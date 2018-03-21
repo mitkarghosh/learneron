@@ -1,0 +1,542 @@
+
+/**/
+@media only screen and (min-width:1025px) and (max-width:1279px) {
+.site-nav ul li {
+	font-size: 15px;
+}
+.site-nav ul li a {
+	padding: 0px 8px;
+}
+.serach-from {
+	width: 360px;
+}
+.intro .ad-section {
+	float: left;
+	width: 60%;
+}
+.intro .user-status .questions, .intro .user-status .users {
+	padding: 7px 22px;
+}
+	.follow-us a {
+    font-size: 13px;
+    margin: 0px 10px;
+    padding: 9px 13px;
+    display: inline-block;
+    vertical-align: middle;
+}
+	.follow-us h3 {
+    font-size: 15px
+	}
+	
+	.btn-small,
+	.btn-small-alt
+	{
+		padding: 5px 11px;
+		font-size: 14px;
+	}
+}
+
+@media only screen and (max-width:1024px) {
+.serach-from {
+	width: 267px;
+}
+.header-top-right .button-set {
+	margin-left: 22px;
+}
+.social-menu-container ul li {
+	font-size: 21px;
+	margin-left: 16px;
+}
+.mob-menu {
+	display: inline-block;
+}
+.menu-close {
+	display: block;
+	margin: 13px 11px 17px;
+	float: right;
+}
+nav.site-nav {
+	position: fixed;
+	background: #343434;
+	display: none;
+	left: 0;
+	width: 100%;
+	z-index: 9999999;
+	top: 0;
+	right: 0;
+	bottom: 0;
+}
+.site-nav ul {
+	margin-top: 64px;
+	height: calc(100vh - 76px);
+	overflow: auto;
+}
+nav.site-nav ul li {
+	margin-right: 0;
+	margin-left: 0;
+	display: block;
+	text-align: center;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.27)
+}
+.intro .ad-section {
+	float: left;
+	width: 50%;
+}
+.intro .user-status .questions, .intro .user-status .users {
+	padding: 6px 17px;
+}
+.intro .user-status .questions h2, .intro .user-status .users h2 {
+	font-size: 24px;
+}
+.intro .user-status .questions h3, .intro .user-status .users h3 {
+	font-size: 20px;
+}
+.banner-sec ul li .caption {
+	padding: 0px 9%;
+}
+.caption p {
+	margin-bottom: 24px;
+}
+	.follow-us 
+	{
+		text-align: center;
+	}
+.follow-us a {
+    font-size: 13px;
+    margin: 5px 10px;
+    padding: 9px 13px;
+    display:inline-block;
+    vertical-align: middle;
+	width: 50%;
+}
+	.follow-us h3 {
+    font-size: 15px;
+		display:block
+	}
+	.news-wrapper
+	{
+		padding: 0;
+	}
+	
+	
+	.btn-small,
+	.btn-small-alt
+	{
+		padding: 5px 11px;
+		font-size: 14px;
+	}
+	.question-info a
+	{
+		margin-bottom: 10px;
+	}
+}
+
+@media only screen and (min-width:768px) and (max-width:900px) {
+.form-conatiner .form-conatiner-inner .form-left {
+	max-width: 40%;
+	table-layout: fixed;
+}
+.form-conatiner .form-conatiner-inner .form-left img {
+	max-width: 100%;
+}
+.form-conatiner .form-conatiner-inner .form-right {
+	max-width: 60%;
+}
+.user-profile-photo .pic-change label {
+	display: block;
+	text-align: center;
+	font-size: 15px;
+	padding: 10px 5px;
+}
+.user-control {
+	float: right;
+	margin-left: 15px;
+}
+.question-nav ul li {
+	margin-right: 15px;
+}
+.Q_info > div {
+	margin-left: 15px;
+}
+.users-left .col-md-4 {
+	width: 50%;
+	flex: 0 50%;
+	max-width: 50%;
+}
+.feature .side-bar-block-box li {
+	padding-left: 0;
+	margin-bottom: 15px;
+}
+.feature .side-bar-block-box li a figure {
+	position: static;
+	margin-bottom: 5px;
+	float: left;
+	margin: 6px 10px 0 0;
+}
+.feature .side-bar-block-box li a span {
+	display: block;
+}
+.recent.side-bar-block li .questions-dtls-info div {
+	width: 100%;
+	float: none;
+}
+.question-right {
+	padding: 0px 0px;
+}
+.banner-sec ul li {
+	height: 400px;
+}
+}
+
+@media only screen and (max-width:767px) {
+.banner-sec ul li {
+	height: 500px;
+}
+.question-nav ul li a:after {
+	margin-top: 8px;
+}
+.Q_filter {
+	float: none;
+	margin: 9px 0px 16px;
+}
+.body-section .title h1 {
+	font-size: 22px;
+	margin-bottom: 9px;
+}
+.Q_info > div {
+	margin-left: 5px;
+}
+.Q_info > div > div {
+	height: 44px;
+	width: 44px;
+	line-height: 41px;
+	font-size: 14px;
+	margin-bottom: 3px;
+}
+.Q_info span {
+	font-size: 12px;
+}
+.Q-left .Q-tags a {
+	margin-right: 7px;
+	padding: 4px 10px;
+	font-size: 13px;
+	margin-bottom: 5px;
+}
+.form-conatiner .form-conatiner-inner .form-left {
+	max-width: 100%;
+	display: block;
+	table-layout: fixed;
+	width: 100%;
+	padding: 22px 26px;
+}
+.form-conatiner .form-conatiner-inner .form-left img {
+	max-width: 100%;
+}
+.form-conatiner .form-conatiner-inner .form-right {
+	max-width: 100%;
+	display: block;
+	width: 100%;
+	padding: 22px 26px;
+}
+.form-conatiner .form-conatiner-inner {
+	display: block;
+}
+.serach-from {
+	width: 190px;
+}
+.serach-from button {
+	width: 43px;
+	font-size: 17px;
+}
+.user-control .user-avatar {
+	margin-right: 4px;
+}
+.header-top-right .button-set {
+	margin-left: 8px;
+	margin-bottom: 11px;
+}
+.serach-from input[type="text"] {
+	padding-right: 51px;
+}
+.user-profile-photo .pic-change label {
+	display: block;
+	text-align: center;
+	font-size: 12px;
+	padding: 10px 5px;
+}
+.user-control {
+	float: right;
+	margin-left: 8px;
+}
+.question-nav ul li {
+	margin-right: 10px;
+}
+.genpage-user-system .title {
+	margin-bottom: 0;
+	padding-top: 17px;
+}
+.user-search {
+	margin-top: 23px;
+}
+.user-search input[type="text"] {
+	margin-left: 4px;
+}
+.intro .user-status .questions h2, .intro .user-status .users h2 {
+	font-size: 20px;
+	line-height: 20px;
+	margin-bottom: 0px;
+}
+.intro .user-status .questions h3, .intro .user-status .users h3 {
+	font-size: 14px;
+	margin-bottom: 0;
+}
+.intro .ad-section {
+	float: left;
+	width: calc(100% - 226px);
+}
+.feature .side-bar-block-box li a figure {
+	position: static;
+	margin-bottom: 5px;
+	float: left;
+	margin: 6px 10px 0 0;
+}
+.feature .side-bar-block-box li a span {
+	display: block;
+}
+.feature .side-bar-block-box li {
+	padding-left: 0;
+}
+	
+	
+	.news-wrapper
+	{
+		padding: 0;
+	}
+	.news-details-content,
+	.comment-list .comment
+	{
+	  padding: 0;
+	}
+	
+.news-detail-sec .author .avatar,
+	.comment-avatar
+	{
+		margin: 0 auto;
+		float: none;
+	}
+	.comment-list ul li .comment-avatar
+	{
+		float: none;
+	}
+	.post-comment
+	{
+		margin-top: 50px;
+	}
+	.news-detail-sec .author {
+    float: none;
+    text-align: center;
+    margin: 0px 0px 20px;
+}
+	.meta-info {
+    float: none;
+    text-align: center !important;
+}
+	.post-share.col-md-6.text-right {
+    text-align: center !important;
+}
+.follow-us {
+    text-align: center;
+	margin-bottom: 30px;
+}
+.follow-us a
+	{
+	 width: 100%;
+		margin: 5px 0px;
+	}
+	.comment-avatar img {
+    width: 55px;
+}
+
+
+}
+
+@media only screen and (min-width:585px) and (max-width:767px) {
+.feature .side-bar-block-box li {
+	padding-left: 0;
+	margin-bottom: 15px;
+}
+.feature .side-bar-block-box li a figure {
+	position: static;
+	margin-bottom: 5px;
+}
+.question-right {
+	padding: 0px 0px;
+}
+.recent.side-bar-block li .questions-dtls-info div {
+	width: 100%;
+	float: none;
+}
+}
+
+@media only screen and (max-width:585px) {
+.Q_info {
+    text-align: left;
+    padding-top: 10px;
+    margin-right: 17px;
+}
+.caption p {
+	height: 189px;
+	overflow: hidden;
+	margin-bottom: 19px;
+	font-size: 12px;
+}
+.banner-sec .bx-wrapper .bx-next, .banner-sec .bx-wrapper .bx-prev {
+	width: 38px;
+	height: 38px;
+	background-size: cover;
+}
+.footer-nav ul li {
+	line-height: 30px;
+	margin: 5px 0px;
+}
+.footer-nav ul li a {
+	padding: 0px 8px;
+}
+.question-right {
+	padding: 0;
+}
+header .logo {
+	margin-bottom: 20px;
+}
+.serach-from {
+	width: calc(100% - 204px);
+}
+.intro {
+	padding: 21px 0px;
+}
+a.add-field-btn.btn-normal {
+	margin: 0;
+}
+.user-search {
+	margin-top: 15px;
+	float: right;
+}
+.user-search input[type="text"] {
+	margin-left: 4px;
+	width: 129px;
+}
+	
+.about-wrapper .about-bottom .col-sm-6
+	{
+		margin-bottom: 20px;
+	}
+	
+	.btn-alt,
+	.btn-normal
+	{
+		padding: 6px 25px;
+		font-size: 14px;
+	}
+	.btn-cancel
+	{
+		padding: 9px 25px !important;
+		font-size: 14px !important;
+	}
+	.news-item
+	{
+		width: 100%;
+	}
+	
+	._ans_posted_by
+	{
+		margin-right: 30px;
+	}
+	.ans-by .btn-set
+	{
+	   margin-left: 0;
+	}
+	
+}
+
+@media only screen and (max-width:480px) {
+.header-top-right .button-set, .serach-from {
+	width: 100%;
+	margin-left: 0;
+	margin-bottom: 10px;
+}
+header .logo {
+	text-align: center;
+}
+header .logo a {
+	display: inline-block;
+	text-align: center;
+}
+.header-top-right .button-set {
+	text-align: center;
+}
+.logo img {
+	display: inline-block;
+}
+.header-top {
+	background: #000;
+	padding: 6px 0px;
+}
+.header-top-right .button-set a {
+	font-size: 10px;
+}
+.banner-sec ul li .caption {
+	padding: 0px 19%;
+}
+.intro .ad-section {
+	float: left;
+	width: 100%;
+	margin-bottom: 10px;
+}
+.intro .user-status .questions h2, .intro .user-status .users h2 {
+	font-size: 18px;
+}
+.intro .user-status .questions h3, .intro .user-status .users h3 {
+	font-size: 15px;
+}
+.user-status {
+	float: right;
+	width: 100%;
+}
+.intro .user-status .questions, .intro .user-status .users {
+	width: 50%;
+}
+.user-control {
+	float: none;
+	margin-bottom: 13px;
+	text-align: center;
+}
+.user-search input[type="text"] {
+	margin-left: 0;
+	width: 100%;
+}
+.user-search, .genpage-user-system .title {
+	float: none;
+}
+.genpage-user-system .title h1 {
+	font-size: 26px;
+	margin-top: 15px;
+}
+.about-user-row {
+	border-bottom: 1px solid #e9e9e9;
+	padding: 0px 0px 15px;
+	margin-bottom: 31px;
+}
+.reset-pass-box {
+	padding: 28px 19px;
+}
+.reset-pass-box h1 {
+	font-size: 21px;
+	margin-bottom: 14px;
+}
+.log-in-form-wrapper .btn-set input[type="submit"], .log-in-form-wrapper .btn-set button, .reset-pass-box input[type="submit"] {
+	font-size: 14px;
+}
+.reset-pass-box p {
+	font-size: 12px;
+}
+}

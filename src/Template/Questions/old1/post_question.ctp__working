@@ -1,0 +1,267 @@
+<?php
+use Cake\Routing\Router;
+?>
+<div class="genpage-user-system">
+    <div class="container">      
+		<div class="genpage-wrapper">
+			<div class="row">          
+				<div class="col-md-9 col-sm-8">
+					<div class="title">
+						<h1>Post Questions</h1>
+					</div>
+					<div class="page-body post-question-area">
+						<div class="form-wrapper question-post-from">
+							<?php echo $this->Form->create(false,['url' => 'javascript:void(0);', 'id' => 'postquestion_settings_form', 'novalidate' => 'novalidate']); ?>
+								<div class="form-group">
+									<label for="">Question Title</label>
+									<?php echo $this->Form->input('name',['type'=>'text', 'placeholder'=>'Question Title', 'label'=>false, 'class'=>'form-control', 'required'=>"required"]); ?>
+								</div>
+								<div class="form-group">
+									<?php echo $this->Form->input('short_description',['type'=>'textarea', 'placeholder'=>'What learning path / curriculum did take you / could take me from the starting level to goal line, if possible respecting my budget or other constraints and limitations?  What courses or other means or learning, and with what succession?', 'label'=>false, 'class'=>'form-control']); ?>
+								</div>
+								<div class="form-group">
+									<label for="">Learning Goal</label>
+									<?php echo $this->Form->input('learning_goal',['type'=>'textarea', 'id'=>'learning-goal', 'label'=>false, 'class'=>'texarea']); ?>
+								</div>
+								<div class="form-group">
+									<label for="">Starting Level
+								<?php if(!empty($Auth)){ ?>
+									<a href="javascript:void(0);" class="btn-normal btn-copy" id="get_education_details" title="Copy from my account settings Education History">Copy from Education History</a>
+								<?php } ?>
+									</label><span id="data_loader"></span>
+									<?php echo $this->Form->input('education_history',['type'=>'textarea', 'id'=>'education-history', 'placeholder'=>'', 'label'=>false, 'class'=>'form-control']); ?>
+								</div>
+								<div class="form-group">
+									<label for="">Budget & other constraints</label>
+									<?php echo $this->Form->input('budget_constraints',['type'=>'textarea', 'id'=>'budget_constraints', 'label'=>false, 'class'=>'texarea']); ?>
+								</div>
+								<div class="form-group">
+									<label for="">Optional input on preferred learning mode </label>
+									<?php echo $this->Form->input('preferred_learning_mode',['type'=>'textarea', 'id'=>'preferred_learning_mode', 'label'=>false, 'class'=>'texarea']); ?>
+								</div>
+								<div class="tag-insert-sections">
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group">
+												<label for="">Tags</label>
+												<?php echo $this->Form->input('tags', ['type'=>'select', 'empty'=>'', 'options'=>$all_tags, 'label' => false, 'class' => 'multipleSelectTags form-control', 'placeholder' => 'Tags', 'multiple'=>true, 'required'=>true ]); ?>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<label for="">Select Category</label>
+												<select name="category_id" id="category_id" class="form-control" required>
+													<option value="">Select</option>
+												<?php
+												foreach($question_categories as $key_category => $val_category){
+												?>
+													<option value="<?php echo $key_category;?>"><?php echo $val_category;?></option>
+												<?php
+												}
+												?>
+												</select>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="check-box-set">
+									<input type="checkbox" name="response_email" id="response_email" value="Y" autocomplete="off">
+									<label for="response_email">Send me new responses to my post via email</label>
+								</div>
+								<div class="check-box-set">
+									<input type="checkbox" name="is_featured" id="is_featured" value="Y" autocomplete="off">
+									<label for="is_featured">Make featured question</label>
+								</div>
+								<div class="button-set">
+									<input type="submit" class="btn-normal" value="Post Your Question">
+								</div>
+								<div id="postquestion_loader"></div>
+								<div id="post_question_msg" style="margin-top:10px;"></div>
+							<?php echo $this->Form->end();?>
+						</div>
+					</div>
+				</div>          
+				<div class="col-md-3 col-sm-4 question-right">
+					<div class="question-instruction">
+				<?php
+				if(!empty($all_faqs)){
+				?>					
+						<div class="category side-bar-block">
+							<h3>Question Posting Instructions</h3>              
+							<ul>
+				<?php		foreach($all_faqs as $faq){ ?>
+								<li><?php echo $faq->question;?></li>
+				<?php		} ?>
+							</ul>
+						</div>
+				<?php
+				}
+				?>
+					</div>          	
+				</div>
+			</div>
+		</div>
+    </div>
+</div>
+
+<div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLongTitle">Login</h5>
+				<div id="login_msg"></div>
+			</div>
+			<div class="log-in-form-wrapper">
+			<?php echo $this->Form->create(false, array('url'=>'javascript:void(0)', 'novalidate' => 'novalidate', 'id'=>'ajax_login_form')); ?>
+			<div class="modal-body">				
+				<div class="form-group">
+					<label for="">Email</label>
+    	        	<?php echo $this->Form->input('email',['type'=>'email', 'placeholder'=>'nepdud@gmail.com', 'label'=>false, 'class'=>'form-control', 'required'=>"required"]); ?>
+				</div>
+				<div class="form-group">
+					<label for="">Password</label>
+					<?php echo $this->Form->input('password',['type'=>'Password', 'placeholder'=>'*******', 'label'=>false, 'class'=>'form-control', 'required'=>"required"]); ?>
+				</div>
+			</div>
+			<div id="ajax_login_loader" style="text-align:center;"></div>
+			<div class="modal-footer btn-set">
+				<input type="submit" class="btn btn-normal" value="Login">
+			</div>
+			<span class="sign-link">Not a Member? &nbsp; <a href="<?php echo Router::url('/signup', true); ?>">Sign Up </a></span>
+			<?php echo $this->Form->end(); ?>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+<?php if(empty($Auth)){ ?>
+$(document).ready(function(){
+	$('#login-modal').modal({backdrop: 'static', keyboard: false});
+});
+<?php } ?>
+
+$('#ajax_login_form').validate({
+	submitHandler:function(){
+		$('#ajax_login_loader').html('<img src="<?php echo Router::url('/images/loader.gif');?>" alt="" />');
+		var data = $('#ajax_login_form').serialize();
+		var promise = $.post('<?php echo Router::url("/users/ajax-login/",true); ?>',data);
+		promise.done(function(response){
+			$('#ajax_login_loader').html('');
+			var data = JSON.parse(response);
+			if(data.login=='success'){
+				$('#login_msg').html('');
+				var login_msg = "<div class='message success' onclick='this.classList.add('hidden')'>Logged in successfully.</div>";
+				$('#login_msg').html(login_msg);
+				setTimeout(function(){
+					$('#login_msg').html('');
+				},10000);
+				$('#login-modal').modal('hide');
+				window.location.href = '<?php echo Router::url(array('controller'=>'Questions','action'=>'post-question'),true); ?>';
+			}else if(data.login=='success_to_setting'){
+				$('#login_msg').html('');
+				var login_msg = "<div class='message success' onclick='this.classList.add('hidden')'>Logged in successfully</div>";
+				$('#login_msg').html(login_msg);
+				window.location.href = '<?php echo Router::url(array('controller'=>'Users','action'=>'account-setting'),true); ?>';
+			}else if(data.login=='user_not_exist'){
+				var login_msg = "<div class='message error' onclick='this.classList.add('hidden')'>This email-id is not registered with us.</div>";
+				$('#login_msg').html(login_msg);
+				setTimeout(function(){
+					$('#login_msg').html('');
+				},10000);
+			}else if(data.login=='user_not_activated'){
+				var login_msg = "<div class='message error' onclick='this.classList.add('hidden')'>Account not activated yet, check your email to activate your account or please contact with Admin.</div>";
+				$('#login_msg').html(login_msg);
+				setTimeout(function(){
+					$('#login_msg').html('');
+				},10000);
+			}else if(data.login=='not_logged_in'){
+				var login_msg = "<div class='message error' onclick='this.classList.add('hidden')'>Invalid Email or Password.</div>";
+				$('#login_msg').html(login_msg);
+				setTimeout(function(){
+					$('#login_msg').html('');
+				},10000);
+			}else if(data.login=='already_logged_in'){
+				var login_msg = "<div class='message error' onclick='this.classList.add('hidden')'>Already logged in.</div>";
+				$('#login_msg').html(login_msg);
+				setTimeout(function(){
+					$('#login_msg').html('');
+				},10000);
+				$('#login-modal').modal('hide');
+			}else{
+				var login_msg = "<div class='message error' onclick='this.classList.add('hidden')'>There was an unexpected error. Try again later or contact the Admin.</div>";
+				$('#msg_div_error').html(login_msg);
+				setTimeout(function(){
+					$('#msg_div_error').html('');
+				},10000);
+			}
+		});
+		promise.fail(function(){
+			$('#ajax_login_loader').html('');
+			var login_msg = "<div class='message error' onclick='this.classList.add('hidden')'>There was an unexpected error. Try again later or contact the Admin.</div>";
+			$('#login_msg').html(login_msg);
+			setTimeout(function(){
+				$('#login_msg').html('');
+			},10000);
+		});
+	}
+});
+
+$('.multipleSelectTags').fastselect();
+
+//For get education history
+$('#get_education_details').click(function(){
+    $("#data_loader").html('<img src="<?php echo Router::url('/images/loader.gif');?>" alt="" />');
+	$.ajax({
+	    url : "<?php echo Router::url("/questions/get-education_details/",true); ?>",
+	    type: "POST",
+	    success:function(response){
+			$("#data_loader").html('');
+			$('#education-history').val(response);	        
+	    }
+	});
+});
+
+//post question
+$('#postquestion_settings_form').validate({
+	submitHandler:function(){
+		$('#postquestion_loader').html('<img src="<?php echo Router::url('/images/loader.gif');?>" alt="" />');
+		var data = $('#postquestion_settings_form').serialize();
+		var promise = $.post('<?php echo Router::url("/questions/post-question-submission/",true); ?>',data);
+		promise.done(function(response){
+			$('#postquestion_loader').html('');
+			var data = JSON.parse(response);
+			if(data.question == 'success'){
+				var post_msg = "<div class='message success' onclick='this.classList.add('hidden')'>Your question has been successfully submitted. It will show after Admin approval.</div>";
+				$('#post_question_msg').html(post_msg);
+				$('#postquestion_settings_form')[0].reset();
+				$('#tags').val('');
+				setTimeout(function(){
+					$('#post_question_msg').html('');
+				},10000);
+			}else if(data.question == 'failed'){
+				var post_msg = "<div class='message erro' onclick='this.classList.add('hidden')'>You need to login to post your question.</div>";
+				$('#post_question_msg').html(post_msg);
+				setTimeout(function(){
+					$('#post_question_msg').html('');
+				},10000);
+				window.location.href = '<?php echo Router::url(array('controller'=>'Questions','action'=>'post-question'),true); ?>';
+			}else{
+				var post_msg = "<div class='message error' onclick='this.classList.add('hidden')'>There was an unexpected error. Try again later or contact the Admin.</div>";
+				$('#post_question_msg').html(post_msg);
+				setTimeout(function(){
+					$('#post_msg').html('');
+				},10000);
+			}
+		});
+		promise.fail(function(){
+			$('#postquestion_loader').html('');
+			var post_msg = "<div class='message error' onclick='this.classList.add('hidden')'>There was an unexpected error. Try again later or contact the Admin.</div>";
+			$('#post_question_msg').html(post_msg);
+			setTimeout(function(){
+				$('#post_question_msg').html('');
+			},10000);
+		});
+	}
+});
+</script>

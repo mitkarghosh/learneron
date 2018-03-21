@@ -1,0 +1,25 @@
+======================================================
+LIVE DETAILS
+======================================================
+learnerer99@gmail.com
+Learn@123
+
+Facebook:
+=========
+api key: 1680856478640200
+Client Key: f83025cfbe7bc685a2ee64a49e25f44b
+
+Twitter:
+========
+API Key: rfDEgEaLBty5rpvC76ioTWjWq
+Consumer Secret (API Secret): 8bYmHzwtpRhEEvUIFZQknXcQnaJN5xPh5n2Q2PGaF2Gf5A8PjG
+
+Gmail:
+======
+client id: 1034473860989-kliu9kqt0qgfh0jcblu03u6bfros9ehs.apps.googleusercontent.com
+client secret:  j0MFlM5TiWmMGv-r7yABCuYS
+
+LinkedIN:
+=========
+Client ID: 81n9q0vf5oxqgm
+Client Secret: DL3nm26J1ztnE6Vg

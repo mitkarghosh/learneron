@@ -1,0 +1,78 @@
+/* CSS Document */
+#news_listing{position:relative;}
+#news_listing .loader{position:absolute; float:left; clear:both; left:43%; top:100%; text-align:center;}
+li.next{list-style-type:none;}
+.no_results_found{text-align:center; color:#caa961; margin:0 auto;}
+.loader li.disabled{display:none;}
+
+/* for edit profile page */ 
+#education_div{border:1px solid #d8d8d8; padding:10px 10px; border-radius:10px;}
+.education_width, .career_width{width:48% !important;}
+.education_margin{margin-top: -8px;}
+.more-files1{border:1px solid #ccc; margin-bottom:0 !important; cursor: pointer;}
+.more-files1:hover{color:#caa961; border:1px solid #caa961; margin-bottom:0 !important;}
+.remove_minus{position:absolute; top:5px; right:6px; padding-right:2px;cursor:pointer; color:#db0e1e;}
+
+#career_div{border:1px solid #d8d8d8; padding:10px 10px; border-radius:10px;}
+.career_margin{margin-top: -8px;}
+
+.error{color:#ff0000 !important;font-size:12px !important;}
+
+.img_user{width:84px; height: 84px;}
+
+.accordion-toggle {cursor: pointer;}
+.accordion-content {display: none; color: #000; font-size: 12px; font-weight: normal; line-height: 19px; margin-bottom: 14px; padding-left: 30px; position: relative;}
+.accordion-content.default {display: block;}
+.question_category{margin-bottom:0;}
+.404_error_class{text-align:center; min-height:200px;}
+.prof_title{margin:0 !important; padding:0 !important;}
+.user_details{color: #000000; font-size: 15px; line-height: 28px; font-weight: normal;}
+.maginless_user_row{padding:0 !important;margin-bottom:20px !important;}
+.highlighted{background-color:#caa961 !important; color:#fff !important;}
+.hidedetails{display:none;}
+.shwdetail{display:block;}
+
+/*for faq*/
+.toggle_block{margin-bottom: 20px;}
+.toggle_block:last-child{margin-bottom: 0;}
+.toggle_block > .ques{background: #eaeaea; padding: 10px 10px 10px 70px; cursor: pointer; position: relative; }
+.toggle_block .faq_q{margin: 0; padding: 0; color: #161616; font-size: 20px; line-height: 24px; }
+.toggle_block > .ques:before, .toggle_block > .ques:after{position: absolute; content: ""; display: block; width: 52px; height: 44px; left: 0; top: 0; bottom: 0; background: #caa961; color: #fff; font-size: 25px; line-height: 44px; font-family: 'FontAwesome';	text-align: center; }
+.toggle_block > .ques:after{content: "\f107"; top: 50%; -webkit-transform: translate(0,-50%); transform: translate(0,-50%); z-index: 1; }
+.toggle_block.opened > .ques{background: #caa961;}
+.toggle_block.opened .ques .faq_q{color: #fff;}
+.toggle_block.opened > .ques:after{content: "\f106";}
+.toggle_block .ans_toggle{display: none; padding: 20px 15px; border: 1px solid #eaeaea; border-top: none; }
+
+.leftmargin_first{margin-left: 15px;}
+.leftmargin_second{margin-left: 30px;}
+.leftmargin_third{margin-left: 40px;}
+
+.btn-cancel, .btn-cancel:focus{text-decoration: none; border: 1px solid #caa961; background: #caa961; color: #fff; text-transform: capitalize; font-size: 16px; padding: 15px 28px; border-radius: 5px; cursor: pointer; transition: all 0.2s; font-family: 'Raleway', sans-serif; }
+.btn-cancel:hover {background: #000; border-color: #000; color: #caa961; -webkit-transition: all 0.2s; -ms-transition: all 0.2s; -moz-transition: all 0.2s; transition: all 0.2s; opacity: 1 !important;}
+
+.hastag{color:#caa961; font-size:60%;}
+
+.table_wrap .table-responsive{margin-bottom: 30px;}
+table {
+	border: none;
+	border-collapse: collapse;
+	border-spacing: 0;
+	width: 100%;
+}
+table th, table td {
+	padding: 5px 12px;
+	vertical-align: top;
+	border: 1px solid #ccc;
+}
+.table_wrap a, table p:last-child{margin-bottom: 0;}
+.table-striped tbody tr th{background-color: rgba(0,0,0,0.1);}
+#postquestion_settings_form #education-history, #postquestion_settings_form #short-description{height:100px !important;}
+
+.news-thumb img{max-height: 400px !important; width: auto !important; margin: 0 auto !important;}
+
+/*#st-1 .st-btn > svg{height: 20px !important; position: relative !important; top: 2px !important; vertical-align: top !important; width: 17px !important;}
+#st-1 .st-btn{border-radius: 16px !important; font-size: 11px !important; height: 24px !important; line-height: 24px !important; margin-right: 8px !important; padding: 0 4px !important;}
+#st-1 .st-btn:last-child{margin-right: 0 !important;}*/
+
+.site-footer .social-menu-container #st-2{text-align: center !important;}

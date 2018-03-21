@@ -26554,3 +26554,43 @@ Stack Trace:
 #2 {main}
 
 
+2018-03-21 17:59:42 Error: [BadMethodCallException] Method getParam does not exist
+Request URL: /signup
+Stack Trace:
+#0 D:\xampp\htdocs\learneron\src\Controller\AppController.php(105): Cake\Network\Request->__call('getParam', Array)
+#1 D:\xampp\htdocs\learneron\src\Controller\AppController.php(105): Cake\Network\Request->getParam('action')
+#2 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Controller\Controller.php(262): App\Controller\AppController->initialize()
+#3 [internal function]: Cake\Controller\Controller->__construct(Object(Cake\Network\Request), Object(Cake\Network\Response), 'Users')
+#4 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\ControllerFactory.php(79): ReflectionClass->newInstance(Object(Cake\Network\Request), Object(Cake\Network\Response), 'Users')
+#5 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\ActionDispatcher.php(92): Cake\Http\ControllerFactory->create(Object(Cake\Network\Request), Object(Cake\Network\Response))
+#6 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\BaseApplication.php(83): Cake\Http\ActionDispatcher->dispatch(Object(Cake\Network\Request), Object(Cake\Network\Response))
+#7 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Http\BaseApplication->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#8 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Routing\Middleware\RoutingMiddleware.php(62): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#9 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Routing\Middleware\RoutingMiddleware->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#10 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Routing\Middleware\AssetMiddleware.php(88): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#11 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Routing\Middleware\AssetMiddleware->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#12 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Error\Middleware\ErrorHandlerMiddleware.php(81): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#13 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Error\Middleware\ErrorHandlerMiddleware->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#14 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(51): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#15 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Server.php(90): Cake\Http\Runner->run(Object(Cake\Http\MiddlewareQueue), Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#16 D:\xampp\htdocs\learneron\webroot\index.php(37): Cake\Http\Server->run()
+#17 {main}
+
+
+2018-03-21 18:02:20 Error: Fatal Error (4): syntax error, unexpected 'die' (T_EXIT) in [D:\xampp\htdocs\learneron\src\Controller\AppController.php, line 105]
+Request URL: /learneron/signup
+Trace:
+Cake\Error\BaseErrorHandler::handleFatalError() - CORE\src\Error\BaseErrorHandler.php, line 216
+Cake\Error\BaseErrorHandler::Cake\Error\{closure}() - CORE\src\Error\BaseErrorHandler.php, line 98
+[main] - [internal], line ??
+
+
+
+2018-03-21 18:02:21 Error: [Cake\Error\FatalErrorException] syntax error, unexpected 'die' (T_EXIT)
+Request URL: /learneron/signup
+Stack Trace:
+#0 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Error\BaseErrorHandler.php(98): Cake\Error\BaseErrorHandler->handleFatalError(4, 'syntax error, u...', 'D:\\xampp\\htdocs...', 105)
+#1 [internal function]: Cake\Error\BaseErrorHandler->Cake\Error\{closure}()
+#2 {main}
+
+

@@ -101,7 +101,7 @@ class AppController extends Controller
         $site_settings = $this->getSiteSettings();
         $this->RememberMe();
         $this->set('Auth', $this->Auth->user());
-        		
+		
 		$user_related_details = '';
 		if(!empty($this->Auth->user())){
 			$userdata = $this->request->session()->read('Auth.Users');
@@ -130,6 +130,9 @@ class AppController extends Controller
 		$VisitorLogTable 	= TableRegistry::get('VisitorLog');
 		$current_url 		= Router::url( $this->here, true );
 		$get_ip 			= $this->getUserIP();
+		$controller 		= isset($this->request->params)?$this->request->params['controller']:'';
+		$method 			= isset($this->request->params)?$this->request->params['action']:'';
+		
 		if( $loggedin_user_id == '' ){
 			//First checking is for USER IP is already exist or not
 			$check_visitor_ip = $VisitorTable->find('all',['conditions'=>['Visitor.user_ipaddress'=>$get_ip]])->first();
@@ -140,6 +143,8 @@ class AppController extends Controller
 				if( $count == 0 ){
 					$visitor_log_data['visitor_id'] 	= $visitor_last_id;
 					$visitor_log_data['page_url'] 		= $current_url;
+					$visitor_log_data['controller'] 	= $controller;
+					$visitor_log_data['method'] 		= $method;
 					$visitor_log_data['visited_time'] 	= date('Y-m-d H:i:s');
 					$VisitorLogNewEntity 				= $VisitorLogTable->newEntity();
 					$insert_log 						= $VisitorLogTable->patchEntity($VisitorLogNewEntity, $visitor_log_data);
@@ -155,6 +160,8 @@ class AppController extends Controller
 					$visitor_last_id 					= $saved_data->id;					
 					$visitor_log_data['visitor_id'] 	= $visitor_last_id;
 					$visitor_log_data['page_url'] 		= $current_url;
+					$visitor_log_data['controller'] 	= $controller;
+					$visitor_log_data['method'] 		= $method;
 					$visitor_log_data['visited_time'] 	= date('Y-m-d H:i:s');
 					$VisitorLogNewEntity 				= $VisitorLogTable->newEntity();
 					$insert_log 						= $VisitorLogTable->patchEntity($VisitorLogNewEntity, $visitor_log_data);
@@ -171,6 +178,8 @@ class AppController extends Controller
 				if( $count == 0 ){
 					$visitor_log_data['visitor_id'] 	= $visitor_last_id;
 					$visitor_log_data['page_url'] 		= $current_url;
+					$visitor_log_data['controller'] 	= $controller;
+					$visitor_log_data['method'] 		= $method;
 					$visitor_log_data['visited_time'] 	= date('Y-m-d H:i:s');
 					$VisitorLogNewEntity 				= $VisitorLogTable->newEntity();
 					$insert_log 						= $VisitorLogTable->patchEntity($VisitorLogNewEntity, $visitor_log_data);
@@ -186,6 +195,8 @@ class AppController extends Controller
 					$visitor_last_id 					= $saved_data->id;					
 					$visitor_log_data['visitor_id'] 	= $visitor_last_id;
 					$visitor_log_data['page_url'] 		= $current_url;
+					$visitor_log_data['controller'] 	= $controller;
+					$visitor_log_data['method'] 		= $method;
 					$visitor_log_data['visited_time'] 	= date('Y-m-d H:i:s');
 					$VisitorLogNewEntity 				= $VisitorLogTable->newEntity();
 					$insert_log 						= $VisitorLogTable->patchEntity($VisitorLogNewEntity, $visitor_log_data);

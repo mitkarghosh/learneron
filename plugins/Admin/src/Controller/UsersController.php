@@ -5,7 +5,8 @@ use Cake\Event\Event;
 use Cake\Network\Exception\NotFoundException;
 use Cake\Utility\Inflector;
 use Cake\ORM\TableRegistry;
-require_once(ROOT . DS . 'vendor' . DS . "verot/class.upload.php/src" . DS . "class.upload.php");
+//require_once(ROOT . DS . 'vendor' . DS . "verot/class.upload.php/src" . DS . "class.upload.php");
+require_once(ROOT . DS . 'vendor' . DS . "Classes" . DS . "PHPExcel.php");
 
 /**
  * Users Controller
@@ -85,6 +86,106 @@ class UsersController extends AppController{
             throw new NotFoundException(__('There is an unexpected error'));
         }
     }
+	
+	public function downloadReports(){
+		$options['contain'] = ['Visitors','Visitors.VisitorLogs'];			
+		$options['order'] 	= ['Users.id'=>'ASC'];
+		//$options['fields'] 	= ['Users.*'];
+		$UserDetails 		= TableRegistry::get('Admin.Users');
+		$details 			= $UserDetails->find('all', $options)->toArray();
+		//pr($details); die;
+		
+		$objPHPExcel = new \PHPExcel();
+		$objPHPExcel->getProperties()->setCreator("Tech Times.")
+									 ->setLastModifiedBy("Tech Times")
+									 ->setTitle("Report")
+									 ->setSubject("Report Document")
+									 ->setDescription("Report, generated using PHP classes.")
+									 ->setKeywords("Report")
+									 ->setCategory("all");                                           
+		// Set fonts                              
+		$objPHPExcel->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
+		$objPHPExcel->getActiveSheet()->getStyle('B1')->getFont()->setBold(true);
+		$objPHPExcel->getActiveSheet()->getStyle('C1')->getFont()->setBold(true);
+		$objPHPExcel->getActiveSheet()->getStyle('D1')->getFont()->setBold(true);
+		$objPHPExcel->getActiveSheet()
+					->setCellValue('A1', 'Full Name')
+					->setCellValue('B1', 'Email')
+					->setCellValue('C1', 'Location')
+					->setCellValue('D1', 'Notification Email');
+		$str = "EFGHIJKLMNOPQRSTUVWXYZ";
+		$i=0;
+		/*foreach($Ingredients_data as $parent){
+			if(empty($parent->Child)){ 
+				$objPHPExcel->getActiveSheet()
+						->setCellValue($str[$i].'1', $parent->ingredient_name);
+						$objPHPExcel->getActiveSheet()->getStyle($str[$i].'1')->getFont()->setBold(true);
+			}else{
+				$k=1;
+				foreach($parent->Child as $child){
+					$objPHPExcel->getActiveSheet()
+						->setCellValue($str[$i].'1', $child->ingredient_name);
+						  $objPHPExcel->getActiveSheet()->getStyle($str[$i].'1')->getFont()->setBold(true);
+					if($k<count($parent->Child)){
+						$i = $i+1;
+					}
+					$k++;
+				}
+			}
+			$i = $i+1;
+		}*/
+		// Rename sheet
+		$objPHPExcel->getActiveSheet()->setTitle('Personal Details');
+		
+		// Set active sheet index to the first sheet, so Excel opens this as the first sheet
+		$cell = 2;
+		foreach($details as $value){
+			$objPHPExcel->setActiveSheetIndex(0)
+								->setCellValue('A'.$cell, $value->full_name)
+								->setCellValue('B'.$cell, $value->email)
+								->setCellValue('C'.$cell, $value->location)
+								->setCellValue('D'.$cell, $value->notification_email);
+			$str = "EFGHIJKLMNOPQRSTUVWXYZ";
+			$i=0;
+			/*foreach($Ingredients_data as $parent){
+				if(empty($parent->Child)){ 
+					foreach($value->product->product_ingredients as $ing){
+						 if($parent->id == $ing->parent_ingredient_id){
+							$objPHPExcel->setActiveSheetIndex(0)
+									->setCellValue($str[$i].$cell, $ing->weight*$value->qty.' KG');
+						}
+					 }
+				}else{ 
+					$k=1;
+					foreach($parent->Child as $child){
+						foreach($value->product->product_ingredients as $ing){
+							if($parent->id == $ing->parent_ingredient_id && $child->id == $ing->child_ingredient_id){ 
+								$objPHPExcel->setActiveSheetIndex(0)
+									->setCellValue($str[$i].$cell, $ing->weight*$value->qty.' KG');
+							}
+						}
+						if($k<count($parent->Child)){
+							$i = $i+1;
+						}
+						$k++;
+					}
+				}
+				$i = $i+1;
+			}*/
+			$cell++;
+		}
+		$file_name= 'User_report_'.time().'.xlsx';  
+		header('Content-type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment; filename= '.$file_name);
+		header('Cache-Control: max-age=0');
+		header ('Expires: Mon, 31 Dec 2030 05:00:00 GMT');
+		header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+		header ('Cache-Control: cache, must-revalidate');
+		header ('Pragma: public');
+		$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+		$objWriter->save('php://output');
+		exit();
+	}
 
     public function addUser(){
 		$session = $this->request->session();

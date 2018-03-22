@@ -24,19 +24,13 @@ class UsersTable extends Table{
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
-		$this->hasMany('Careereducations',[
-							'className'=>'Admin.Careereducations',
-							'foreignKey'=>'user_id'               
-						]);
-		$this->hasMany('UserAccountSetting',[
-							'className'=>'Admin.UserAccountSetting',
+		$this->hasMany('Visitors',[
+							'className'=>'Admin.Visitors',
 							'foreignKey'=>'user_id'               
 						]);
     }
-
-    public function beforeFind(Event $event, Query $query)
-    {
-
+	
+    public function beforeFind(Event $event, Query $query){
         //$query->where(['type' => 'C']);
     }
 

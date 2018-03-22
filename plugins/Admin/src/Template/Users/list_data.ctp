@@ -62,6 +62,7 @@ $this->assign('hasDatepicker', true); ?>
                </span>
             </div>
          </form>
+		 <a href="<?php  echo Router::url('/admin/users/download-reports/?').$_SERVER['QUERY_STRING']; ?>" class="form-control rounded-s btn-primary btn">Download XLSX</a>
       </div>	  
    </div>
    <div class="card items">

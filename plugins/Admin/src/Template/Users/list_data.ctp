@@ -61,8 +61,7 @@ $this->assign('hasDatepicker', true); ?>
 					</a>
                </span>
             </div>
-         </form>
-		 <a href="<?php  echo Router::url('/admin/users/download-reports/?').$_SERVER['QUERY_STRING']; ?>" class="form-control rounded-s btn-primary btn">Download XLSX</a>
+         </form>		 
       </div>	  
    </div>
    <div class="card items">
@@ -262,6 +261,15 @@ $this->assign('hasDatepicker', true); ?>
 							<li>
 								<a class="edit" href="<?php echo Router::url("/admin/users/user-submitted-details",true).'/'.base64_encode($userDetail->id);?>" title="Submitted Details">
 								  <i class="fa fa-eye"></i>
+								</a>
+							</li>
+						<?php
+						}
+						if( (array_key_exists('user-submitted-details',$session->read('permissions.'.strtolower('Users')))) && $session->read('permissions.'.strtolower('Users').'.'.strtolower('user-submitted-details'))==1 ){
+						?>
+							<li>
+								<a class="edit" href="<?php echo Router::url("/admin/users/download-reports",true).'/'.base64_encode($userDetail->id);?>" title="Download Excel">
+								  <i class="fa fa-file-excel-o"></i>
 								</a>
 							</li>
 						<?php

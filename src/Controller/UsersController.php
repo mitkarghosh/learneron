@@ -31,6 +31,7 @@ class UsersController extends AppController{
     
 	//All users listing page
     public function allUsers(){
+		$this->visitorlogs('Users','allUsers');
         $UsersTable = TableRegistry::get('Users');
 		$alphabet_options['conditions']	= ['Users.status'=>'A'];
 		$alphabet_options['fields']		= ['Users.id','Users.name'];
@@ -102,6 +103,7 @@ class UsersController extends AppController{
 	
 	//Signup page
     public function signup(){
+		$this->visitorlogs('Users','signup');
 		$title = 'Sign Up';
 		if($this->request->is('post')){	//signup form submit
 			if($this->request->data['email'] != ''){
@@ -204,6 +206,7 @@ class UsersController extends AppController{
 	
 	//Login page
     public function login(){
+		$this->visitorlogs('Users','login');
 		$title = 'Login';
 		$session = $this->request->session();
 		$UsersTable = TableRegistry::get('Users');
@@ -355,6 +358,7 @@ class UsersController extends AppController{
 	
 	//myAccount function for user dashboard page
 	public function myAccount(){
+		$this->visitorlogs('Users','myAccount');
 		$title = 'My Account';
 		$session = $this->request->session();
 		$user_data = $session->read('Auth.Users');
@@ -370,6 +374,7 @@ class UsersController extends AppController{
 	
 	//editProfile function for user edit profile page
 	public function editProfile(){
+		$this->visitorlogs('Users','editProfile');
 		$title = 'Edit Profile';
 		$session = $this->request->session();
 		$user_data = $session->read('Auth.Users');
@@ -519,6 +524,7 @@ class UsersController extends AppController{
 	
 	//changePassword function is for user password change
 	public function changePassword(){
+		$this->visitorlogs('Users','changePassword');
 		$title = 'Change Password';
 		$UsersTable = TableRegistry::get('Users');
 		$userdetails = $UsersTable->get($this->Auth->user('id'));
@@ -540,6 +546,7 @@ class UsersController extends AppController{
 	
 	//forgotPassword for front-end user password reset
     public function forgotPassword(){
+		$this->visitorlogs('Users','forgotPassword');
 		$title = 'Forgot Password';
 		if(!empty($this->Auth->user())){
 			return $this->redirect(Router::url(array('controller'=>'Users','action'=>'my-account'), true));
@@ -580,6 +587,7 @@ class UsersController extends AppController{
 		if(!empty($this->Auth->user())){
 			return $this->redirect(Router::url(array('controller'=>'Users','action'=>'my-account'), true));
 		}
+		$this->visitorlogs('Users','resetPassword');
 		$user = TableRegistry::get('Users');
 		if($forget_password_string==NULL || $reset_time==NULL){
 			$this->Flash->error(__('Invalid URL or you have already used, please try again.'));
@@ -658,6 +666,7 @@ class UsersController extends AppController{
 	
 	//Account settings page
 	public function accountSetting(){
+		$this->visitorlogs('Users','accountSetting');
 		$title = 'Account Settings';
 		$session = $this->request->session();
 		$QuestionTable = TableRegistry::get('Questions');
@@ -750,7 +759,7 @@ class UsersController extends AppController{
 		$user_id = isset($this->request->data['user_id'])?$this->request->data['user_id']:'';
 		if($user_id == NULL){
             throw new NotFoundException(__('Page not found'));
-        }		
+        }
 		if($user_id != ''){
 			$UsersTable = TableRegistry::get('Users');		
 			$option['contain']	  = ['Careereducations'];
@@ -763,6 +772,7 @@ class UsersController extends AppController{
 	
 	//all submitted details for a particular user
 	public function viewSubmissions(){
+		$this->visitorlogs('Users','viewSubmissions');
 		$user_id = $this->Auth->user('id');
 		if ($user_id == NULL) {
             //throw new NotFoundException(__('Page not found'));

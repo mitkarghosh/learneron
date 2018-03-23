@@ -34,6 +34,7 @@ class NewsController extends AppController{
     
 	//All news listing page
     public function newsListing(){
+		$this->visitorlogs('News','newsListing');
         $NewsTable = TableRegistry::get('News');
         $CmsTable = TableRegistry::get('Cms');
         $cms_data = $CmsTable->get(2);
@@ -70,6 +71,7 @@ class NewsController extends AppController{
 		if($slug=='' && $slug==NULL){
 			$this->redirect(['controller' => 'News', 'action' => 'index']);
 		}else{
+			$this->visitorlogs('News','details');
 			$NewsTable = TableRegistry::get('News');
 			$options['contain'] = ['Users'=>['fields'=>['Users.id','Users.name','Users.profile_pic']],'NewsComment'=>['conditions'=>['NewsComment.status'=>1],'fields'=>['NewsComment.id','NewsComment.user_id','NewsComment.news_id','NewsComment.name','NewsComment.email','NewsComment.status','NewsComment.created']]];
 			$options['conditions']= ['slug'=>$slug];
@@ -201,6 +203,7 @@ class NewsController extends AppController{
 	
 	//News category page (after clicking any category) -> News listing under that category
     public function category($slug=NULL){
+		$this->visitorlogs('News','category');
         $CmsTable = TableRegistry::get('Cms');
         $cms_data = $CmsTable->get(2);
 		$title = $cms_data->title;
@@ -209,7 +212,7 @@ class NewsController extends AppController{
 		
 		$NewsCategoryTable = TableRegistry::get('NewsCategories');
 		$all_related_ids = array();
-		/*$cat_options['contain']		= ['ChildsCategories'=>['fields'=>['id','parent_id']]];
+		/*$cat_options['contain']	= ['ChildsCategories'=>['fields'=>['id','parent_id']]];
 		$cat_options['conditions'] 	= ['status'=>'A', 'slug'=>$slug];
 		$cat_options['fields'] 		= ['id','name','parent_id'];
 		$category_data = $NewsCategoryTable->find('all',$cat_options)->toArray();
@@ -270,6 +273,7 @@ class NewsController extends AppController{
 		if($id == NULL){
             return $this->redirect(['controller' => '/', 'action' => 'viewSubmissions']);
         }
+		$this->visitorlogs('News','editSubmittedNewsComment');
 		$title = 'Edit News Comment';
 		$NewsCommentTable = TableRegistry::get('NewsComment');
         $id = base64_decode($id);

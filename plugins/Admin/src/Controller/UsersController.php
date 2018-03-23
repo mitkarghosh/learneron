@@ -33,7 +33,7 @@ class UsersController extends AppController{
             // ************** start search filter **************** //
             if ($this->request->is('get')) {
 				if (isset($this->request->query['search']) && !empty($this->request->query['search'])){					
-                    $name = explode(' ', $this->request->query['search']);
+                    $name = explode(' ', trim($this->request->query['search']));
                     if (isset($name[1])) {
                         if (!empty($name[1])) {
                            $options['conditions']['OR'][] = array('OR' => array('Users.name LIKE' => $name[0].'%'));
@@ -87,104 +87,144 @@ class UsersController extends AppController{
         }
     }
 	
-	public function downloadReports(){
-		$options['contain'] = ['Visitors','Visitors.VisitorLogs'];			
-		$options['order'] 	= ['Users.id'=>'ASC'];
-		//$options['fields'] 	= ['Users.*'];
-		$UserDetails 		= TableRegistry::get('Admin.Users');
-		$details 			= $UserDetails->find('all', $options)->toArray();
-		//pr($details); die;
-		
-		$objPHPExcel = new \PHPExcel();
-		$objPHPExcel->getProperties()->setCreator("Tech Times.")
-									 ->setLastModifiedBy("Tech Times")
-									 ->setTitle("Report")
-									 ->setSubject("Report Document")
-									 ->setDescription("Report, generated using PHP classes.")
-									 ->setKeywords("Report")
-									 ->setCategory("all");                                           
-		// Set fonts                              
-		$objPHPExcel->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
-		$objPHPExcel->getActiveSheet()->getStyle('B1')->getFont()->setBold(true);
-		$objPHPExcel->getActiveSheet()->getStyle('C1')->getFont()->setBold(true);
-		$objPHPExcel->getActiveSheet()->getStyle('D1')->getFont()->setBold(true);
-		$objPHPExcel->getActiveSheet()
-					->setCellValue('A1', 'Full Name')
-					->setCellValue('B1', 'Email')
-					->setCellValue('C1', 'Location')
-					->setCellValue('D1', 'Notification Email');
-		$str = "EFGHIJKLMNOPQRSTUVWXYZ";
-		$i=0;
-		/*foreach($Ingredients_data as $parent){
-			if(empty($parent->Child)){ 
-				$objPHPExcel->getActiveSheet()
-						->setCellValue($str[$i].'1', $parent->ingredient_name);
-						$objPHPExcel->getActiveSheet()->getStyle($str[$i].'1')->getFont()->setBold(true);
-			}else{
-				$k=1;
-				foreach($parent->Child as $child){
-					$objPHPExcel->getActiveSheet()
-						->setCellValue($str[$i].'1', $child->ingredient_name);
-						  $objPHPExcel->getActiveSheet()->getStyle($str[$i].'1')->getFont()->setBold(true);
-					if($k<count($parent->Child)){
-						$i = $i+1;
-					}
-					$k++;
-				}
-			}
-			$i = $i+1;
-		}*/
-		// Rename sheet
-		$objPHPExcel->getActiveSheet()->setTitle('Personal Details');
-		
-		// Set active sheet index to the first sheet, so Excel opens this as the first sheet
-		$cell = 2;
-		foreach($details as $value){
+	public function downloadReports($id=NULL){
+		$this->viewBuilder()->layout('ajax');
+		$this->autoRender = false;
+		if( !empty($id) ){
+			$id = base64_decode($id);
+			
+			$objPHPExcel = new \PHPExcel();
+			$objPHPExcel->getProperties()->setCreator("Tech Times.")
+										 ->setLastModifiedBy("Tech Times")
+										 ->setTitle("Report")
+										 ->setSubject("Report Document")
+										 ->setDescription("Report, generated using PHP classes.")
+										 ->setKeywords("Report")
+										 ->setCategory("all");
+			
+			/*---------Personal Details-----------*/
+			$options['contain'] 	= ['Visitors','Visitors.VisitorLogs'];			
+			$options['conditions'] 	= ['Users.id'=>$id];
+			$options['order'] 		= ['Users.id'=>'ASC'];
+			//$options['fields'] 	= ['Users.*'];
+			$UserDetails 			= TableRegistry::get('Admin.Users');
+			$details 				= $UserDetails->find('all', $options)->first()->toArray();
+			//pr($details); die;
+			
+			// Set fonts                              
+			$objPHPExcel->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
+			$objPHPExcel->getActiveSheet()->getStyle('B1')->getFont()->setBold(true);
+			$objPHPExcel->getActiveSheet()->getStyle('C1')->getFont()->setBold(true);
+			$objPHPExcel->getActiveSheet()
+						->setCellValue('A1', 'Name')
+						->setCellValue('B1', 'Email')
+						->setCellValue('C1', 'Location');
+			
+			// Rename sheet
+			$objPHPExcel->getActiveSheet()->setTitle('Personal Details');
+			
+			//Set values
 			$objPHPExcel->setActiveSheetIndex(0)
-								->setCellValue('A'.$cell, $value->full_name)
-								->setCellValue('B'.$cell, $value->email)
-								->setCellValue('C'.$cell, $value->location)
-								->setCellValue('D'.$cell, $value->notification_email);
-			$str = "EFGHIJKLMNOPQRSTUVWXYZ";
-			$i=0;
-			/*foreach($Ingredients_data as $parent){
-				if(empty($parent->Child)){ 
-					foreach($value->product->product_ingredients as $ing){
-						 if($parent->id == $ing->parent_ingredient_id){
-							$objPHPExcel->setActiveSheetIndex(0)
-									->setCellValue($str[$i].$cell, $ing->weight*$value->qty.' KG');
-						}
-					 }
-				}else{ 
-					$k=1;
-					foreach($parent->Child as $child){
-						foreach($value->product->product_ingredients as $ing){
-							if($parent->id == $ing->parent_ingredient_id && $child->id == $ing->child_ingredient_id){ 
-								$objPHPExcel->setActiveSheetIndex(0)
-									->setCellValue($str[$i].$cell, $ing->weight*$value->qty.' KG');
-							}
-						}
-						if($k<count($parent->Child)){
-							$i = $i+1;
-						}
-						$k++;
-					}
+                                    ->setCellValue('A2', $details['name'])
+                                    ->setCellValue('B2', $details['email'])
+                                    ->setCellValue('C2', $details['location']);
+			/*---------Personal Details-----------*/
+			
+			/*---------QUESTION POSTED-----------*/
+			$objQuestionPosted = $objPHPExcel->createSheet(1); //Setting index when creating
+			$objQuestionPosted->getStyle('A1')->getFont()->setBold(true);
+			$objQuestionPosted->getStyle('B1')->getFont()->setBold(true);
+			$objQuestionPosted->getStyle('C1')->getFont()->setBold(true);
+			$objQuestionPosted->getStyle('D1')->getFont()->setBold(true);			
+			$objQuestionPosted  ->setCellValue('A1', 'Question')
+								->setCellValue('B1', 'Category')
+								->setCellValue('C1', 'Created On')
+								->setCellValue('D1', 'Status');
+			
+			$QuestionTable = TableRegistry::get('Admin.Questions');
+			$submitted_questions = $QuestionTable->find('all',['contain'=>['QuestionCategories'],'conditions'=>['user_id'=>$id],'fields'=>['id','category_id','user_id','name','is_featured','status','created','QuestionCategories.id','QuestionCategories.name'],'order'=>['Questions.id DESC']])->toArray();
+			if( !empty($submitted_questions) ){
+				$pq = 2;
+				foreach($submitted_questions as $val_sq){
+					if($val_sq->question_category->name != '') $catname = $val_sq->question_category->name; else $catname = 'N/A';
+					if($val_sq->status == 'I') $status = 'Inactive'; else $status = 'Active';
+					$objQuestionPosted->setCellValue('A'.$pq, $val_sq->name)
+									  ->setCellValue('B'.$pq, $catname)
+									  ->setCellValue('C'.$pq, date('jS F Y', strtotime($val_sq->created)))
+									  ->setCellValue('D'.$pq, $status);
+					$pq++;
 				}
-				$i = $i+1;
-			}*/
-			$cell++;
+			}								
+			$objQuestionPosted->setTitle('Questions Posted');
+			/*---------QUESTION POSTED-----------*/
+			
+			/*---------ANSWER POSTED-----------*/
+			$objAnswerPosted = $objPHPExcel->createSheet(2); //Setting index when creating
+			$objAnswerPosted->getStyle('A1')->getFont()->setBold(true);
+			$objAnswerPosted->getStyle('B1')->getFont()->setBold(true);
+			$objAnswerPosted->getStyle('C1')->getFont()->setBold(true);
+			$objAnswerPosted->getStyle('D1')->getFont()->setBold(true);			
+			$objAnswerPosted->setCellValue('A1', 'Answer')
+							->setCellValue('B1', 'Question')
+							->setCellValue('C1', 'Created On')
+							->setCellValue('D1', 'Status');
+			
+			$QuestionAnswersTable = TableRegistry::get('QuestionAnswer');
+			$answer_details = $QuestionAnswersTable->find('all',['contain'=>['Questions'=>['fields'=>['id','user_id','name']]],'conditions'=>['QuestionAnswer.user_id'=>$id],'fields'=>['QuestionAnswer.id','QuestionAnswer.question_id','QuestionAnswer.user_id','QuestionAnswer.learning_path_recommendation','QuestionAnswer.status','QuestionAnswer.created'],'order'=>['QuestionAnswer.id DESC']])->toArray();
+			if( !empty($answer_details) ){
+				$pa = 2;
+				foreach($answer_details as $val_ad){
+					if($val_ad->status == 'I') $status = 'Inactive'; else $status = 'Active';
+					$objAnswerPosted->setCellValue	('A'.$pa, strip_tags($val_ad->learning_path_recommendation))
+									  ->setCellValue('B'.$pa, $val_ad->question->name)
+									  ->setCellValue('C'.$pa, date('jS F Y', strtotime($val_ad->created)))
+									  ->setCellValue('D'.$pa, $status);
+					$pa++;
+				}
+			}								
+			$objAnswerPosted->setTitle('Asnwers Posted');
+			/*---------ANSWER POSTED-----------*/
+			
+			/*---------COMMENTS POSTED-----------*/
+			$objAnswerPosted = $objPHPExcel->createSheet(3); //Setting index when creating
+			$objAnswerPosted->getStyle('A1')->getFont()->setBold(true);
+			$objAnswerPosted->getStyle('B1')->getFont()->setBold(true);
+			$objAnswerPosted->getStyle('C1')->getFont()->setBold(true);
+			$objAnswerPosted->getStyle('D1')->getFont()->setBold(true);			
+			$objAnswerPosted->setCellValue('A1', 'Comment')
+							->setCellValue('B1', 'Question')
+							->setCellValue('C1', 'Created On')
+							->setCellValue('D1', 'Status');
+			
+			$QuestionCommentTable = TableRegistry::get('QuestionComment');
+			$comment_details = $QuestionCommentTable->find('all',['contain'=>['Questions'=>['fields'=>['id','user_id','name']]],'conditions'=>['QuestionComment.user_id'=>$id],'fields'=>['QuestionComment.id','QuestionComment.question_id','QuestionComment.user_id','QuestionComment.comment','QuestionComment.status','QuestionComment.created'],'order'=>['QuestionComment.id DESC']])->toArray();
+			if( !empty($comment_details) ){
+				$cd = 2;
+				foreach($comment_details as $val_cd){
+					if($val_cd->status == 'I') $status = 'Inactive'; else $status = 'Active';
+					$objAnswerPosted->setCellValue	('A'.$cd, strip_tags($val_cd->comment))
+									  ->setCellValue('B'.$cd, $val_cd->question->name)
+									  ->setCellValue('C'.$cd, date('jS F Y', strtotime($val_cd->created)))
+									  ->setCellValue('D'.$cd, $status);
+					$cd++;
+				}
+			}								
+			$objAnswerPosted->setTitle('Comments Posted');
+			/*---------COMMENTS POSTED-----------*/			
+			$objPHPExcel->setActiveSheetIndex(0);
+			
+			$file_name= 'User_report_'.time().'.xlsx';
+			header('Content-type: application/vnd.ms-excel');
+			header('Content-Disposition: attachment; filename= '.$file_name);
+			header('Cache-Control: max-age=0');
+			header('Expires: Mon, 31 Dec 2030 05:00:00 GMT');
+			header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+			header('Cache-Control: cache, must-revalidate');
+			header('Pragma: public');
+			$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+			$objWriter->save('php://output');			
+			exit();
 		}
-		$file_name= 'User_report_'.time().'.xlsx';  
-		header('Content-type: application/vnd.ms-excel');
-		header('Content-Disposition: attachment; filename= '.$file_name);
-		header('Cache-Control: max-age=0');
-		header ('Expires: Mon, 31 Dec 2030 05:00:00 GMT');
-		header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
-		header ('Cache-Control: cache, must-revalidate');
-		header ('Pragma: public');
-		$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-		$objWriter->save('php://output');
-		exit();
 	}
 
     public function addUser(){

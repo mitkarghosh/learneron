@@ -34,7 +34,7 @@ class NewsController extends AppController{
     
 	//All news listing page
     public function newsListing(){
-		$this->visitorlogs('News','newsListing');
+		$this->visitorlogs('News','newsListing','News Listing',NULL,NULL);
         $NewsTable = TableRegistry::get('News');
         $CmsTable = TableRegistry::get('Cms');
         $cms_data = $CmsTable->get(2);
@@ -56,6 +56,8 @@ class NewsController extends AppController{
 	//All news listing -> Pagination page
 	public function search(){
         if($this->request->is('post')){
+			$this->visitorlogs('News','search','More News',NULL,NULL);	//Log details insertion
+			
 			$options['contain']		= ['NewsCategories'=>['fields'=>['NewsCategories.id','NewsCategories.name','NewsCategories.parent_id']], 'NewsCategories.ParentCategory'=>['fields'=>['ParentCategory.id','ParentCategory.name']], 'Users'=>['fields'=>['Users.id','Users.name']],'NewsComment'=>['conditions'=>['NewsComment.status'=>1],'fields'=>['NewsComment.id','NewsComment.news_id']]];
 			$options['conditions']	= ['News.status'=>'A'];
 			$options['fields']		= ['News.id','News.category_id','News.user_id','News.name','News.slug','News.description','News.image','News.view','News.created'];
@@ -71,11 +73,12 @@ class NewsController extends AppController{
 		if($slug=='' && $slug==NULL){
 			$this->redirect(['controller' => 'News', 'action' => 'index']);
 		}else{
-			$this->visitorlogs('News','details');
 			$NewsTable = TableRegistry::get('News');
 			$options['contain'] = ['Users'=>['fields'=>['Users.id','Users.name','Users.profile_pic']],'NewsComment'=>['conditions'=>['NewsComment.status'=>1],'fields'=>['NewsComment.id','NewsComment.user_id','NewsComment.news_id','NewsComment.name','NewsComment.email','NewsComment.status','NewsComment.created']]];
 			$options['conditions']= ['slug'=>$slug];
 			$news_detail = $NewsTable->find('all',$options)->first()->toArray();
+			
+			$this->visitorlogs('News','details','News Details',$news_detail['id'],NULL);	//Log details insertion
 			
 			//comment section start here
 			$NewsCommentTable = TableRegistry::get('NewsComment');
@@ -114,13 +117,16 @@ class NewsController extends AppController{
         $this->render(false);
 		if($this->request->is(['post','put'])){
 			if(array_key_exists('news_id',$this->request->data) && $this->request->data['news_id'] != ''){
+				$this->request->data['news_id'] = isset($this->request->data['news_id'])?base64_decode($this->request->data['news_id']):0;
+				$this->request->data['user_ip'] = $this->getUserIP();
+				
+				$this->visitorlogs('News','details','News Comment', $this->request->data['news_id'],NULL);	//Log details insertion
+				
 				if(!empty($this->Auth->user())){
 					$this->request->data['user_id'] = $this->Auth->user('id');
 				}else{
 					$this->request->data['user_id'] = 0;
-				}
-				$this->request->data['news_id'] = isset($this->request->data['news_id'])?base64_decode($this->request->data['news_id']):0;
-				$this->request->data['user_ip'] = $this->getUserIP();
+				}				
 				$active_permission = $this->getSiteSettings();
 				if(!empty($active_permission)){
 					if($active_permission['news_comment_approval']==1){
@@ -187,7 +193,8 @@ class NewsController extends AppController{
 				$options['conditions']	= ['News.slug'=>$slug];
 				$options['fields']		= ['News.id'];
 				$news_detail = $NewsTable->find('all',$options)->first()->toArray();				
-				if($news_detail['id'] != ''){
+				if($news_detail['id'] != ''){					
+					$this->visitorlogs('News','searchComments','More News Comment',$news_detail['id'],NULL);	//Log details insertion
 					$NewsCommentTable = TableRegistry::get('NewsComment');
 					$com_options['contain'] 	= ['Users'=>['fields'=>['Users.id','Users.name','Users.profile_pic']]];
 					$com_options['conditions'] 	= ['NewsComment.status'=>1];
@@ -203,8 +210,7 @@ class NewsController extends AppController{
 	
 	//News category page (after clicking any category) -> News listing under that category
     public function category($slug=NULL){
-		$this->visitorlogs('News','category');
-        $CmsTable = TableRegistry::get('Cms');
+		$CmsTable = TableRegistry::get('Cms');
         $cms_data = $CmsTable->get(2);
 		$title = $cms_data->title;
 		$meta_keywords = $cms_data->meta_keywords;
@@ -234,7 +240,9 @@ class NewsController extends AppController{
 		$category_data = $NewsCategoryTable->find('all',$cat_options)->first()->toArray();
 		$get_category_name = $category_data['name'];
 		$all_related_ids[] = $category_data['id'];
-				
+		
+		$this->visitorlogs('News','category','News Category', NULL, $category_data['id']);	//Log details insertion
+		
 		$options['contain']		= ['NewsCategories'=>['fields'=>['NewsCategories.id','NewsCategories.name','NewsCategories.parent_id']], 'NewsCategories.ParentCategory'=>['fields'=>['ParentCategory.id','ParentCategory.name']], 'Users'=>['fields'=>['Users.id','Users.name']]];
 		$options['conditions']	= ['News.status'=>'A', 'News.category_id IN'=>$all_related_ids];
 		$options['fields']		= ['News.id','News.category_id','News.user_id','News.name','News.slug','News.description','News.image','News.view','News.created'];
@@ -254,9 +262,12 @@ class NewsController extends AppController{
 			$cat_options['conditions'] 	= ['status'=>'A', 'slug'=>$slug];
 			$cat_options['fields'] 		= ['id','name','parent_id'];
 			$category_data = $NewsCategoryTable->find('all',$cat_options)->first()->toArray();
+			
+			$this->visitorlogs('News','searchCategoryNews','More News from Category', NULL, $category_data['id']);	//Log details insertion
+			
 			$get_category_name = $category_data['name'];
 			$all_related_ids[] = $category_data['id'];
-					
+			
 			$options['contain']		= ['NewsCategories'=>['fields'=>['NewsCategories.id','NewsCategories.name','NewsCategories.parent_id']], 'NewsCategories.ParentCategory'=>['fields'=>['ParentCategory.id','ParentCategory.name']], 'Users'=>['fields'=>['Users.id','Users.name']]];
 			$options['conditions']	= ['News.status'=>'A', 'News.category_id IN'=>$all_related_ids];
 			$options['fields']		= ['News.id','News.category_id','News.user_id','News.name','News.slug','News.description','News.image','News.view','News.created'];
@@ -273,7 +284,8 @@ class NewsController extends AppController{
 		if($id == NULL){
             return $this->redirect(['controller' => '/', 'action' => 'viewSubmissions']);
         }
-		$this->visitorlogs('News','editSubmittedNewsComment');
+		$this->visitorlogs('News','editSubmittedNewsComment','Edited News Comment', NULL, NULL);	//Log details insertion
+		
 		$title = 'Edit News Comment';
 		$NewsCommentTable = TableRegistry::get('NewsComment');
         $id = base64_decode($id);

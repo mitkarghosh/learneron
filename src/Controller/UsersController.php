@@ -31,6 +31,7 @@ class UsersController extends AppController{
     
 	//All users listing page
     public function allUsers(){
+		$this->visitorlogs('Users','allUsers','Users Listing');		//Log details insertion
 		$this->visitorlogs('Users','allUsers');
         $UsersTable = TableRegistry::get('Users');
 		$alphabet_options['conditions']	= ['Users.status'=>'A'];
@@ -74,7 +75,9 @@ class UsersController extends AppController{
 	
 	//All users listing -> Pagination page
 	public function search(){
-        if($this->request->is('post')){			
+        if($this->request->is('post')){
+			$this->visitorlogs('Users','search','More Users',NULL,NULL);	//Log details insertion
+			
 			$UsersTable = TableRegistry::get('Users');
 			$options['contain']		= ['QuestionAnswer'=>['conditions'=>['QuestionAnswer.status'=>'A'],'fields'=>['QuestionAnswer.id','QuestionAnswer.question_id','QuestionAnswer.user_id','QuestionAnswer.status']],'Careereducations'=>['fields'=>['id','user_id','history_type','edu_degree','edu_organization','career_position','career_company']],'Questions'=>['conditions'=>['status'=>'A','user_type'=>'U'],'fields'=>['id','user_id']]];
 			if(empty($this->request->query)){
@@ -103,7 +106,7 @@ class UsersController extends AppController{
 	
 	//Signup page
     public function signup(){
-		$this->visitorlogs('Users','signup');
+		//$this->visitorlogs('Users','signup');
 		$title = 'Sign Up';
 		if($this->request->is('post')){	//signup form submit
 			if($this->request->data['email'] != ''){
@@ -118,6 +121,7 @@ class UsersController extends AppController{
 				$data_to_insert = $UsersTable->patchEntity($newUsers, $this->request->data);
 				if($savedData = $UsersTable->save($data_to_insert)){
 					$insert_user_id = $savedData->id;
+					$this->visitorlogs('Users','signup','Signup',NULL,NULL,$insert_user_id);	//Log details insertion
 					$url = Router::url('/', true).'users/verify/'.$this->request->data['signup_string'].'/'.base64_encode(time());
 					$settings = $this->getSiteSettings();
 					//if($this->Email->userRegister($this->request->data['email'], $url, $this->request->data, $settings)){
@@ -143,6 +147,7 @@ class UsersController extends AppController{
 				$UsersTable = TableRegistry::get('Users');
 				$user = $UsersTable->get($this->request->data['user_id']);			
 				$updated_data = $UsersTable->patchEntity($user, $this->request->data);
+				$this->visitorlogs('Users','signupSetting','Setting in Signup',NULL,NULL,$this->request->data['user_id']);
 				if($savedData = $UsersTable->save($updated_data)) {
 					echo json_encode(['register'=>'success']);
 					exit();
@@ -188,6 +193,7 @@ class UsersController extends AppController{
                 $session->write('from_verify', 'expired');
                 return $this->redirect(Router::url(array('controller'=>'Users','action'=>'signup'), true));
             }else{
+				$this->visitorlogs('Users','verify','User Account Verification',NULL,NULL);		//Log details insertion
                 $query = $user->query();
                 $query->update()
                     ->set(['status' => 'A', 'is_verified'=>'1', 'signup_string'=>''])
@@ -206,7 +212,7 @@ class UsersController extends AppController{
 	
 	//Login page
     public function login(){
-		$this->visitorlogs('Users','login');
+		//$this->visitorlogs('Users','login');
 		$title = 'Login';
 		$session = $this->request->session();
 		$UsersTable = TableRegistry::get('Users');
@@ -232,6 +238,7 @@ class UsersController extends AppController{
 							}else{
 								$session->write('Users.remember_me', '');
 							}
+							$this->visitorlogs('Users','login','Login',NULL,NULL,$user['id']);
 							if($user['type']=='N'){
 								$this->Auth->setUser($user);
 								$query = $UsersTable->query();
@@ -277,6 +284,7 @@ class UsersController extends AppController{
         $session = $this->request->session();
 		$UsersTable = TableRegistry::get('Users');
 		$query = $UsersTable->query();
+		$this->visitorlogs('Users','logout','Logout',NULL,NULL,$this->Auth->user('id'));	//Log details insertion
 		$query->update()
 			->set(['loggedin_status'=>0])
 			->where(['id'=>$this->Auth->user('id')])
@@ -358,28 +366,26 @@ class UsersController extends AppController{
 	
 	//myAccount function for user dashboard page
 	public function myAccount(){
-		$this->visitorlogs('Users','myAccount');
 		$title = 'My Account';
 		$session = $this->request->session();
 		$user_data = $session->read('Auth.Users');
-		$UsersTable = TableRegistry::get('Users');
-		
+		$UsersTable = TableRegistry::get('Users');		
 		$option['contain']	  = ['Careereducations'];
 		$option['conditions'] = ['Users.id'=>$user_data['id'], 'Users.status'=>'A'];
 		$option['fields'] 	  = ['id','name','profile_pic','location','title','email','full_name','birthday','about_me','type','facebook_link','twitter_link','gplus_link','linkedin_link','status'];
 		$user_related_details = $UsersTable->find('all', $option)->first();
+		$this->visitorlogs('Users','myAccount','My Account',NULL,NULL,$user_data['id']);	//Log details insertion
 		//pr($user_related_details); die;
 		$this->set(compact('user_data','user_related_details','title'));
 	}
 	
 	//editProfile function for user edit profile page
 	public function editProfile(){
-		$this->visitorlogs('Users','editProfile');
 		$title = 'Edit Profile';
 		$session = $this->request->session();
 		$user_data = $session->read('Auth.Users');
-		$UsersTable = TableRegistry::get('Users');
-		
+		$UsersTable = TableRegistry::get('Users');		
+		$this->visitorlogs('Users','editProfile','Edit Profile',NULL,NULL,$user_data['id']);	//Log details insertion
 		$option['contain']	  = ['Careereducations'];
 		$option['conditions'] = ['Users.id'=>$user_data['id']];
 		$user_related_details = $UsersTable->find('all', $option)->first();

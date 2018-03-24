@@ -438,7 +438,7 @@ class AppController extends Controller
         return $data;
     }
 	
-	public function visitorlogs($controller_name=NULL, $method_name=NULL){
+	public function visitorlogs($controller_name=NULL, $method_name=NULL, $page_name=NULL, $news_id=NULL, $news_category_id=NULL, $userid=NULL){
 		$loggedin_user_id 	= $this->Auth->user('id');
 		$VisitorTable 		= TableRegistry::get('Visitor');
 		$VisitorLogTable 	= TableRegistry::get('VisitorLog');
@@ -448,6 +448,10 @@ class AppController extends Controller
 		//$method 			= isset($this->request->params)?$this->request->params['action']:'';
 		$controller 		= isset($controller_name)?$controller_name:'';
 		$method 			= isset($method_name)?$method_name:'';
+		$page_name 			= isset($page_name)?$page_name:'';
+		$news_id 			= isset($news_id)?$news_id:'';
+		$news_category_id 	= isset($news_category_id)?$news_category_id:'';
+		$user_id 			= isset($userid)?$userid:'';
 		
 		if( $loggedin_user_id == '' ){
 			//First checking is for USER IP is already exist or not
@@ -458,9 +462,15 @@ class AppController extends Controller
 				$count = $VisitorLogTable->find('all',['conditions'=>['VisitorLog.visitor_id'=>$visitor_last_id,'VisitorLog.page_url'=>$current_url,'VisitorLog.visited_time LIKE'=>date('Y-m-d').'%']])->count();
 				if( $count == 0 ){
 					$visitor_log_data['visitor_id'] 	= $visitor_last_id;
+					$visitor_log_data['page_name'] 		= $page_name;
 					$visitor_log_data['page_url'] 		= $current_url;
 					$visitor_log_data['controller'] 	= $controller;
 					$visitor_log_data['method'] 		= $method;
+					if($controller == 'News'){
+						$visitor_log_data['news_id'] 	= $news_id;
+						$visitor_log_data['news_category_id'] 	= $news_category_id;
+					}					
+					$visitor_log_data['user_id'] 		= $user_id;
 					$visitor_log_data['visited_time'] 	= date('Y-m-d H:i:s');
 					$VisitorLogNewEntity 				= $VisitorLogTable->newEntity();
 					$insert_log 						= $VisitorLogTable->patchEntity($VisitorLogNewEntity, $visitor_log_data);
@@ -475,9 +485,15 @@ class AppController extends Controller
 				if( $saved_data = $VisitorTable->save($insert) ){
 					$visitor_last_id 					= $saved_data->id;					
 					$visitor_log_data['visitor_id'] 	= $visitor_last_id;
+					$visitor_log_data['page_name'] 		= $page_name;
 					$visitor_log_data['page_url'] 		= $current_url;
 					$visitor_log_data['controller'] 	= $controller;
 					$visitor_log_data['method'] 		= $method;
+					if($controller == 'News'){
+						$visitor_log_data['news_id'] 	= $news_id;
+						$visitor_log_data['news_category_id'] 	= $news_category_id;
+					}
+					$visitor_log_data['user_id'] 		= $user_id;
 					$visitor_log_data['visited_time'] 	= date('Y-m-d H:i:s');
 					$VisitorLogNewEntity 				= $VisitorLogTable->newEntity();
 					$insert_log 						= $VisitorLogTable->patchEntity($VisitorLogNewEntity, $visitor_log_data);
@@ -493,9 +509,15 @@ class AppController extends Controller
 				$count = $VisitorLogTable->find('all',['conditions'=>['VisitorLog.visitor_id'=>$visitor_last_id,'VisitorLog.page_url'=>$current_url,'VisitorLog.visited_time LIKE'=>date('Y-m-d').'%']])->count();
 				if( $count == 0 ){
 					$visitor_log_data['visitor_id'] 	= $visitor_last_id;
+					$visitor_log_data['page_name'] 		= $page_name;
 					$visitor_log_data['page_url'] 		= $current_url;
 					$visitor_log_data['controller'] 	= $controller;
 					$visitor_log_data['method'] 		= $method;
+					if($controller == 'News'){
+						$visitor_log_data['news_id'] 	= $news_id;
+						$visitor_log_data['news_category_id'] 	= $news_category_id;
+					}
+					$visitor_log_data['user_id'] 		= $loggedin_user_id;
 					$visitor_log_data['visited_time'] 	= date('Y-m-d H:i:s');
 					$VisitorLogNewEntity 				= $VisitorLogTable->newEntity();
 					$insert_log 						= $VisitorLogTable->patchEntity($VisitorLogNewEntity, $visitor_log_data);
@@ -510,9 +532,15 @@ class AppController extends Controller
 				if( $saved_data = $VisitorTable->save($insert) ){
 					$visitor_last_id 					= $saved_data->id;					
 					$visitor_log_data['visitor_id'] 	= $visitor_last_id;
+					$visitor_log_data['page_name'] 		= $page_name;
 					$visitor_log_data['page_url'] 		= $current_url;
 					$visitor_log_data['controller'] 	= $controller;
 					$visitor_log_data['method'] 		= $method;
+					if($controller == 'News'){
+						$visitor_log_data['news_id'] 	= $news_id;
+						$visitor_log_data['news_category_id'] 	= $news_category_id;
+					}
+					$visitor_log_data['user_id'] 		= $loggedin_user_id;
 					$visitor_log_data['visited_time'] 	= date('Y-m-d H:i:s');
 					$VisitorLogNewEntity 				= $VisitorLogTable->newEntity();
 					$insert_log 						= $VisitorLogTable->patchEntity($VisitorLogNewEntity, $visitor_log_data);

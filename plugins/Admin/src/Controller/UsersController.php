@@ -261,15 +261,17 @@ class UsersController extends AppController{
 			
 			$objPHPExcel->setActiveSheetIndex(0);
 			
-			$file_name= 'User_report_'.time().'.xlsx';
+			$file_name= 'User_report_'.time().'.xls';
 			header('Content-type: application/vnd.ms-excel');
 			header('Content-Disposition: attachment; filename= '.$file_name);
 			header('Cache-Control: max-age=0');
-			header('Expires: Mon, 31 Dec 2030 05:00:00 GMT');
+			/*header('Expires: Mon, 31 Dec 2030 05:00:00 GMT');
 			header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
 			header('Cache-Control: cache, must-revalidate');
 			header('Pragma: public');
-			$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+			$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');*/			
+			$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+			ob_clean();
 			$objWriter->save('php://output');			
 			exit();
 		}

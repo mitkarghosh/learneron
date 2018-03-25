@@ -21,6 +21,7 @@ class QuestionsController extends AppController{
 	
 	//post question page
 	public function postQuestion(){
+		$this->visitorlogs('Questions','postQuestion');
         $this->viewBuilder()->layout('postquestion');
 		$title = 'Post Question';
 		$FaqsTable = TableRegistry::get('Faqs');
@@ -128,6 +129,7 @@ class QuestionsController extends AppController{
 	
 	//Browse all questions (search) page
 	public function allQuestions(){
+		$this->visitorlogs('Questions','allQuestions');
 		$QuestionsTable = TableRegistry::get('Questions');
 		//$featured_question_rightpanel = $this->getFeaturedQuestions();	//mention in AppController
 		$featured_question_rightpanel = '';
@@ -201,6 +203,7 @@ class QuestionsController extends AppController{
 	
 	//mostViewedQuestions function is for Browse all questions page most_viewed questions tab
     public function mostViewedQuestions(){
+		$this->visitorlogs('Questions','mostViewedQuestions');
         $QuestionsTable = TableRegistry::get('Questions');
 		
 		//$featured_question_rightpanel = $this->getFeaturedQuestions();	//mention in AppController
@@ -276,6 +279,7 @@ class QuestionsController extends AppController{
 		if($slug=='' && $slug==NULL){
 			$this->redirect(['controller' => 'Questions', 'action' => 'all-questions']);
 		}else{
+			$this->visitorlogs('Questions','questionCategory');
 			$QuestionCategoriesTable = TableRegistry::get('QuestionCategories');
 			$category_data = $QuestionCategoriesTable->find('all',['conditions'=>['QuestionCategories.slug'=>$slug, 'QuestionCategories.status'=>'A'],'fields'=>['QuestionCategories.id','QuestionCategories.name','QuestionCategories.slug']])->first();
 			$QuestionsTable = TableRegistry::get('Questions');
@@ -318,6 +322,7 @@ class QuestionsController extends AppController{
 			$this->redirect(Router::url(array('controller'=>'Sites','action'=>'home-page'), true));
 		}else{
 			$id = base64_decode($id);
+			$this->visitorlogs('Questions','details');
 			$QuestionsTable = TableRegistry::get('Questions');
 			//$featured_question_rightpanel = $this->getFeaturedQuestions();	//mention in AppController
 			$latest_news_rightpanel = $this->getLatestNews();					//mention in AppController
@@ -653,6 +658,7 @@ class QuestionsController extends AppController{
 	
 	//Un-answered questions for question listing page
 	public function unAnsweredQuestions(){
+		$this->visitorlogs('Questions','unAnsweredQuestions');
         $QuestionsTable = TableRegistry::get('Questions');
 		$total_questions = $QuestionsTable->find('all', ['conditions'=>['status'=>'A']] )->count();
 		$UsersTable = TableRegistry::get('Users');
@@ -777,6 +783,7 @@ class QuestionsController extends AppController{
 		if($slug=='' && $slug==NULL){
 			$this->redirect(['controller' => 'Questions', 'action' => 'all-questions']);
 		}else{
+			$this->visitorlogs('Questions','questionTag');
 			$TagsTable = TableRegistry::get('Tags');
 			$tagdata = $TagsTable->find('all', ['conditions'=>['Tags.status'=>'A','Tags.slug'=>$slug],'fields'=>['id','title','slug']])->first();
 			//$featured_question_rightpanel = $this->getFeaturedQuestions();	//mention in AppController
@@ -831,6 +838,7 @@ class QuestionsController extends AppController{
 		if($id == NULL){
             return $this->redirect(['controller' => '/', 'action' => 'viewSubmissions']);
         }
+		$this->visitorlogs('Questions','editSubmittedQuestion');
 		$this->viewBuilder()->layout('postquestion');
 		$title = 'Edit Post Question';
 		$FaqsTable = TableRegistry::get('Faqs');
@@ -898,6 +906,7 @@ class QuestionsController extends AppController{
 		if($id == NULL){
             return $this->redirect(['controller' => '/', 'action' => 'viewSubmissions']);
         }
+		$this->visitorlogs('Questions','editSubmittedQuestionComment');
 		$title = 'Edit Question Comment';
 		$QuestionCommentTable = TableRegistry::get('QuestionComment');
         $id = base64_decode($id);
@@ -921,6 +930,7 @@ class QuestionsController extends AppController{
 		if($id == NULL){
             return $this->redirect(['controller' => '/', 'action' => 'viewSubmissions']);
         }
+		$this->visitorlogs('Questions','editSubmittedQuestionAnswer');
 		$title = 'Edit Question Answer';
 		$this->viewBuilder()->layout('postquestion');
 		$QuestionAnswerTable = TableRegistry::get('QuestionAnswer');
@@ -945,6 +955,7 @@ class QuestionsController extends AppController{
 		if($id == NULL){
             return $this->redirect(['controller' => '/', 'action' => 'viewSubmissions']);
         }
+		$this->visitorlogs('Questions','editSubmittedQuestionAnswerComment');
 		$title = 'Edit Question Answer Comment';
 		$AnswerCommentTable = TableRegistry::get('AnswerComment');
         $id = base64_decode($id);

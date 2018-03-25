@@ -45,7 +45,7 @@ class QuestionsController extends AppController{
 			}
 			// *********** end of search filter *********************** //
 			
-			$options['contain'] = ['QuestionCategories','QuestionTags.Tags'=>['fields'=>['Tags.id','Tags.title']],'QuestionAnswers'=>['conditions'=>['QuestionAnswers.status'=>'I'],'fields'=>['QuestionAnswers.id','QuestionAnswers.question_id','QuestionAnswers.learning_path_recommendation','QuestionAnswers.status']],'QuestionComments'=>['conditions'=>['QuestionComments.status'=>0],'fields'=>['QuestionComments.id','QuestionComments.question_id','QuestionComments.comment','QuestionComments.status']]];			
+			$options['contain'] = ['QuestionCategories','QuestionTags.Tags'=>['fields'=>['Tags.id','Tags.title']],'QuestionAnswers'=>['conditions'=>['QuestionAnswers.status'=>'I'],'fields'=>['QuestionAnswers.id','QuestionAnswers.question_id','QuestionAnswers.learning_path_recommendation','QuestionAnswers.status']],'QuestionComments'=>['conditions'=>['QuestionComments.status'=>0],'fields'=>['QuestionComments.id','QuestionComments.question_id','QuestionComments.comment','QuestionComments.status']]];
             $options['fields'] = ['Questions.id','Questions.name','Questions.is_featured','Questions.created','Questions.status','QuestionCategories.id','QuestionCategories.name'];
 			$options['order'] = array('Questions.id DESC');
             $options['limit'] = $this->paginationLimit;

@@ -25,7 +25,7 @@ class SitesController extends AppController
      * 
      */
     public function homePage(){
-		$this->visitorlogs('Sites','homePage');
+		$this->visitorlogs('Sites','homePage','Front Page');
         $BannersTable = TableRegistry::get('Banners');
 		$all_banners = $BannersTable->find('all',['conditions'=>['status'=>'A'],'order'=>['id asc']])->toArray();		
 		$QuestionsTable = TableRegistry::get('Questions');
@@ -53,7 +53,7 @@ class SitesController extends AppController
 	
 	//Home page latest question listing -> Pagination page
 	public function latestquestionsSearch(){
-		$this->visitorlogs('Sites','latestquestionsSearch');
+		$this->visitorlogs('Sites','latestquestionsSearch','More Latest Question Listing For Home Page');	//Log details insertion
         if($this->request->is('post')){
 			$QuestionsTable = TableRegistry::get('Questions');
 			$options['contain'] 	= ['QuestionCategories','Users'=>['fields'=>['id','name','full_name']],'QuestionTags'=>['fields'=>['id','question_id','tag_id']],'QuestionTags.Tags'=>['fields'=>['id','title','slug']],'QuestionAnswer'=>['conditions'=>['QuestionAnswer.status'=>'A'],'fields'=>['id','question_id'],'AnswerUpvote'=>['conditions'=>['AnswerUpvote.status'=>1],'fields'=>['AnswerUpvote.question_id','AnswerUpvote.answer_id']]]];
@@ -68,7 +68,7 @@ class SitesController extends AppController
 	
 	//mostViewed function is for home page most_viewed questions tab
     public function mostViewed(){
-		$this->visitorlogs('Sites','mostViewed');
+		$this->visitorlogs('Sites','mostViewed','Most Viewed Question Listing For Home Page');	//Log details insertion
         $BannersTable = TableRegistry::get('Banners');
 		$all_banners = $BannersTable->find('all',['conditions'=>['status'=>'A'],'order'=>['id asc']])->toArray();		
 		$QuestionsTable = TableRegistry::get('Questions');
@@ -95,8 +95,8 @@ class SitesController extends AppController
 	
 	//Home page most viewed question listing -> Pagination page
 	public function mostviewedSearch(){
-		$this->visitorlogs('Sites','mostviewedSearch');
-        if($this->request->is('post')){
+		if($this->request->is('post')){
+			$this->visitorlogs('Sites','mostviewedSearch','More Most Viewed Question Listing For Home Page');	//Log details insertion
 			$QuestionsTable = TableRegistry::get('Questions');
 			$options['contain'] 	= ['QuestionCategories','Users'=>['fields'=>['id','name','full_name']],'QuestionTags'=>['fields'=>['id','question_id','tag_id']],'QuestionTags.Tags'=>['fields'=>['id','title','slug']],'QuestionAnswer'=>['conditions'=>['QuestionAnswer.status'=>'A'],'fields'=>['id','question_id'],'AnswerUpvote'=>['conditions'=>['AnswerUpvote.status'=>1],'fields'=>['AnswerUpvote.question_id','AnswerUpvote.answer_id']]]];
 			$options['conditions'] 	= ['Questions.status'=>'A'];
@@ -110,7 +110,7 @@ class SitesController extends AppController
 	
 	//Un-answered questions for home page
 	public function unAnswered(){
-		$this->visitorlogs('Sites','unAnswered');
+		$this->visitorlogs('Sites','unAnswered','Unanswered Question Listing For Home Page');	//Log details insertion
         $BannersTable = TableRegistry::get('Banners');
 		$all_banners = $BannersTable->find('all',['conditions'=>['status'=>'A'],'order'=>['id asc']])->toArray();		
 		$QuestionsTable = TableRegistry::get('Questions');
@@ -146,6 +146,7 @@ class SitesController extends AppController
 	//Home page un answered question listing -> Pagination page
 	public function unansweredSearch(){
         if($this->request->is('post')){
+			$this->visitorlogs('Sites','unansweredSearch','More Unanswered Question Listing For Home Page');	//Log details insertion
 			$QuestionsTable = TableRegistry::get('Questions');
 			//for getting not answered questions
 			$QuestionAnswerTable = TableRegistry::get('QuestionAnswer');
@@ -167,7 +168,7 @@ class SitesController extends AppController
 	
     //About us page
     public function aboutUs(){
-		$this->visitorlogs('Sites','aboutUs');
+		$this->visitorlogs('Sites','aboutUs','About Us');
     	$cms = TableRegistry::get('Cms');
 		$cms_data = $cms->get(3);
         $title = $cms_data->title;
@@ -178,7 +179,7 @@ class SitesController extends AppController
     
 	//Contact us page
     public function contactUs(){
-		$this->visitorlogs('Sites','contactUs');
+		$this->visitorlogs('Sites','contactUs','Contact Us');
     	$title = 'Contact Us';		
 		$ContactTable = TableRegistry::get('Contact');
 		$contact = $ContactTable->newEntity();
@@ -199,7 +200,7 @@ class SitesController extends AppController
     }
     
 	public function faqs(){
-		$this->visitorlogs('Sites','faqs');
+		$this->visitorlogs('Sites','faqs','Faqs');
 		$title = 'Frequently Ask Questions';
 		$faqTable = TableRegistry::get('Faqs');
 		$faqs_data = $faqTable->find('all', ['conditions'=>['status'=>'A'],'order'=>['created'=>'ASC']])->toArray();
@@ -210,6 +211,7 @@ class SitesController extends AppController
         $this->viewBuilder()->layout = false;
         $this->render(false);
         if($this->request->is('post')){
+			$this->visitorlogs('Sites','newsletterSignup','Newsletter Subscriptions');
             $jsonData = $this->request->input('json_decode');
             $newsletter = TableRegistry::get('NewsletterSubscriptions');
             $is_exist = $newsletter->find('all', ['conditions'=>['email'=>$jsonData->email]])->first();
@@ -237,7 +239,7 @@ class SitesController extends AppController
      * @return [type] [description]
      */
     public function termsAndConditions(){
-		$this->visitorlogs('Sites','termsAndConditions');
+		$this->visitorlogs('Sites','termsAndConditions','Terms and Conditions');
         $cms = TableRegistry::get('Cms');
         $cms_data = $cms->get(4);
         $title = $cms_data->title;
@@ -251,7 +253,7 @@ class SitesController extends AppController
      * @return [type] [description]
      */
     public function privacy(){
-		$this->visitorlogs('Sites','privacy');
+		$this->visitorlogs('Sites','privacy','Privacy');
         $cms = TableRegistry::get('Cms');
         $cms_data = $cms->get(5);
         $title = $cms_data->title;

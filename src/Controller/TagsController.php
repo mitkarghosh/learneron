@@ -32,9 +32,8 @@ class TagsController extends AppController{
     
 	//Tags listing page
     public function index(){
-		$this->visitorlogs('Tags','index');
-        $TagsTable = TableRegistry::get('Tags');
-		
+		$this->visitorlogs('Tags','index','Tag Listing');
+		$TagsTable = TableRegistry::get('Tags');		
 		/*$options['contain']		= ['QuestionTags','QuestionTags.Questions'=>['conditions'=>['status'=>'A'],'fields'=>['id','status','created']]];
 		$options['conditions']	= ['Tags.status'=>'A'];
 		$options['order'] 		= ['Tags.title'=>'ASC'];

@@ -116,9 +116,18 @@ class UsersController extends AppController{
 			$objPHPExcel->getActiveSheet()->getStyle('B1')->getFont()->setBold(true);
 			$objPHPExcel->getActiveSheet()->getStyle('C1')->getFont()->setBold(true);
 			$objPHPExcel->getActiveSheet()
-						->setCellValue('A1', 'Name')
+						->setCellValue('A1', 'Nick Name')
 						->setCellValue('B1', 'Email')
-						->setCellValue('C1', 'Location');
+						->setCellValue('C1', 'Location')
+						->setCellValue('D1', 'Title')
+						->setCellValue('E1', 'Full Name')
+						->setCellValue('F1', 'Birthday')
+						->setCellValue('G1', 'About Me')
+						->setCellValue('H1', 'Facebook Link')
+						->setCellValue('I1', 'Twitter Link')
+						->setCellValue('J1', 'Google Plus Link')
+						->setCellValue('K1', 'LinkedIn Link')
+						->setCellValue('L1', 'Account Created');
 			
 			// Rename sheet
 			$objPHPExcel->getActiveSheet()->setTitle('Personal Details');
@@ -127,7 +136,16 @@ class UsersController extends AppController{
 			$objPHPExcel->setActiveSheetIndex(0)
                                     ->setCellValue('A2', $details['name'])
                                     ->setCellValue('B2', $details['email'])
-                                    ->setCellValue('C2', $details['location']);
+                                    ->setCellValue('C2', $details['location'])
+                                    ->setCellValue('D2', $details['title'])
+                                    ->setCellValue('E2', $details['full_name'])
+                                    ->setCellValue('F2', $details['birthday'])
+                                    ->setCellValue('G2', $details['about_me'])
+                                    ->setCellValue('H2', $details['facebook_link'])
+                                    ->setCellValue('I2', $details['twitter_link'])
+                                    ->setCellValue('J2', $details['gplus_link'])
+                                    ->setCellValue('K2', $details['linkedin_link'])
+                                    ->setCellValue('L2', date('jS F Y H:i:s', strtotime($details['created'])));
 			/*---------Personal Details-----------*/
 			
 			/*---------QUESTION POSTED-----------*/
@@ -150,7 +168,7 @@ class UsersController extends AppController{
 					if($val_sq->status == 'I') $status = 'Inactive'; else $status = 'Active';
 					$objQuestionPosted->setCellValue('A'.$pq, $val_sq->name)
 									  ->setCellValue('B'.$pq, $catname)
-									  ->setCellValue('C'.$pq, date('jS F Y', strtotime($val_sq->created)))
+									  ->setCellValue('C'.$pq, date('jS F Y H:i:s', strtotime($val_sq->created)))
 									  ->setCellValue('D'.$pq, $status);
 					$pq++;
 				}
@@ -177,12 +195,12 @@ class UsersController extends AppController{
 					if($val_ad->status == 'I') $status = 'Inactive'; else $status = 'Active';
 					$objAnswerPosted->setCellValue	('A'.$pa, strip_tags($val_ad->learning_path_recommendation))
 									  ->setCellValue('B'.$pa, $val_ad->question->name)
-									  ->setCellValue('C'.$pa, date('jS F Y', strtotime($val_ad->created)))
+									  ->setCellValue('C'.$pa, date('jS F Y H:i:s', strtotime($val_ad->created)))
 									  ->setCellValue('D'.$pa, $status);
 					$pa++;
 				}
 			}								
-			$objAnswerPosted->setTitle('Asnwers Posted');
+			$objAnswerPosted->setTitle('Answers Posted');
 			/*---------ANSWER POSTED-----------*/
 			
 			/*---------COMMENTS POSTED-----------*/
@@ -204,13 +222,43 @@ class UsersController extends AppController{
 					if($val_cd->status == 'I') $status = 'Inactive'; else $status = 'Active';
 					$objAnswerPosted->setCellValue	('A'.$cd, strip_tags($val_cd->comment))
 									  ->setCellValue('B'.$cd, $val_cd->question->name)
-									  ->setCellValue('C'.$cd, date('jS F Y', strtotime($val_cd->created)))
+									  ->setCellValue('C'.$cd, date('jS F Y H:i:s', strtotime($val_cd->created)))
 									  ->setCellValue('D'.$cd, $status);
 					$cd++;
 				}
 			}								
 			$objAnswerPosted->setTitle('Comments Posted');
-			/*---------COMMENTS POSTED-----------*/			
+			/*---------COMMENTS POSTED-----------*/
+			
+			/*---------LOG DETAILS-----------*/
+			$objAnswerPosted = $objPHPExcel->createSheet(4); //Setting index when creating
+			$objAnswerPosted->getStyle('A1')->getFont()->setBold(true);
+			$objAnswerPosted->getStyle('B1')->getFont()->setBold(true);
+			$objAnswerPosted->getStyle('C1')->getFont()->setBold(true);
+			$objAnswerPosted->getStyle('D1')->getFont()->setBold(true);			
+			$objAnswerPosted->setCellValue('A1', 'Sl. No.')
+							->setCellValue('B1', 'Page')
+							->setCellValue('C1', 'Controller')
+							->setCellValue('D1', 'Method')
+							->setCellValue('E1', 'Visited Date & Time');
+			
+			$VisitorTable = TableRegistry::get('Admin.Visitors');
+			$log_details = $VisitorTable->find('all',['contain'=>['VisitorLogs'=>['fields'=>[]]],'conditions'=>['Visitors.user_id'=>$id]])->first();
+			//pr($log_details);die;
+			if( !empty($log_details['visitor_logs']) ){
+				$ld = 2;
+				foreach($log_details['visitor_logs'] as $val_ld){
+					$objAnswerPosted->setCellValue('A'.$ld, ($ld-1))
+									->setCellValue('B'.$ld, $val_ld['page_name'])
+									->setCellValue('C'.$ld, $val_ld['controller'])
+									->setCellValue('D'.$ld, $val_ld['method'])
+									->setCellValue('E'.$ld, date('jS F Y H:i:s', strtotime($val_ld['visited_time'])));
+					$ld++;
+				}
+			}								
+			$objAnswerPosted->setTitle('Log Details');
+			/*---------LOG DETAILS-----------*/
+			
 			$objPHPExcel->setActiveSheetIndex(0);
 			
 			$file_name= 'User_report_'.time().'.xlsx';

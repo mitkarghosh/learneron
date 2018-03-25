@@ -21,8 +21,7 @@ class QuestionsController extends AppController{
 	
 	//post question page
 	public function postQuestion(){
-		$this->visitorlogs('Questions','postQuestion');
-        $this->viewBuilder()->layout('postquestion');
+		$this->viewBuilder()->layout('postquestion');
 		$title = 'Post Question';
 		$FaqsTable = TableRegistry::get('Faqs');
 		$all_faqs = $FaqsTable->find('all',['conditions'=>['status'=>'A'],'order'=>['id'=>'ASC']])->toArray();
@@ -60,6 +59,7 @@ class QuestionsController extends AppController{
 				$inserted_data = $QuestionTable->patchEntity($new_question, $this->request->data);				
 				if($savedData = $QuestionTable->save($inserted_data)){
 					$get_last_insert_id = $savedData->id;
+					$this->visitorlogs('Questions','postQuestionSubmission','Question Submission',NULL,NULL,$this->Auth->user('id'),$get_last_insert_id);	//Log details insertion
 					if(!empty($this->request->data['tags'])){
 						$QuestionTagsTable = TableRegistry::get('QuestionTags');
 						foreach( $this->request->data['tags'] as $key_tag_data => $val_tag_data ){
@@ -129,7 +129,7 @@ class QuestionsController extends AppController{
 	
 	//Browse all questions (search) page
 	public function allQuestions(){
-		$this->visitorlogs('Questions','allQuestions');
+		$this->visitorlogs('Questions','allQuestions','Latest Question Listing',NULL,NULL,NULL,NULL);	//Log details insertion
 		$QuestionsTable = TableRegistry::get('Questions');
 		//$featured_question_rightpanel = $this->getFeaturedQuestions();	//mention in AppController
 		$featured_question_rightpanel = '';
@@ -172,6 +172,7 @@ class QuestionsController extends AppController{
 	//Browse all questions page latest question listing -> Pagination page
 	public function latestquestionsSearch(){
         if($this->request->is('post')){
+			$this->visitorlogs('Questions','latestquestionsSearch','More Latest Question Listing',NULL,NULL,NULL,NULL);	//Log details insertion
 			$QuestionsTable = TableRegistry::get('Questions');
 			if($this->request->query('search') != NULL){
 				$UsersTable = TableRegistry::get('Users');
@@ -203,7 +204,7 @@ class QuestionsController extends AppController{
 	
 	//mostViewedQuestions function is for Browse all questions page most_viewed questions tab
     public function mostViewedQuestions(){
-		$this->visitorlogs('Questions','mostViewedQuestions');
+		$this->visitorlogs('Questions','mostViewedQuestions','Most Viewed Question Listing',NULL,NULL,NULL,NULL);	//Log details insertion
         $QuestionsTable = TableRegistry::get('Questions');
 		
 		//$featured_question_rightpanel = $this->getFeaturedQuestions();	//mention in AppController
@@ -245,6 +246,7 @@ class QuestionsController extends AppController{
 	//Browse all questions page most viewed question listing -> Pagination page
 	public function mostviewedQuestionsSearch(){
         if($this->request->is('post')){
+			$this->visitorlogs('Questions','mostviewedQuestionsSearch','More Most Viewed Question Listing',NULL,NULL,NULL,NULL);	//Log details insertion
 			$QuestionsTable = TableRegistry::get('Questions');
 			if($this->request->query('search') != NULL){
 				$UsersTable = TableRegistry::get('Users');
@@ -274,12 +276,103 @@ class QuestionsController extends AppController{
         }
     }
 	
+	//Un-answered questions for question listing page
+	public function unAnsweredQuestions(){
+		$this->visitorlogs('Questions','unAnsweredQuestions','Unanswered Question Listing',NULL,NULL,NULL,NULL);	//Log details insertion
+        $QuestionsTable = TableRegistry::get('Questions');
+		$total_questions = $QuestionsTable->find('all', ['conditions'=>['status'=>'A']] )->count();
+		$UsersTable = TableRegistry::get('Users');
+		$total_users = $UsersTable->find('all', ['conditions'=>['status'=>'A']] )->count();
+		
+		//$featured_question_rightpanel = $this->getFeaturedQuestions();	//mention in AppController
+		$featured_question_rightpanel = '';
+		$latest_news_rightpanel = $this->getLatestNews();				//mention in AppController
+		$question_categories = $this->getTreeQuestionCategoriesSorted();//mention in AppController
+		
+		//for getting not answered questions
+		$QuestionAnswerTable = TableRegistry::get('QuestionAnswer');
+		$unanswered_ids = $QuestionAnswerTable->find('list', [/*'conditions'=>['QuestionAnswer.status'=>'I'],*/ 'group'=>'QuestionAnswer.question_id', 'keyField'=>'id','valueField'=>'question_id'])->toArray();
+		if(!empty($unanswered_ids)){
+			if($this->request->query('search') != NULL){
+				$UsersTable = TableRegistry::get('Users');
+				$get_match_users = $UsersTable->find('list',['conditions'=>['OR'=>['Users.name LIKE' => '%'.trim($this->request->query('search')).'%','Users.full_name LIKE' => '%'.trim($this->request->query('search')).'%']]])->toArray();
+				if(!empty($get_match_users)){
+					$options['conditions'][] = ['OR'=>[
+														'Questions.name LIKE' => '%'.$this->request->query('search').'%',
+														'Questions.short_description LIKE' => '%'.$this->request->query('search').'%',
+														'Questions.user_id IN' => $get_match_users
+														]
+												];
+				}else{			
+					$options['conditions'][] = ['OR'=>[
+														'Questions.name LIKE' => '%'.$this->request->query('search').'%',
+														'Questions.short_description LIKE' => '%'.$this->request->query('search').'%'
+														]
+												];
+				}
+			}
+			$options['contain'] 	= ['QuestionCategories','Users'=>['fields'=>['id','name','full_name']],'QuestionTags'=>['fields'=>['id','question_id','tag_id']],'QuestionTags.Tags'=>['fields'=>['id','title','slug']],'AnswerUpvote'=>['conditions'=>['AnswerUpvote.status'=>1],'fields'=>['id','question_id']],'QuestionAnswer'=>['conditions'=>['QuestionAnswer.status'=>'I'],'fields'=>['id','question_id']]];
+			$options['conditions'][]= ['Questions.id NOT IN'=>$unanswered_ids,'Questions.status'=>'A'];
+			$options['fields'] 		= ['id','name','user_id','short_description','view','created','QuestionCategories.id','QuestionCategories.name','QuestionCategories.slug'];
+			$options['order'] 		= ['Questions.created DESC'];
+			$options['limit'] 		= $this->limitLatestQuestions;
+			$unanswered_questions 	= $this->paginate($QuestionsTable, $options)->toArray();
+			
+			if($this->request->query('search') != NULL){
+				unset($options['limit']);
+				$total_count = $QuestionsTable->find('all', $options)->count();
+			}
+		}else{
+			$unanswered_questions = array();
+		}
+		//for getting not answered questions
+		$this->set(compact('total_questions','total_users','featured_question_rightpanel','latest_news_rightpanel','question_categories','unanswered_questions','total_count'));
+    }
+	//Browse all question page unanswered question listing -> Pagination page
+	public function unansweredQuestionsSearch(){
+        if($this->request->is('post')){
+			$this->visitorlogs('Questions','unansweredQuestionsSearch','More Unanswered Question Listing',NULL,NULL,NULL,NULL);	//Log details insertion
+			$QuestionsTable = TableRegistry::get('Questions');
+			//for getting not answered questions
+			$QuestionAnswerTable = TableRegistry::get('QuestionAnswer');
+			$unanswered_ids = $QuestionAnswerTable->find('list', [/*'conditions'=>['QuestionAnswer.status'=>'I'],*/ 'group'=>'QuestionAnswer.question_id', 'keyField'=>'id','valueField'=>'question_id'])->toArray();
+			if(!empty($unanswered_ids)){
+				if($this->request->query('search') != NULL){
+					$UsersTable = TableRegistry::get('Users');
+					$get_match_users = $UsersTable->find('list',['conditions'=>['OR'=>['Users.name LIKE' => '%'.trim($this->request->query('search')).'%','Users.full_name LIKE' => '%'.trim($this->request->query('search')).'%']]])->toArray();
+					if(!empty($get_match_users)){
+						$options['conditions'][] = ['OR'=>[
+															'Questions.name LIKE' => '%'.$this->request->query('search').'%',
+															'Questions.short_description LIKE' => '%'.$this->request->query('search').'%',
+															'Questions.user_id IN' => $get_match_users
+															]
+													];
+					}else{			
+						$options['conditions'][] = ['OR'=>[
+															'Questions.name LIKE' => '%'.$this->request->query('search').'%',
+															'Questions.short_description LIKE' => '%'.$this->request->query('search').'%'
+															]
+													];
+					}
+				}
+				$options['contain'] 	= ['QuestionCategories','Users'=>['fields'=>['id','name','full_name']],'QuestionTags'=>['fields'=>['id','question_id','tag_id']],'QuestionTags.Tags'=>['fields'=>['id','title','slug']],'AnswerUpvote'=>['conditions'=>['AnswerUpvote.status'=>1],'fields'=>['id','question_id']],'QuestionAnswer'=>['conditions'=>['QuestionAnswer.status'=>'I'],'fields'=>['id','question_id']]];
+				$options['conditions'][]= ['Questions.id NOT IN'=>$unanswered_ids,'Questions.status'=>'A'];
+				$options['fields'] 		= ['id','name','user_id','short_description','view','created','QuestionCategories.id','QuestionCategories.name','QuestionCategories.slug'];
+				$options['order'] 		= ['Questions.created DESC'];
+				$options['limit'] 		= $this->limitLatestQuestions;
+				$unanswered_questions 	= $this->paginate($QuestionsTable, $options)->toArray();
+			}else{
+				$unanswered_questions = array();
+			}
+			$this->set(compact('unanswered_questions'));
+        }
+    }
+	
 	//questionCategory function is for Browse all questions in a category
     public function questionCategory($slug=NULL){
 		if($slug=='' && $slug==NULL){
 			$this->redirect(['controller' => 'Questions', 'action' => 'all-questions']);
 		}else{
-			$this->visitorlogs('Questions','questionCategory');
 			$QuestionCategoriesTable = TableRegistry::get('QuestionCategories');
 			$category_data = $QuestionCategoriesTable->find('all',['conditions'=>['QuestionCategories.slug'=>$slug, 'QuestionCategories.status'=>'A'],'fields'=>['QuestionCategories.id','QuestionCategories.name','QuestionCategories.slug']])->first();
 			$QuestionsTable = TableRegistry::get('Questions');
@@ -287,6 +380,8 @@ class QuestionsController extends AppController{
 			$featured_question_rightpanel = '';
 			$latest_news_rightpanel = $this->getLatestNews();				//mention in AppController
 			$question_categories = $this->getTreeQuestionCategoriesSorted();//mention in AppController
+			
+			$this->visitorlogs('Questions','questionCategory','Question Category',NULL,NULL,NULL,NULL,$category_data['id']);	//Log details insertion
 			
 			$options['contain'] 	= ['QuestionCategories','Users'=>['fields'=>['id','name','full_name']],'QuestionTags'=>['fields'=>['id','question_id','tag_id']],'QuestionTags.Tags'=>['fields'=>['id','title','slug']],'AnswerUpvote'=>['conditions'=>['AnswerUpvote.status'=>1],'fields'=>['id','question_id']],'QuestionAnswer'=>['conditions'=>['QuestionAnswer.status'=>'A'],'fields'=>['id','question_id']]];
 			$options['conditions'] 	= ['Questions.category_id'=>$category_data['id'],'Questions.status'=>'A'];
@@ -296,15 +391,14 @@ class QuestionsController extends AppController{
 			$questions = $this->paginate($QuestionsTable, $options);
 			$this->set(compact('featured_question_rightpanel','latest_news_rightpanel','question_categories','questions','category_data'));
 		}
-    }
-	
+    }	
 	//questionCategory function is for Browse all questions in a category -> Pagination page
 	public function questioncategorySearch($slug=NULL){
 		if($this->request->is('post')){
 			$QuestionCategoriesTable = TableRegistry::get('QuestionCategories');
 			$category_data = $QuestionCategoriesTable->find('all',['conditions'=>['QuestionCategories.slug'=>$slug, 'QuestionCategories.status'=>'A'],'fields'=>['QuestionCategories.id','QuestionCategories.name','QuestionCategories.slug']])->first();
 			$QuestionsTable = TableRegistry::get('Questions');
-			
+			$this->visitorlogs('Questions','questioncategorySearch','More Question From Category',NULL,NULL,NULL,NULL,$category_data['id']);	//Log details insertion
 			$options['contain'] 	= ['QuestionCategories','Users'=>['fields'=>['id','name','full_name']],'QuestionTags'=>['fields'=>['id','question_id','tag_id']],'QuestionTags.Tags'=>['fields'=>['id','title','slug']],'AnswerUpvote'=>['conditions'=>['AnswerUpvote.status'=>1],'fields'=>['id','question_id']],'QuestionAnswer'=>['conditions'=>['QuestionAnswer.status'=>'A'],'fields'=>['id','question_id']]];
 			$options['conditions'] 	= ['Questions.category_id'=>$category_data['id'],'Questions.status'=>'A'];
 			$options['fields'] 		= ['id','name','category_id','user_id','short_description','view','created','QuestionCategories.id','QuestionCategories.name','QuestionCategories.slug'];
@@ -322,7 +416,7 @@ class QuestionsController extends AppController{
 			$this->redirect(Router::url(array('controller'=>'Sites','action'=>'home-page'), true));
 		}else{
 			$id = base64_decode($id);
-			$this->visitorlogs('Questions','details');
+			$this->visitorlogs('Questions','details','Question Details',NULL,NULL,NULL,$id,NULL);	//Log details insertion
 			$QuestionsTable = TableRegistry::get('Questions');
 			//$featured_question_rightpanel = $this->getFeaturedQuestions();	//mention in AppController
 			$latest_news_rightpanel = $this->getLatestNews();					//mention in AppController
@@ -393,6 +487,7 @@ class QuestionsController extends AppController{
 						$new = $questionAnswersTable->newEntity();
 						$data_to_insert = $questionAnswersTable->patchEntity($new, $this->request->data);						
 						if($questionAnswersTable->save($data_to_insert)){
+							$this->visitorlogs('Questions','postQuestionAnswer','Question Answer Submission',NULL,NULL,NULL,$this->request->data['question_id'],NULL);	//Log details insertion
 							//if question submitter wants notification for new answer
 							$question_submitter_acccount_setting = $this->getAccountSetting($det->user_id);
 							if((!empty($question_submitter_acccount_setting)) && ($question_submitter_acccount_setting['response_to_my_question_notification']==1)){
@@ -473,6 +568,7 @@ class QuestionsController extends AppController{
 								$new = $QuestionCommentTable->newEntity();
 								$data_to_insert = $QuestionCommentTable->patchEntity($new, $this->request->data);
 								if($QuestionCommentTable->save($data_to_insert)){
+									$this->visitorlogs('Questions','postQuestionComment','Question Comment Submission',NULL,NULL,NULL,$this->request->data['question_id'],NULL);	//Log details insertion
 									//if question submitter wants notification for new share a comment (question)
 									$question_submitter_acccount_setting = $this->getAccountSetting($det->user_id);
 									if((!empty($question_submitter_acccount_setting)) && ($question_submitter_acccount_setting['response_to_my_question_notification']==1)){
@@ -548,7 +644,9 @@ class QuestionsController extends AppController{
 					$this->request->data['answer_user_id'] 	= isset($this->request->data['answer_user_id'])?base64_decode($this->request->data['answer_user_id']):0;
 					$this->request->data['comment'] 	= isset($this->request->data['answer_comment'])?$this->request->data['answer_comment']:'';
 					
-					$QuestionsTable			= TableRegistry::get('Questions');
+					$this->visitorlogs('Questions','postAnswerComment','Answer Comment Submission',NULL,NULL,NULL,$this->request->data['question_id'],NULL,$this->request->data['answer_id']);	//Log details insertion
+					
+					$QuestionsTable				= TableRegistry::get('Questions');
 					$ques_option['fields']		= ['Questions.id','Questions.user_id','Questions.name','Questions.short_description'];
 					$ques_option['conditions']	= ['Questions.id'=>$this->request->data['question_id']];
 					$ques_det = $QuestionsTable->find('all',$ques_option)->first();
@@ -633,6 +731,8 @@ class QuestionsController extends AppController{
 					$this->request->data['answer_id'] 	= isset($this->request->data['answer_id'])?$this->request->data['answer_id']:0;
 					$this->request->data['answer_user_id'] 	= isset($this->request->data['answer_user_id'])?$this->request->data['answer_user_id']:0;
 					
+					$this->visitorlogs('Questions','ajaxAnswerUpvote','Answer Upvote Submission',NULL,NULL,NULL,$this->request->data['question_id'],NULL,$this->request->data['answer_id']);	//Log details insertion
+					
 					$AnswerUpvoteTable	= TableRegistry::get('AnswerUpvote');
 					$options_1['conditions']= ['AnswerUpvote.question_id'=>$this->request->data['question_id'],'AnswerUpvote.answer_id'=>$this->request->data['answer_id'],'AnswerUpvote.user_id'=>$this->Auth->user('id')];
 					$count = $AnswerUpvoteTable->find('all',$options_1)->count();
@@ -656,102 +756,12 @@ class QuestionsController extends AppController{
 		}
 	}
 	
-	//Un-answered questions for question listing page
-	public function unAnsweredQuestions(){
-		$this->visitorlogs('Questions','unAnsweredQuestions');
-        $QuestionsTable = TableRegistry::get('Questions');
-		$total_questions = $QuestionsTable->find('all', ['conditions'=>['status'=>'A']] )->count();
-		$UsersTable = TableRegistry::get('Users');
-		$total_users = $UsersTable->find('all', ['conditions'=>['status'=>'A']] )->count();
-		
-		//$featured_question_rightpanel = $this->getFeaturedQuestions();	//mention in AppController
-		$featured_question_rightpanel = '';
-		$latest_news_rightpanel = $this->getLatestNews();				//mention in AppController
-		$question_categories = $this->getTreeQuestionCategoriesSorted();//mention in AppController
-		
-		//for getting not answered questions
-		$QuestionAnswerTable = TableRegistry::get('QuestionAnswer');
-		$unanswered_ids = $QuestionAnswerTable->find('list', [/*'conditions'=>['QuestionAnswer.status'=>'I'],*/ 'group'=>'QuestionAnswer.question_id', 'keyField'=>'id','valueField'=>'question_id'])->toArray();
-		if(!empty($unanswered_ids)){
-			if($this->request->query('search') != NULL){
-				$UsersTable = TableRegistry::get('Users');
-				$get_match_users = $UsersTable->find('list',['conditions'=>['OR'=>['Users.name LIKE' => '%'.trim($this->request->query('search')).'%','Users.full_name LIKE' => '%'.trim($this->request->query('search')).'%']]])->toArray();
-				if(!empty($get_match_users)){
-					$options['conditions'][] = ['OR'=>[
-														'Questions.name LIKE' => '%'.$this->request->query('search').'%',
-														'Questions.short_description LIKE' => '%'.$this->request->query('search').'%',
-														'Questions.user_id IN' => $get_match_users
-														]
-												];
-				}else{			
-					$options['conditions'][] = ['OR'=>[
-														'Questions.name LIKE' => '%'.$this->request->query('search').'%',
-														'Questions.short_description LIKE' => '%'.$this->request->query('search').'%'
-														]
-												];
-				}
-			}
-			$options['contain'] 	= ['QuestionCategories','Users'=>['fields'=>['id','name','full_name']],'QuestionTags'=>['fields'=>['id','question_id','tag_id']],'QuestionTags.Tags'=>['fields'=>['id','title','slug']],'AnswerUpvote'=>['conditions'=>['AnswerUpvote.status'=>1],'fields'=>['id','question_id']],'QuestionAnswer'=>['conditions'=>['QuestionAnswer.status'=>'I'],'fields'=>['id','question_id']]];
-			$options['conditions'][]= ['Questions.id NOT IN'=>$unanswered_ids,'Questions.status'=>'A'];
-			$options['fields'] 		= ['id','name','user_id','short_description','view','created','QuestionCategories.id','QuestionCategories.name','QuestionCategories.slug'];
-			$options['order'] 		= ['Questions.created DESC'];
-			$options['limit'] 		= $this->limitLatestQuestions;
-			$unanswered_questions 	= $this->paginate($QuestionsTable, $options)->toArray();
-			
-			if($this->request->query('search') != NULL){
-				unset($options['limit']);
-				$total_count = $QuestionsTable->find('all', $options)->count();
-			}
-		}else{
-			$unanswered_questions = array();
-		}
-		//for getting not answered questions
-		$this->set(compact('total_questions','total_users','featured_question_rightpanel','latest_news_rightpanel','question_categories','unanswered_questions','total_count'));
-    }
-	
-	//Home page un answered question listing -> Pagination page
-	public function unansweredQuestionsSearch(){
-        if($this->request->is('post')){
-			$QuestionsTable = TableRegistry::get('Questions');
-			//for getting not answered questions
-			$QuestionAnswerTable = TableRegistry::get('QuestionAnswer');
-			$unanswered_ids = $QuestionAnswerTable->find('list', [/*'conditions'=>['QuestionAnswer.status'=>'I'],*/ 'group'=>'QuestionAnswer.question_id', 'keyField'=>'id','valueField'=>'question_id'])->toArray();
-			if(!empty($unanswered_ids)){
-				if($this->request->query('search') != NULL){
-					$UsersTable = TableRegistry::get('Users');
-					$get_match_users = $UsersTable->find('list',['conditions'=>['OR'=>['Users.name LIKE' => '%'.trim($this->request->query('search')).'%','Users.full_name LIKE' => '%'.trim($this->request->query('search')).'%']]])->toArray();
-					if(!empty($get_match_users)){
-						$options['conditions'][] = ['OR'=>[
-															'Questions.name LIKE' => '%'.$this->request->query('search').'%',
-															'Questions.short_description LIKE' => '%'.$this->request->query('search').'%',
-															'Questions.user_id IN' => $get_match_users
-															]
-													];
-					}else{			
-						$options['conditions'][] = ['OR'=>[
-															'Questions.name LIKE' => '%'.$this->request->query('search').'%',
-															'Questions.short_description LIKE' => '%'.$this->request->query('search').'%'
-															]
-													];
-					}
-				}
-				$options['contain'] 	= ['QuestionCategories','Users'=>['fields'=>['id','name','full_name']],'QuestionTags'=>['fields'=>['id','question_id','tag_id']],'QuestionTags.Tags'=>['fields'=>['id','title','slug']],'AnswerUpvote'=>['conditions'=>['AnswerUpvote.status'=>1],'fields'=>['id','question_id']],'QuestionAnswer'=>['conditions'=>['QuestionAnswer.status'=>'I'],'fields'=>['id','question_id']]];
-				$options['conditions'][]= ['Questions.id NOT IN'=>$unanswered_ids,'Questions.status'=>'A'];
-				$options['fields'] 		= ['id','name','user_id','short_description','view','created','QuestionCategories.id','QuestionCategories.name','QuestionCategories.slug'];
-				$options['order'] 		= ['Questions.created DESC'];
-				$options['limit'] 		= $this->limitLatestQuestions;
-				$unanswered_questions 	= $this->paginate($QuestionsTable, $options)->toArray();
-			}else{
-				$unanswered_questions = array();
-			}
-			$this->set(compact('unanswered_questions'));
-        }
-    }
-	
 	//All answer comments
 	public function ajaxAllAnswerComments(){
         if($this->request->is('post')){
 			$answer_id = isset($this->request->data['answer_id'])?$this->request->data['answer_id']:0;
+			$this->visitorlogs('Questions','ajaxAllAnswerComments','Answer Comment Listing',NULL,NULL,NULL,NULL,NULL,$answer_id);	//Log details insertion
+			
 			$AnswerCommentTable = TableRegistry::get('AnswerComment');			
 			$options['contain'] 	= ['Users'=>['fields'=>['id','name','profile_pic']]];
 			$options['conditions'] 	= ['AnswerComment.answer_id'=>$answer_id,'AnswerComment.status'=>1];
@@ -767,6 +777,7 @@ class QuestionsController extends AppController{
 	public function ajaxAllQuestionComments(){
         if($this->request->is('post')){
 			$question_id = isset($this->request->data['question_id'])?base64_decode($this->request->data['question_id']):0;
+			$this->visitorlogs('Questions','ajaxAllQuestionComments','Question Comment Listing',NULL,NULL,NULL,$question_id,NULL,NULL);	//Log details insertion
 			$QuestionCommentTable = TableRegistry::get('QuestionComment');			
 			$options['contain'] 	= ['Users'=>['fields'=>['id','name','profile_pic']]];
 			$options['conditions'] 	= ['QuestionComment.question_id'=>$question_id,'QuestionComment.status'=>1];
@@ -783,7 +794,6 @@ class QuestionsController extends AppController{
 		if($slug=='' && $slug==NULL){
 			$this->redirect(['controller' => 'Questions', 'action' => 'all-questions']);
 		}else{
-			$this->visitorlogs('Questions','questionTag');
 			$TagsTable = TableRegistry::get('Tags');
 			$tagdata = $TagsTable->find('all', ['conditions'=>['Tags.status'=>'A','Tags.slug'=>$slug],'fields'=>['id','title','slug']])->first();
 			//$featured_question_rightpanel = $this->getFeaturedQuestions();	//mention in AppController
@@ -793,6 +803,7 @@ class QuestionsController extends AppController{
 			
 			$QuestionTagsTable = TableRegistry::get('QuestionTags');
 			$question_ids = $QuestionTagsTable->find('list',['conditions'=>['tag_id'=>$tagdata['id']],'keyField'=>'0','valueField'=>'question_id'])->toArray();
+			$this->visitorlogs('Questions','questionTag','Tag Related Questions',NULL,NULL,NULL,NULL,NULL,NULL,$tagdata['id']);	//Log details insertion
 			if(!empty($question_ids)){
 				$QuestionsTable = TableRegistry::get('Questions');
 				$options['contain'] 	= ['QuestionCategories','Users'=>['fields'=>['id','name','full_name']],'QuestionTags'=>['fields'=>['id','question_id','tag_id']],'QuestionTags.Tags'=>['fields'=>['id','title','slug']],'AnswerUpvote'=>['conditions'=>['AnswerUpvote.status'=>1],'fields'=>['id','question_id']],'QuestionAnswer'=>['conditions'=>['QuestionAnswer.status'=>'A'],'fields'=>['id','question_id']]];
@@ -813,7 +824,7 @@ class QuestionsController extends AppController{
 		if($this->request->is('post')){
 			$TagsTable = TableRegistry::get('Tags');
 			$tagdata = $TagsTable->find('all', ['conditions'=>['Tags.status'=>'A','Tags.slug'=>$slug],'fields'=>['id','title','slug']])->first();
-			
+			$this->visitorlogs('Questions','questiontagSearch','More Tag Related Questions',NULL,NULL,NULL,NULL,NULL,NULL,$tagdata['id']);	//Log details insertion
 			$QuestionTagsTable = TableRegistry::get('QuestionTags');
 			$question_ids = $QuestionTagsTable->find('list',['conditions'=>['tag_id'=>$tagdata['id']],'keyField'=>'0','valueField'=>'question_id']);
 			if(!empty($question_ids)){
@@ -838,7 +849,6 @@ class QuestionsController extends AppController{
 		if($id == NULL){
             return $this->redirect(['controller' => '/', 'action' => 'viewSubmissions']);
         }
-		$this->visitorlogs('Questions','editSubmittedQuestion');
 		$this->viewBuilder()->layout('postquestion');
 		$title = 'Edit Post Question';
 		$FaqsTable = TableRegistry::get('Faqs');
@@ -846,7 +856,7 @@ class QuestionsController extends AppController{
 		
 		$id = base64_decode($id);
 		$QuestionsTable = TableRegistry::get('Questions');
-		$QuestionTable = TableRegistry::get('Questions');
+		$this->visitorlogs('Questions','editSubmittedQuestion','Edited Question',NULL,NULL,NULL,$id,NULL,NULL,NULL);	//Log details insertion
 		$question_categories = $this->getQuestionCategoriesSorted();	//mention in AppController
 		$TagsTable = TableRegistry::get('Tags');
 		$all_tags = $TagsTable->find('list', ['conditions'=>['Tags.status'=>'A'], 'keyField'=>'id','valueField'=>'title'])->toArray();
@@ -906,11 +916,11 @@ class QuestionsController extends AppController{
 		if($id == NULL){
             return $this->redirect(['controller' => '/', 'action' => 'viewSubmissions']);
         }
-		$this->visitorlogs('Questions','editSubmittedQuestionComment');
 		$title = 'Edit Question Comment';
 		$QuestionCommentTable = TableRegistry::get('QuestionComment');
         $id = base64_decode($id);
-        $existing_data = $QuestionCommentTable->get($id,['contain'=>['Questions'=>['fields'=>['id','name']]]]);
+		$existing_data = $QuestionCommentTable->get($id,['contain'=>['Questions'=>['fields'=>['id','name']]]]);
+		$this->visitorlogs('Questions','editSubmittedQuestionComment','Edited Question Comment',NULL,NULL,NULL,$existing_data['question_id'],NULL,NULL,NULL);	//Log details insertion
 		if ($this->request->is(['post', 'put'])) {
 			$this->request->data['modified'] = date('Y-m-d H:i:s');
 			$updated_data = $QuestionCommentTable->patchEntity($existing_data, $this->request->data);
@@ -930,12 +940,12 @@ class QuestionsController extends AppController{
 		if($id == NULL){
             return $this->redirect(['controller' => '/', 'action' => 'viewSubmissions']);
         }
-		$this->visitorlogs('Questions','editSubmittedQuestionAnswer');
 		$title = 'Edit Question Answer';
 		$this->viewBuilder()->layout('postquestion');
 		$QuestionAnswerTable = TableRegistry::get('QuestionAnswer');
         $id = base64_decode($id);
         $existing_data = $QuestionAnswerTable->get($id,['contain'=>['Questions'=>['fields'=>['id','name']]]]);
+		$this->visitorlogs('Questions','editSubmittedQuestionAnswer','Edited Question Answer',NULL,NULL,NULL,$existing_data['question_id'],NULL,NULL,NULL);	//Log details insertion
 		if ($this->request->is(['post', 'put'])) {
 			$this->request->data['modified'] = date('Y-m-d H:i:s');
 			$updated_data = $QuestionAnswerTable->patchEntity($existing_data, $this->request->data);
@@ -955,11 +965,11 @@ class QuestionsController extends AppController{
 		if($id == NULL){
             return $this->redirect(['controller' => '/', 'action' => 'viewSubmissions']);
         }
-		$this->visitorlogs('Questions','editSubmittedQuestionAnswerComment');
 		$title = 'Edit Question Answer Comment';
 		$AnswerCommentTable = TableRegistry::get('AnswerComment');
         $id = base64_decode($id);
         $existing_data = $AnswerCommentTable->get($id,['contain'=>['Questions'=>['fields'=>['id','name']],'QuestionAnswer'=>['fields'=>['id','learning_path_recommendation','learning_experience','learning_utility']]]]);
+		$this->visitorlogs('Questions','editSubmittedQuestionAnswerComment','Edited Question Answer Comment',NULL,NULL,NULL,$existing_data['question_id'],NULL,NULL,NULL);	//Log details insertion
 		if ($this->request->is(['post', 'put'])) {
 			$this->request->data['modified'] = date('Y-m-d H:i:s');
 			$updated_data = $AnswerCommentTable->patchEntity($existing_data, $this->request->data);

@@ -32,7 +32,6 @@ class UsersController extends AppController{
 	//All users listing page
     public function allUsers(){
 		$this->visitorlogs('Users','allUsers','Users Listing');		//Log details insertion
-		$this->visitorlogs('Users','allUsers');
         $UsersTable = TableRegistry::get('Users');
 		$alphabet_options['conditions']	= ['Users.status'=>'A'];
 		$alphabet_options['fields']		= ['Users.id','Users.name'];
@@ -147,7 +146,7 @@ class UsersController extends AppController{
 				$UsersTable = TableRegistry::get('Users');
 				$user = $UsersTable->get($this->request->data['user_id']);			
 				$updated_data = $UsersTable->patchEntity($user, $this->request->data);
-				$this->visitorlogs('Users','signupSetting','Setting in Signup',NULL,NULL,$this->request->data['user_id']);
+				$this->visitorlogs('Users','signupSetting','Setting in Signup',NULL,NULL,$this->request->data['user_id']);	//Log details insertion
 				if($savedData = $UsersTable->save($updated_data)) {
 					echo json_encode(['register'=>'success']);
 					exit();
@@ -212,7 +211,7 @@ class UsersController extends AppController{
 	
 	//Login page
     public function login(){
-		//$this->visitorlogs('Users','login');
+		//$this->visitorlogs('Users','login');	//Log details insertion
 		$title = 'Login';
 		$session = $this->request->session();
 		$UsersTable = TableRegistry::get('Users');
@@ -238,7 +237,7 @@ class UsersController extends AppController{
 							}else{
 								$session->write('Users.remember_me', '');
 							}
-							$this->visitorlogs('Users','login','Login',NULL,NULL,$user['id']);
+							$this->visitorlogs('Users','login','Login',NULL,NULL,$user['id']);	//Log details insertion
 							if($user['type']=='N'){
 								$this->Auth->setUser($user);
 								$query = $UsersTable->query();
@@ -424,6 +423,7 @@ class UsersController extends AppController{
 			$updated_data = $UsersTable->patchEntity($user, $this->request->data);
             if($savedData = $UsersTable->save($updated_data)) {
 				$get_last_insert_id = $savedData->id;
+				$this->visitorlogs('Users','updateProfile','Update Profile',NULL,NULL,$user_data['id']);	//Log details insertion
 				$CareereducationsTable = TableRegistry::get('Careereducations');
 				//education section start//
 				if( $this->request->data['education_chk'] == 'education' ){	//checking education section is checked (then update/insert)
@@ -530,7 +530,6 @@ class UsersController extends AppController{
 	
 	//changePassword function is for user password change
 	public function changePassword(){
-		$this->visitorlogs('Users','changePassword');
 		$title = 'Change Password';
 		$UsersTable = TableRegistry::get('Users');
 		$userdetails = $UsersTable->get($this->Auth->user('id'));
@@ -538,6 +537,7 @@ class UsersController extends AppController{
 			return $this->redirect(Router::url(['action'=>'my-account'], true));
 		}
 		if($this->request->is(['patch', 'post', 'put'])){
+			$this->visitorlogs('Users','changePassword','Change Password',NULL,NULL,$this->Auth->user('id'));	//Log details insertion
 			$this->request->data['password'] = $this->request->data['new_password'];
 			$password = $UsersTable->patchEntity($userdetails, $this->request->data, ['validate' => 'password']);
 			if ($UsersTable->save($password)) {
@@ -552,7 +552,7 @@ class UsersController extends AppController{
 	
 	//forgotPassword for front-end user password reset
     public function forgotPassword(){
-		$this->visitorlogs('Users','forgotPassword');
+		//$this->visitorlogs('Users','forgotPassword','Forgot Password');
 		$title = 'Forgot Password';
 		if(!empty($this->Auth->user())){
 			return $this->redirect(Router::url(array('controller'=>'Users','action'=>'my-account'), true));
@@ -572,6 +572,7 @@ class UsersController extends AppController{
                       ->set(['forget_password_string' => $reset_password_str])
                       ->where(['email' => $this->request->data['email']])
                       ->execute();
+					$this->visitorlogs('Users','forgotPassword','Forgot Password',NULL,NULL,$user_data->id);	//Log details insertion
 					$url = Router::url('/', true).'users/reset-password/'.$reset_password_str.'/'.base64_encode(time());
 					if($this->Email->resetPassword($this->request->data['email'],$user_data->name, $url, $settings)){
 						echo json_encode(['status'=>'success']);
@@ -593,7 +594,6 @@ class UsersController extends AppController{
 		if(!empty($this->Auth->user())){
 			return $this->redirect(Router::url(array('controller'=>'Users','action'=>'my-account'), true));
 		}
-		$this->visitorlogs('Users','resetPassword');
 		$user = TableRegistry::get('Users');
 		if($forget_password_string==NULL || $reset_time==NULL){
 			$this->Flash->error(__('Invalid URL or you have already used, please try again.'));
@@ -655,6 +655,7 @@ class UsersController extends AppController{
 	            if($UsersTable->save($data_to_insert)){
 					$user = $UsersTable->get($loggedIn_user['id']);
 					$this->Auth->setUser($user);
+					$this->visitorlogs('Users','uploadProfilePicture','Update Profile Picture',NULL,NULL,$loggedIn_user['id']);	//Log details insertion
 	            	echo json_encode(['data'=>$data]);
 					exit();
 	            }else{
@@ -672,7 +673,7 @@ class UsersController extends AppController{
 	
 	//Account settings page
 	public function accountSetting(){
-		$this->visitorlogs('Users','accountSetting');
+		//$this->visitorlogs('Users','accountSetting');
 		$title = 'Account Settings';
 		$session = $this->request->session();
 		$QuestionTable = TableRegistry::get('Questions');
@@ -689,6 +690,7 @@ class UsersController extends AppController{
 		
 		if($this->request->is('post')){	//form submit
 			$account_settings = $UserAccountSettingTable->find('all',['conditions'=>['user_id'=>$user_data['id']]])->first();
+			$this->visitorlogs('Users','accountSetting','Update Account Setting',NULL,NULL,$user_data['id']);	//Log details insertion
 			if(empty($account_settings)){
 				$this->request->data['user_id']	= $this->Auth->user('id');
 				$settings = $UserAccountSettingTable->newEntity();
@@ -784,6 +786,8 @@ class UsersController extends AppController{
             //throw new NotFoundException(__('Page not found'));
 			return $this->redirect(['controller' => 'Users', 'action' => 'login']);
         }
+		$this->visitorlogs('Users','viewSubmissions','View Submissions',NULL,NULL,$this->Auth->user('id'));	//Log details insertion
+		
 		//submitted questions start//
 		$QuestionTable = TableRegistry::get('Questions');
 		$submitted_questions = $QuestionTable->find('all',['contain'=>['QuestionCategories'],'conditions'=>['user_id'=>$user_id],'fields'=>['id','category_id','user_id','name','is_featured','status','created','QuestionCategories.id','QuestionCategories.name'],'order'=>['Questions.id DESC']])->toArray();
@@ -872,7 +876,8 @@ class UsersController extends AppController{
 							->set(['loggedin_status'=>1,'loggedin_time'=>date('Y-m-d H:i:s')])
 							->where(['id' => $data['id']])
 							->execute();
-						$this->Auth->setUser($data);
+						$this->Auth->setUser($data);						
+						$this->visitorlogs('Users','facebookLogin','Facebook Login',NULL,NULL,$data['id']);		//Log details insertion
 						echo json_encode(array('type'=>'success'));
 						exit();
 					}else{
@@ -883,8 +888,7 @@ class UsersController extends AppController{
 					$query->update()
 						->set(['loggedin_status'=>1,'loggedin_time'=>date('Y-m-d H:i:s')])
 						->where(['facebook_id' => $json->id])
-						->execute();
-					
+						->execute();					
 					$profile_pic	= 'http://graph.facebook.com/'.$json->id.'/picture?width=9999';					
 					$img_url = file_get_contents($profile_pic);
 					$file_name = 'profile_'.time().rand(0,9).'.jpg';
@@ -910,6 +914,7 @@ class UsersController extends AppController{
 					
 					$user_Detail = $UsersTable->find('all',array('conditions'=>array('Users.facebook_id'=>$json->id)))->first();
 					$this->Auth->setUser($user_Detail);
+					$this->visitorlogs('Users','facebookLogin','Facebook Login',NULL,NULL,$user_Detail['id']);		//Log details insertion
 					echo json_encode(array('type'=>'success'));
 					exit();
 				}
@@ -1010,6 +1015,7 @@ class UsersController extends AppController{
 									->where(['id' => $data['id']])
 									->execute();
 								$this->Auth->setUser($data);
+								$this->visitorlogs('Users','gplusConfirmLogin','Google Plus Login',NULL,NULL,$data['id']);	//Log details insertion
 								//echo json_encode(array('type'=>'success'));
 								return $this->redirect(['action' => 'my-account']);
 								exit();
@@ -1051,6 +1057,7 @@ class UsersController extends AppController{
 							
 							$user_Detail = $UsersTable->find('all',array('conditions'=>array('Users.googleplus_id'=>$user['id'])))->first();
 							$this->Auth->setUser($user_Detail);
+							$this->visitorlogs('Users','gplusConfirmLogin','Google Plus Login',NULL,NULL,$user_Detail['id']);	//Log details insertion
 							//echo json_encode(array('type'=>'success'));							
 							return $this->redirect(['action' => 'my-account']);
 							exit();							
@@ -1153,6 +1160,7 @@ class UsersController extends AppController{
 									->where(['id' => $data['id']])
 									->execute();
 								$this->Auth->setUser($data);
+								$this->visitorlogs('Users','twittercallback','Twitter Login',NULL,NULL,$data['id']);	//Log details insertion
 								//echo json_encode(array('type'=>'success'));
 								return $this->redirect(['action'=>'my-account']);
 								exit();
@@ -1193,6 +1201,7 @@ class UsersController extends AppController{
 							
 							$user_Detail = $UsersTable->find('all',array('conditions'=>array('Users.twitter_id'=>$user_data['id'])))->first();
 							$this->Auth->setUser($user_Detail);
+							$this->visitorlogs('Users','twittercallback','Twitter Login',NULL,NULL,$user_Detail['id']);	//Log details insertion
 							$session->write('email_check','already_exist');
 							return $this->redirect(['action' => 'my-account']);
 							exit();							
@@ -1291,6 +1300,7 @@ class UsersController extends AppController{
 										->where(['id' => $data['id']])
 										->execute();
 									$this->Auth->setUser($data);
+									$this->visitorlogs('Users','linkedinCallBack','LinkedIn Login',NULL,NULL,$data['id']);	//Log details insertion
 									//echo json_encode(array('type'=>'success'));
 									return $this->redirect(['action'=>'my-account']);
 									exit();
@@ -1331,6 +1341,7 @@ class UsersController extends AppController{
 								
 								$user_Detail = $UsersTable->find('all',array('conditions'=>array('Users.linkedin_id'=>$user_data->id)))->first();
 								$this->Auth->setUser($user_Detail);
+								$this->visitorlogs('Users','linkedinCallBack','LinkedIn Login',NULL,NULL,$user_Detail['id']);	//Log details insertion
 								$session->write('email_check','already_exist');
 								return $this->redirect(['action' => 'my-account']);
 								exit();

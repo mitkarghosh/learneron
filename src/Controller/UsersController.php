@@ -123,10 +123,10 @@ class UsersController extends AppController{
 					$this->visitorlogs('Users','signup','Signup',NULL,NULL,$insert_user_id);	//Log details insertion
 					$url = Router::url('/', true).'users/verify/'.$this->request->data['signup_string'].'/'.base64_encode(time());
 					$settings = $this->getSiteSettings();
-					//if($this->Email->userRegister($this->request->data['email'], $url, $this->request->data, $settings)){
+					if($this->Email->userRegister($this->request->data['email'], $url, $this->request->data, $settings)){
 						echo json_encode(['register'=>'success', 'userid'=>$insert_user_id]);
 						exit();
-					//}
+					}
 				}else{
 					echo json_encode(['register'=>'failed']);
 					exit();

@@ -197,7 +197,6 @@ class UsersController extends AppController{
 			
 			$QuestionAnswersTable = TableRegistry::get('QuestionAnswer');
 			$answer_details = $QuestionAnswersTable->find('all',['contain'=>['Questions'=>['fields'=>['id','user_id','name']]],'conditions'=>['QuestionAnswer.user_id'=>$id],'fields'=>['QuestionAnswer.id','QuestionAnswer.question_id','QuestionAnswer.user_id','QuestionAnswer.learning_path_recommendation','QuestionAnswer.learning_experience','QuestionAnswer.learning_utility','QuestionAnswer.status','QuestionAnswer.created'],'order'=>['QuestionAnswer.id DESC']])->toArray();
-			//echo '<pre>'; print_r($answer_details); die;
 			if( !empty($answer_details) ){
 				$pa = 2;
 				foreach($answer_details as $val_ad){

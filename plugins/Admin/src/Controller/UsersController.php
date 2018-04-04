@@ -155,21 +155,27 @@ class UsersController extends AppController{
 			$objQuestionPosted->getStyle('C1')->getFont()->setBold(true);
 			$objQuestionPosted->getStyle('D1')->getFont()->setBold(true);			
 			$objQuestionPosted  ->setCellValue('A1', 'Question')
-								->setCellValue('B1', 'Category')
-								->setCellValue('C1', 'Created On')
-								->setCellValue('D1', 'Status');
+								->setCellValue('B1', 'Learning Goal')
+								->setCellValue('C1', 'Budget & other constraints')
+								->setCellValue('D1', 'Optional input on preferred learning mode')
+								->setCellValue('E1', 'Category')
+								->setCellValue('F1', 'Created On')
+								->setCellValue('G1', 'Status');
 			
 			$QuestionTable = TableRegistry::get('Admin.Questions');
-			$submitted_questions = $QuestionTable->find('all',['contain'=>['QuestionCategories'],'conditions'=>['user_id'=>$id],'fields'=>['id','category_id','user_id','name','is_featured','status','created','QuestionCategories.id','QuestionCategories.name'],'order'=>['Questions.id DESC']])->toArray();
+			$submitted_questions = $QuestionTable->find('all',['contain'=>['QuestionCategories'],'conditions'=>['user_id'=>$id],'fields'=>['id','category_id','user_id','name','learning_goal','budget_constraints','preferred_learning_mode','is_featured','status','created','QuestionCategories.id','QuestionCategories.name'],'order'=>['Questions.id DESC']])->toArray();
 			if( !empty($submitted_questions) ){
 				$pq = 2;
 				foreach($submitted_questions as $val_sq){
 					if($val_sq->question_category->name != '') $catname = $val_sq->question_category->name; else $catname = 'N/A';
 					if($val_sq->status == 'I') $status = 'Inactive'; else $status = 'Active';
 					$objQuestionPosted->setCellValue('A'.$pq, $val_sq->name)
-									  ->setCellValue('B'.$pq, $catname)
-									  ->setCellValue('C'.$pq, date('jS F Y H:i:s', strtotime($val_sq->created)))
-									  ->setCellValue('D'.$pq, $status);
+									  ->setCellValue('B'.$pq, html_entity_decode(strip_tags($val_sq->learning_goal)))
+									  ->setCellValue('C'.$pq, html_entity_decode(strip_tags($val_sq->budget_constraints)))
+									  ->setCellValue('D'.$pq, html_entity_decode(strip_tags($val_sq->preferred_learning_mode)))
+									  ->setCellValue('E'.$pq, $catname)
+									  ->setCellValue('F'.$pq, date('jS F Y H:i:s', strtotime($val_sq->created)))
+									  ->setCellValue('G'.$pq, $status);
 					$pq++;
 				}
 			}								
@@ -182,21 +188,26 @@ class UsersController extends AppController{
 			$objAnswerPosted->getStyle('B1')->getFont()->setBold(true);
 			$objAnswerPosted->getStyle('C1')->getFont()->setBold(true);
 			$objAnswerPosted->getStyle('D1')->getFont()->setBold(true);			
-			$objAnswerPosted->setCellValue('A1', 'Answer')
-							->setCellValue('B1', 'Question')
-							->setCellValue('C1', 'Created On')
-							->setCellValue('D1', 'Status');
+			$objAnswerPosted->setCellValue('A1', 'Learning Path Recommendation')
+							->setCellValue('B1', 'What Was Your Learning Experience')
+							->setCellValue('C1', 'What Was Your Learning Utility')
+							->setCellValue('D1', 'Question')
+							->setCellValue('E1', 'Created On')
+							->setCellValue('F1', 'Status');
 			
 			$QuestionAnswersTable = TableRegistry::get('QuestionAnswer');
-			$answer_details = $QuestionAnswersTable->find('all',['contain'=>['Questions'=>['fields'=>['id','user_id','name']]],'conditions'=>['QuestionAnswer.user_id'=>$id],'fields'=>['QuestionAnswer.id','QuestionAnswer.question_id','QuestionAnswer.user_id','QuestionAnswer.learning_path_recommendation','QuestionAnswer.status','QuestionAnswer.created'],'order'=>['QuestionAnswer.id DESC']])->toArray();
+			$answer_details = $QuestionAnswersTable->find('all',['contain'=>['Questions'=>['fields'=>['id','user_id','name']]],'conditions'=>['QuestionAnswer.user_id'=>$id],'fields'=>['QuestionAnswer.id','QuestionAnswer.question_id','QuestionAnswer.user_id','QuestionAnswer.learning_path_recommendation','QuestionAnswer.learning_experience','QuestionAnswer.learning_utility','QuestionAnswer.status','QuestionAnswer.created'],'order'=>['QuestionAnswer.id DESC']])->toArray();
+			//echo '<pre>'; print_r($answer_details); die;
 			if( !empty($answer_details) ){
 				$pa = 2;
 				foreach($answer_details as $val_ad){
 					if($val_ad->status == 'I') $status = 'Inactive'; else $status = 'Active';
-					$objAnswerPosted->setCellValue	('A'.$pa, strip_tags($val_ad->learning_path_recommendation))
-									  ->setCellValue('B'.$pa, $val_ad->question->name)
-									  ->setCellValue('C'.$pa, date('jS F Y H:i:s', strtotime($val_ad->created)))
-									  ->setCellValue('D'.$pa, $status);
+					$objAnswerPosted->setCellValue	('A'.$pa, html_entity_decode(strip_tags($val_ad->learning_path_recommendation)))
+									  ->setCellValue('B'.$pa, html_entity_decode(strip_tags($val_ad->learning_experience)))
+									  ->setCellValue('C'.$pa, html_entity_decode(strip_tags($val_ad->learning_utility)))
+									  ->setCellValue('D'.$pa, $val_ad->question->name)
+									  ->setCellValue('E'.$pa, date('jS F Y H:i:s', strtotime($val_ad->created)))
+									  ->setCellValue('F'.$pa, $status);
 					$pa++;
 				}
 			}								
@@ -236,11 +247,10 @@ class UsersController extends AppController{
 			$objAnswerPosted->getStyle('B1')->getFont()->setBold(true);
 			$objAnswerPosted->getStyle('C1')->getFont()->setBold(true);
 			$objAnswerPosted->getStyle('D1')->getFont()->setBold(true);			
-			$objAnswerPosted->setCellValue('A1', 'Sl. No.')
-							->setCellValue('B1', 'Page')
-							->setCellValue('C1', 'Controller')
-							->setCellValue('D1', 'Method')
-							->setCellValue('E1', 'Visited Date & Time');
+			$objAnswerPosted->setCellValue('A1', 'Page')
+							->setCellValue('B1', 'Controller')
+							->setCellValue('C1', 'Question Page URL')
+							->setCellValue('D1', 'Visited Date & Time');
 			
 			$VisitorTable = TableRegistry::get('Admin.Visitors');
 			$log_details = $VisitorTable->find('all',['contain'=>['VisitorLogs'=>['fields'=>[]]],'conditions'=>['Visitors.user_id'=>$id]])->first();
@@ -248,11 +258,14 @@ class UsersController extends AppController{
 			if( !empty($log_details['visitor_logs']) ){
 				$ld = 2;
 				foreach($log_details['visitor_logs'] as $val_ld){
-					$objAnswerPosted->setCellValue('A'.$ld, ($ld-1))
-									->setCellValue('B'.$ld, $val_ld['page_name'])
-									->setCellValue('C'.$ld, $val_ld['controller'])
-									->setCellValue('D'.$ld, $val_ld['method'])
-									->setCellValue('E'.$ld, date('jS F Y H:i:s', strtotime($val_ld['visited_time'])));
+					$url = '';
+					if($val_ld['question_id'] != '' && strpos($val_ld['page_url'], 'questions/details') !== false){
+						$url = $val_ld['page_url'];
+					}
+					$objAnswerPosted->setCellValue('A'.$ld, $val_ld['page_name'])
+									->setCellValue('B'.$ld, $val_ld['controller'])
+									->setCellValue('C'.$ld, $url)
+									->setCellValue('D'.$ld, date('jS F Y H:i:s', strtotime($val_ld['visited_time'])));
 					$ld++;
 				}
 			}								

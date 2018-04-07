@@ -200,7 +200,7 @@ use Cake\Routing\Router;
 					</div>
 					<p id="setting_check_error"></p>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-alt" data-dismiss="modal">No</button>
+						<button type="button" class="btn btn-alt" data-dismiss="modal">Not Now</button>
 						<button type="submit" class="btn btn-normal">Yes</button>
 					</div>
 					<div class="setting_loader" style="text-align:center;"></div>

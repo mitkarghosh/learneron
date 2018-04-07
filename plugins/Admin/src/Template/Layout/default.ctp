@@ -27,6 +27,7 @@
         <?php echo $this->Html->script('/admin/js/custom.js') ?>
 		
 		<?php echo $this->Html->script('/admin/sweetalert/sweetalert.js') ?>
+		<?php echo $this->Html->script('/admin/sweetalert/swalExtend.js') ?>
 		<?php echo $this->Html->css('/admin/sweetalert/sweetalert.css'); ?>
     </head>
 

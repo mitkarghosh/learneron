@@ -4,6 +4,7 @@ use Admin\Controller\AppController;
 use Cake\Event\Event;
 use Cake\Network\Exception\NotFoundException;
 use Cake\Utility\Inflector;
+use Cake\Routing\Router;
 use Cake\ORM\TableRegistry;
 //require_once(ROOT . DS . 'vendor' . DS . "verot/class.upload.php/src" . DS . "class.upload.php");
 require_once(ROOT . DS . 'vendor' . DS . "Classes" . DS . "PHPExcel.php");
@@ -730,6 +731,95 @@ class UsersController extends AppController{
 		}
         exit();
     }
+	
+	public function deleteUserWithSubmission($id = NULL){
+        $this->viewBuilder()->layout(false);
+		$this->render(false);
+		$session = $this->request->session();
+		if( (empty($session->read('permissions.'.strtolower('Users'))) || (!array_key_exists('delete-user',$session->read('permissions.'.strtolower('Users')))) || $session->read('permissions.'.strtolower('Users').'.'.strtolower('delete-user'))!=1) ){
+			$this->Flash->error(__("You don't have permission to access this page."));
+			return $this->redirect(['plugin' => 'admin', 'controller' => 'admin-details', 'action' => 'dashboard']);
+		}
+        $this->request->allowMethod(['post', 'delete']);
+		if(!empty($this->request->data['id'])){
+			foreach($this->request->data['id'] as $val_id){
+				$UsersTable = TableRegistry::get('Admin.Users');			
+				//delete from career
+				$CareereducationsTable = TableRegistry::get('Admin.Careereducations');
+				$delete_careereducation_data = $CareereducationsTable->find('list', ['conditions'=>array('Careereducations.user_id'=>$val_id),'fields' => ['Careereducations.id']])->toArray();
+				if( count($delete_careereducation_data) > 0){
+					$CareereducationsTable->deleteAll(['id IN' => $delete_careereducation_data]);
+				}
+				//delete from question
+				$QuestionsTable = TableRegistry::get('Admin.Questions');
+				$question_data = $QuestionsTable->find('list')->where(['user_id'=>$val_id])->toArray();
+				if( count($question_data) > 0){
+					$QuestionsTable->deleteAll(['id IN' => $question_data]);
+				}
+				//delete from question tags
+				$QuestionTagsTable = TableRegistry::get('Admin.QuestionTags');
+				$question_tags_data = $QuestionTagsTable->find('list')->where(['user_id'=>$val_id])->toArray();
+				if( count($question_tags_data) > 0){
+					$QuestionTagsTable->deleteAll(['id IN' => $question_tags_data]);
+				}
+				//delete from question comments
+				$QuestionCommentsTable = TableRegistry::get('Admin.QuestionComments');
+				$question_comment_data = $QuestionCommentsTable->find('list')->where(['user_id'=>$val_id])->toArray();
+				if( count($question_comment_data) > 0){
+					$QuestionCommentsTable->deleteAll(['id IN' => $question_comment_data]);
+				}			
+				//delete from question answer
+				$QuestionAnswersTable = TableRegistry::get('Admin.QuestionAnswers');
+				$question_answer_data = $QuestionAnswersTable->find('list')->where(['user_id'=>$val_id])->toArray();
+				if( count($question_answer_data) > 0){
+					$QuestionAnswersTable->deleteAll(['id IN' => $question_answer_data]);
+				}
+				//delete from answer comment
+				$AnswerCommentTable = TableRegistry::get('Admin.AnswerComment');
+				$delete_data = $AnswerCommentTable->find('list', ['conditions'=>array('AnswerComment.user_id'=>$val_id),'fields' => ['AnswerComment.id']])->toArray();
+				if( count($delete_data) > 0){
+					$AnswerCommentTable->deleteAll(['id IN' => $delete_data]);
+				}
+				//delete from answer upvote
+				$AnswerUpvoteTable = TableRegistry::get('Admin.AnswerUpvote');
+				$delete_answerupvote_data = $AnswerUpvoteTable->find('list',['conditions'=>array('user_id'=>$val_id),'fields' => ['id']])->toArray();
+				if( count($delete_answerupvote_data) > 0){
+					$AnswerUpvoteTable->deleteAll(['id IN' => $delete_answerupvote_data]);
+				}
+				//delete from news comment
+				$NewsCommentsTable = TableRegistry::get('Admin.NewsComments');
+				$delete_newscomment_data = $NewsCommentsTable->find('list',['conditions'=>array('user_id'=>$val_id),'fields' => ['id']])->toArray();
+				if( count($delete_newscomment_data) > 0){
+					$NewsCommentsTable->deleteAll(['id IN' => $delete_newscomment_data]);
+				}
+				//delete from user account settings
+				$UserAccountSettingTable = TableRegistry::get('Admin.UserAccountSetting');
+				$delete_accountsettings_data = $UserAccountSettingTable->find('list',['conditions'=>array('user_id'=>$val_id),'fields'=>['id']])->toArray();
+				if( count($delete_accountsettings_data) > 0){
+					$UserAccountSettingTable->deleteAll(['id IN' => $delete_accountsettings_data]);
+				}
+				$user_data = $UsersTable->get($val_id);
+				$UsersTable->delete($user_data);
+				
+				$deleted_user_ids[] = $val_id;
+				$deleted_users_count++;
+				$non_deleted_users_count = 0;				
+			}			
+			if( (count($this->request->data['id']) == $deleted_users_count) && ($non_deleted_users_count == 0) ){
+				$deleted_user_ids = $this->request->data['id'];
+				echo json_encode(array('type' => 'success', 'deleted_ids' => $deleted_user_ids, 'delete_count' => '1', 'message' => 'User(s) successfully deleted'));
+			}
+			else if( ($deleted_users_count == 0) && (count($this->request->data['id']) == $non_deleted_users_count) ){
+				echo json_encode(array('type' => 'error', 'deleted_ids' => '', 'delete_count' => '2', 'message' => 'Selected user(s) related question(s) exist, delete question(s) first!!!'));
+			}
+			else{
+				echo json_encode(array('type' => 'warning', 'deleted_ids' => $deleted_user_ids, 'delete_count' => '3', 'message' => 'Some user(s) related question(s) exist, delete question(s) first!!!'));
+			}
+		}else{
+			echo json_encode(array('type' => 'error', 'deleted_ids' => '', 'delete_count' => '', 'message' => 'There is an unexpected error. Try contacting the developers'));
+		}
+        exit();
+    }
     
     public function activeMultiple($id = NULL){
         $this->viewBuilder()->layout(false);
@@ -795,6 +885,83 @@ class UsersController extends AppController{
 			echo json_encode(array('type' => 'error', 'delete_count' => '', 'message' => 'There is an unexpected error. Try contacting the developers'));
 		}
 		exit();
+    }
+	
+	//Make Anonymous User
+	public function makeUserAnonymous(){
+		$this->viewBuilder()->layout(false);
+		$this->render(false);
+		/*$session = $this->request->session();
+		if( (empty($session->read('permissions.'.strtolower('Users'))) || (!array_key_exists('change-status',$session->read('permissions.'.strtolower('Users')))) && $session->read('permissions.'.strtolower('Users').'.'.strtolower('change-status'))!=1) ){
+			$this->Flash->error(__("You don't have permission to access this page."));
+			return $this->redirect(['plugin' => 'admin', 'controller' => 'admin-details', 'action' => 'dashboard']);
+		}*/
+        $this->request->allowMethod(['post']);
+		
+		$AnonymousUserTable = TableRegistry::get('Admin.AnonymousUsers');
+		$UsersTable = TableRegistry::get('Admin.Users');
+		
+		//checking user is already anonymous or not
+		$count = $AnonymousUserTable->find('all',['conditions'=>['AnonymousUsers.user_id'=>$this->request->data['id']]])->count();
+		if( $count == 0 ){
+			$anonymous_data['AnonymousUsers']['user_id']  		= isset($this->request->data['id'])?$this->request->data['id']:0;		
+			if($this->request->data['type'] == 'group'){
+				$anonymous_data['AnonymousUsers']['usertype'] 	= isset($this->request->data['type'])?$this->request->data['type']:'group';
+				$anonymous_data['AnonymousUsers']['slug'] 	 	= 'Anonymous Group';
+				
+				$user_update_data['Users']['name']				= ucwords('Anonymous Group');
+				$user_update_data['Users']['email']				= 'anonymousgroup@learneron.net';
+				$user_update_data['Users']['full_name']			= 'Anonymous Group';
+				
+			}
+			else if($this->request->data['type'] == 'individual'){
+				$slug											= $AnonymousUserTable->createSlug('Anonymous');
+				$exploded_value									= explode('-',$slug);
+				$anonymous_data['AnonymousUsers']['slug'] 	 	= $slug;
+				$anonymous_data['AnonymousUsers']['usertype'] 	= isset($this->request->data['type'])?$this->request->data['type']:'group';
+				$anonymous_data['AnonymousUsers']['unique_id'] 	= $exploded_value[1];
+				
+				$user_update_data['Users']['name']				= ucwords($slug);
+				$user_update_data['Users']['email']				= $slug.'@learneron.net';
+				$user_update_data['Users']['full_name']			= 'Anonymous User';
+			}
+				$user_update_data['Users']['profile_pic']		= 'user_no_image.png';
+				$user_update_data['Users']['location']			= NULL;
+				$user_update_data['Users']['title']				= NULL;
+				$user_update_data['Users']['birthday']			= NULL;
+				$user_update_data['Users']['about_me']			= NULL;
+				$user_update_data['Users']['signup_ip']			= NULL;
+				$user_update_data['Users']['type']				= 'N';
+				$user_update_data['Users']['facebook_id']		= NULL;
+				$user_update_data['Users']['googleplus_id']		= NULL;
+				$user_update_data['Users']['twitter_id']		= NULL;
+				$user_update_data['Users']['linkedin_id']		= NULL;
+				$user_update_data['Users']['facebook_link']		= NULL;
+				$user_update_data['Users']['twitter_link']		= NULL;
+				$user_update_data['Users']['gplus_link']		= NULL;
+				$user_update_data['Users']['linkedin_link']		= NULL;
+			
+			$AnonymousUserNewEntity = $AnonymousUserTable->newEntity();
+			$anonymous_insert_data = $AnonymousUserTable->patchEntity($AnonymousUserNewEntity, $anonymous_data);
+			if($AnonymousUserTable->save($anonymous_insert_data)){		
+				$ids = $this->request->data['id'];			
+				$existing_user_data = $UsersTable->get($this->request->data['id']);
+				$user_update_data['Users']['status']			= $existing_user_data['status'];
+				$update_user_data = $UsersTable->patchEntity($existing_user_data, $user_update_data);
+				
+				//pr($update_user_data); die;
+				
+				$UsersTable->save($update_user_data);
+				echo json_encode(array('type' => 'success', 'message' => "You have made that user as Anonymous successfully"));
+			}else{
+				$ids = '';
+				echo json_encode(array('type' => 'error', 'message' => "You have already made that user as Anonymous"));
+			}
+		}else{
+			$ids = '';
+			echo json_encode(array('type' => 'error', 'message' => "You have already made that user as Anonymous"));
+		}		
+        exit();
     }
     
 	public function changeStatus($id = NULL, $status = NULL){

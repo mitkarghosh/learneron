@@ -104,7 +104,7 @@ class UsersController extends AppController{
 										 ->setCategory("all");
 			
 			/*---------Personal Details-----------*/
-			$options['contain'] 	= ['Visitors','Visitors.VisitorLogs'];			
+			$options['contain'] 	= ['Visitors','Visitors.VisitorLogs','Careereducations','UserAccountSetting','UserAccountSetting.QuestionCategories'];			
 			$options['conditions'] 	= ['Users.id'=>$id];
 			$options['order'] 		= ['Users.id'=>'ASC'];
 			//$options['fields'] 	= ['Users.*'];
@@ -149,8 +149,92 @@ class UsersController extends AppController{
                                     ->setCellValue('L2', date('jS F Y H:i:s', strtotime($details['created'])));
 			/*---------Personal Details-----------*/
 			
-			/*---------QUESTION POSTED-----------*/
+			/*---------Account Settings Section-----------*/
 			$objQuestionPosted = $objPHPExcel->createSheet(1); //Setting index when creating
+			$objQuestionPosted->getStyle('A1')->getFont()->setBold(true);
+			$objQuestionPosted->getStyle('B1')->getFont()->setBold(true);
+			$objQuestionPosted->getStyle('C1')->getFont()->setBold(true);
+			$objQuestionPosted->getStyle('D1')->getFont()->setBold(true);			
+			$objQuestionPosted  ->setCellValue('A1', 'Receive Email Notifications on New Responses to My Questions')
+								->setCellValue('B1', 'Subscribe for News & Views')
+								->setCellValue('C1', 'Follow us on Twitter')
+								->setCellValue('D1', 'Send Me Notifications on Posting New Question in Below Defined Category');
+			
+			if( !empty($details['user_account_setting']) ){
+				$as = 2;
+				foreach($details['user_account_setting'] as $val_as){
+					if($val_as['response_to_my_question_notification'] == 1) $question_notification = 'Yes'; else $question_notification = 'No';
+					if($val_as['news_notification'] == 1) $news_notification = 'Yes'; else $news_notification = 'No';
+					if($val_as['follow_twitter'] == 1) $follow_twitter = 'Yes'; else $follow_twitter = 'No';
+					if($val_as['posting_new_question_notification'] == 1){
+						$catname = $val_as['question_category']['name'];
+					}else{
+						$catname = '';
+					}
+					$objQuestionPosted->setCellValue('A'.$as, $question_notification)
+								  ->setCellValue('B'.$as, $news_notification)
+								  ->setCellValue('C'.$as, $follow_twitter)
+								  ->setCellValue('D'.$as, $catname);
+					$as++;					
+				}
+			}								
+			$objQuestionPosted->setTitle('Account Settings');
+			/*---------Account Settings Section-----------*/
+			
+			/*---------Educational Details Section-----------*/
+			$objQuestionPosted = $objPHPExcel->createSheet(2); //Setting index when creating
+			$objQuestionPosted->getStyle('A1')->getFont()->setBold(true);
+			$objQuestionPosted->getStyle('B1')->getFont()->setBold(true);
+			$objQuestionPosted->getStyle('C1')->getFont()->setBold(true);
+			$objQuestionPosted->getStyle('D1')->getFont()->setBold(true);			
+			$objQuestionPosted  ->setCellValue('A1', 'Degree, Certificate, or Completion / Finished')
+								->setCellValue('B1', 'School, Bootcamp, MOOC, Course or Similar Name')
+								->setCellValue('C1', 'From Date')
+								->setCellValue('D1', 'To Date');
+			
+			if( !empty($details['careereducations']) ){
+				$ec = 2;
+				foreach($details['careereducations'] as $val_ec){
+					if( $val_ec['history_type'] == 'E' ){
+						$objQuestionPosted->setCellValue('A'.$ec, html_entity_decode(strip_tags($val_ec['edu_degree'])))
+									  ->setCellValue('B'.$ec, html_entity_decode(strip_tags($val_ec['edu_organization'])))
+									  ->setCellValue('C'.$ec, html_entity_decode(strip_tags($val_ec['edu_from'])))
+									  ->setCellValue('D'.$ec, html_entity_decode(strip_tags($val_ec['edu_to'])));
+						$ec++;
+					}
+				}
+			}								
+			$objQuestionPosted->setTitle('Educational Details');
+			/*---------Educational Details Section-----------*/
+			
+			/*---------Career / Company Details Section-----------*/
+			$objQuestionPosted = $objPHPExcel->createSheet(3); //Setting index when creating
+			$objQuestionPosted->getStyle('A1')->getFont()->setBold(true);
+			$objQuestionPosted->getStyle('B1')->getFont()->setBold(true);
+			$objQuestionPosted->getStyle('C1')->getFont()->setBold(true);
+			$objQuestionPosted->getStyle('D1')->getFont()->setBold(true);			
+			$objQuestionPosted  ->setCellValue('A1', 'Position')
+								->setCellValue('B1', 'Company Name')
+								->setCellValue('C1', 'From Date')
+								->setCellValue('D1', 'To Date');
+			
+			if( !empty($details['careereducations']) ){
+				$ce = 2;
+				foreach($details['careereducations'] as $val_ce){
+					if( $val_ce['history_type'] == 'C' ){
+						$objQuestionPosted->setCellValue('A'.$ce, html_entity_decode(strip_tags($val_ce['career_position'])))
+									  ->setCellValue('B'.$ce, html_entity_decode(strip_tags($val_ce['career_company'])))
+									  ->setCellValue('C'.$ce, $val_ce['career_from'])
+									  ->setCellValue('D'.$ce, $val_ce['career_to']);
+						$ce++;
+					}
+				}
+			}								
+			$objQuestionPosted->setTitle('Company Details');
+			/*---------Career / Company Details Section-----------*/
+			
+			/*---------QUESTION POSTED-----------*/
+			$objQuestionPosted = $objPHPExcel->createSheet(4); //Setting index when creating
 			$objQuestionPosted->getStyle('A1')->getFont()->setBold(true);
 			$objQuestionPosted->getStyle('B1')->getFont()->setBold(true);
 			$objQuestionPosted->getStyle('C1')->getFont()->setBold(true);
@@ -184,7 +268,7 @@ class UsersController extends AppController{
 			/*---------QUESTION POSTED-----------*/
 			
 			/*---------ANSWER POSTED-----------*/
-			$objAnswerPosted = $objPHPExcel->createSheet(2); //Setting index when creating
+			$objAnswerPosted = $objPHPExcel->createSheet(5); //Setting index when creating
 			$objAnswerPosted->getStyle('A1')->getFont()->setBold(true);
 			$objAnswerPosted->getStyle('B1')->getFont()->setBold(true);
 			$objAnswerPosted->getStyle('C1')->getFont()->setBold(true);
@@ -215,7 +299,7 @@ class UsersController extends AppController{
 			/*---------ANSWER POSTED-----------*/
 			
 			/*---------COMMENTS POSTED-----------*/
-			$objAnswerPosted = $objPHPExcel->createSheet(3); //Setting index when creating
+			$objAnswerPosted = $objPHPExcel->createSheet(6); //Setting index when creating
 			$objAnswerPosted->getStyle('A1')->getFont()->setBold(true);
 			$objAnswerPosted->getStyle('B1')->getFont()->setBold(true);
 			$objAnswerPosted->getStyle('C1')->getFont()->setBold(true);
@@ -232,7 +316,7 @@ class UsersController extends AppController{
 				foreach($comment_details as $val_cd){
 					if($val_cd->status == 'I') $status = 'Inactive'; else $status = 'Active';
 					$objAnswerPosted->setCellValue	('A'.$cd, strip_tags($val_cd->comment))
-									  ->setCellValue('B'.$cd, $val_cd->question->name)
+									  ->setCellValue('B'.$cd, $val_cd->question['name'])
 									  ->setCellValue('C'.$cd, date('jS F Y H:i:s', strtotime($val_cd->created)))
 									  ->setCellValue('D'.$cd, $status);
 					$cd++;
@@ -242,7 +326,7 @@ class UsersController extends AppController{
 			/*---------COMMENTS POSTED-----------*/
 			
 			/*---------LOG DETAILS-----------*/
-			$objAnswerPosted = $objPHPExcel->createSheet(4); //Setting index when creating
+			$objAnswerPosted = $objPHPExcel->createSheet(7); //Setting index when creating
 			$objAnswerPosted->getStyle('A1')->getFont()->setBold(true);
 			$objAnswerPosted->getStyle('B1')->getFont()->setBold(true);
 			$objAnswerPosted->getStyle('C1')->getFont()->setBold(true);

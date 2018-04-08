@@ -27,6 +27,10 @@ class UserAccountSettingTable extends Table{
 							'className'=>'Admin.Users',
 							'foreignKey'=>'user_id'							
 						]);
+		$this->belongsTo('QuestionCategories',[
+							'className'=>'Admin.QuestionCategories',
+							'foreignKey'=>'category_id'							
+						]);
     }
 
     public function beforeFind(Event $event, Query $query){

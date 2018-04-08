@@ -590,6 +590,38 @@ class UsersController extends AppController{
 			$QuestionsTable = TableRegistry::get('Admin.Questions');
 			$question_data = $QuestionsTable->find('list')->where(['user_id'=>$id])->toArray();
 			if( count($question_data) > 0){
+				foreach($question_data as $qd){
+					//delete from question answer respect to question id
+					$QuestionAnswersTable = TableRegistry::get('Admin.QuestionAnswers');
+					$ques_answer_data = $QuestionAnswersTable->find('list')->where(['question_id'=>$qd])->toArray();
+					if( count($ques_answer_data) > 0){
+						$QuestionAnswersTable->deleteAll(['id IN' => $ques_answer_data]);
+					}
+					//delete from question comments respect to question id
+					$QuestionCommentsTable = TableRegistry::get('Admin.QuestionComments');
+					$ques_comment_data = $QuestionCommentsTable->find('list')->where(['question_id'=>$qd])->toArray();
+					if( count($ques_comment_data) > 0){
+						$QuestionCommentsTable->deleteAll(['id IN' => $ques_comment_data]);
+					}
+					//delete from question tags respect to question id
+					$QuestionTagsTable = TableRegistry::get('Admin.QuestionTags');
+					$ques_tags_data = $QuestionTagsTable->find('list')->where(['question_id'=>$qd])->toArray();
+					if( count($ques_tags_data) > 0){
+						$QuestionTagsTable->deleteAll(['id IN' => $ques_tags_data]);
+					}
+					//delete from answer comment respect to question id
+					$AnswerCommentTable = TableRegistry::get('Admin.AnswerComment');
+					$del_data = $AnswerCommentTable->find('list', ['conditions'=>array('AnswerComment.question_id'=>$qd),'fields' => ['AnswerComment.id']])->toArray();
+					if( count($del_data) > 0){
+						$AnswerCommentTable->deleteAll(['id IN' => $del_data]);
+					}
+					//delete from answer upvote respect to question id
+					$AnswerUpvoteTable = TableRegistry::get('Admin.AnswerUpvote');
+					$del_answerupvote_data = $AnswerUpvoteTable->find('list',['conditions'=>array('question_id'=>$qd),'fields' => ['id']])->toArray();
+					if( count($del_answerupvote_data) > 0){
+						$AnswerUpvoteTable->deleteAll(['id IN' => $del_answerupvote_data]);
+					}
+				}
 				$QuestionsTable->deleteAll(['id IN' => $question_data]);
 			}
 			//delete from question tags
@@ -634,6 +666,25 @@ class UsersController extends AppController{
 			if( count($delete_accountsettings_data) > 0){
 				$UserAccountSettingTable->deleteAll(['id IN' => $delete_accountsettings_data]);
 			}
+			//delete from anonymous user
+			$AnonymousUserTable = TableRegistry::get('Admin.AnonymousUsers');				
+			$delete_anonymous_user_data = $AnonymousUserTable->find('list',['conditions'=>array('user_id'=>$id),'fields'=>['id']])->toArray();
+			if( count($delete_anonymous_user_data) > 0){
+				$AnonymousUserTable->deleteAll(['id IN' => $delete_anonymous_user_data]);
+			}
+			//delete from visitor table
+			$VisitorsTable = TableRegistry::get('Admin.VisitorLogs');				
+			$del_visitor_data = $VisitorsTable->find('list',['conditions'=>array('user_id'=>$id),'fields'=>['id']])->toArray();
+			if( count($del_visitor_data) > 0){
+				$VisitorsTable->deleteAll(['id IN' => $del_visitor_data]);
+			}
+			//delete from visitor logs table
+			$VisitorLogsTable = TableRegistry::get('Admin.VisitorLogs');				
+			$del_visitor_log_data = $VisitorLogsTable->find('list',['conditions'=>array('user_id'=>$id),'fields'=>['id']])->toArray();
+			if( count($del_visitor_log_data) > 0){
+				$VisitorLogsTable->deleteAll(['id IN' => $del_visitor_log_data]);
+			}
+			
 			$user_data = $UsersTable->get($id);
 			$UsersTable->delete($user_data);
 			echo json_encode(array('type' => 'success', 'deleted_id' => $id, 'message' => 'User successfully deleted'));			
@@ -660,13 +711,45 @@ class UsersController extends AppController{
 				$delete_careereducation_data = $CareereducationsTable->find('list', ['conditions'=>array('Careereducations.user_id'=>$val_id),'fields' => ['Careereducations.id']])->toArray();
 				if( count($delete_careereducation_data) > 0){
 					$CareereducationsTable->deleteAll(['id IN' => $delete_careereducation_data]);
-				}
+				}				
 				//delete from question
 				$QuestionsTable = TableRegistry::get('Admin.Questions');
 				$question_data = $QuestionsTable->find('list')->where(['user_id'=>$val_id])->toArray();
 				if( count($question_data) > 0){
+					foreach($question_data as $qd){
+						//delete from question answer respect to question id
+						$QuestionAnswersTable = TableRegistry::get('Admin.QuestionAnswers');
+						$ques_answer_data = $QuestionAnswersTable->find('list')->where(['question_id'=>$qd])->toArray();
+						if( count($ques_answer_data) > 0){
+							$QuestionAnswersTable->deleteAll(['id IN' => $ques_answer_data]);
+						}
+						//delete from question comments respect to question id
+						$QuestionCommentsTable = TableRegistry::get('Admin.QuestionComments');
+						$ques_comment_data = $QuestionCommentsTable->find('list')->where(['question_id'=>$qd])->toArray();
+						if( count($ques_comment_data) > 0){
+							$QuestionCommentsTable->deleteAll(['id IN' => $ques_comment_data]);
+						}
+						//delete from question tags respect to question id
+						$QuestionTagsTable = TableRegistry::get('Admin.QuestionTags');
+						$ques_tags_data = $QuestionTagsTable->find('list')->where(['question_id'=>$qd])->toArray();
+						if( count($ques_tags_data) > 0){
+							$QuestionTagsTable->deleteAll(['id IN' => $ques_tags_data]);
+						}
+						//delete from answer comment respect to question id
+						$AnswerCommentTable = TableRegistry::get('Admin.AnswerComment');
+						$del_data = $AnswerCommentTable->find('list', ['conditions'=>array('AnswerComment.question_id'=>$qd),'fields' => ['AnswerComment.id']])->toArray();
+						if( count($del_data) > 0){
+							$AnswerCommentTable->deleteAll(['id IN' => $del_data]);
+						}
+						//delete from answer upvote respect to question id
+						$AnswerUpvoteTable = TableRegistry::get('Admin.AnswerUpvote');
+						$del_answerupvote_data = $AnswerUpvoteTable->find('list',['conditions'=>array('question_id'=>$qd),'fields' => ['id']])->toArray();
+						if( count($del_answerupvote_data) > 0){
+							$AnswerUpvoteTable->deleteAll(['id IN' => $del_answerupvote_data]);
+						}
+					}
 					$QuestionsTable->deleteAll(['id IN' => $question_data]);
-				}
+				}				
 				//delete from question tags
 				$QuestionTagsTable = TableRegistry::get('Admin.QuestionTags');
 				$question_tags_data = $QuestionTagsTable->find('list')->where(['user_id'=>$val_id])->toArray();
@@ -709,6 +792,25 @@ class UsersController extends AppController{
 				if( count($delete_accountsettings_data) > 0){
 					$UserAccountSettingTable->deleteAll(['id IN' => $delete_accountsettings_data]);
 				}
+				//delete from anonymous user
+				$AnonymousUserTable = TableRegistry::get('Admin.AnonymousUsers');				
+				$delete_anonymous_user_data = $AnonymousUserTable->find('list',['conditions'=>array('user_id'=>$val_id),'fields'=>['id']])->toArray();
+				if( count($delete_anonymous_user_data) > 0){
+					$AnonymousUserTable->deleteAll(['id IN' => $delete_anonymous_user_data]);
+				}
+				//delete from visitor table
+				$VisitorsTable = TableRegistry::get('Admin.VisitorLogs');				
+				$del_visitor_data = $VisitorsTable->find('list',['conditions'=>array('user_id'=>$val_id),'fields'=>['id']])->toArray();
+				if( count($del_visitor_data) > 0){
+					$VisitorsTable->deleteAll(['id IN' => $del_visitor_data]);
+				}
+				//delete from visitor logs table
+				$VisitorLogsTable = TableRegistry::get('Admin.VisitorLogs');				
+				$del_visitor_log_data = $VisitorLogsTable->find('list',['conditions'=>array('user_id'=>$val_id),'fields'=>['id']])->toArray();
+				if( count($del_visitor_log_data) > 0){
+					$VisitorLogsTable->deleteAll(['id IN' => $del_visitor_log_data]);
+				}
+				
 				$user_data = $UsersTable->get($val_id);
 				$UsersTable->delete($user_data);
 				
@@ -732,6 +834,7 @@ class UsersController extends AppController{
         exit();
     }
 	
+	//Delete all user data from database
 	public function deleteUserWithSubmission($id = NULL){
         $this->viewBuilder()->layout(false);
 		$this->render(false);
@@ -742,81 +845,119 @@ class UsersController extends AppController{
 		}
         $this->request->allowMethod(['post', 'delete']);
 		if(!empty($this->request->data['id'])){
-			foreach($this->request->data['id'] as $val_id){
-				$UsersTable = TableRegistry::get('Admin.Users');			
-				//delete from career
-				$CareereducationsTable = TableRegistry::get('Admin.Careereducations');
-				$delete_careereducation_data = $CareereducationsTable->find('list', ['conditions'=>array('Careereducations.user_id'=>$val_id),'fields' => ['Careereducations.id']])->toArray();
-				if( count($delete_careereducation_data) > 0){
-					$CareereducationsTable->deleteAll(['id IN' => $delete_careereducation_data]);
+			$val_id = $this->request->data['id'];
+			
+			$UsersTable = TableRegistry::get('Admin.Users');			
+			//delete from career
+			$CareereducationsTable = TableRegistry::get('Admin.Careereducations');
+			$delete_careereducation_data = $CareereducationsTable->find('list', ['conditions'=>array('Careereducations.user_id'=>$val_id),'fields' => ['Careereducations.id']])->toArray();
+			if( count($delete_careereducation_data) > 0){
+				$CareereducationsTable->deleteAll(['id IN' => $delete_careereducation_data]);
+			}
+			//delete from question
+			$QuestionsTable = TableRegistry::get('Admin.Questions');
+			$question_data = $QuestionsTable->find('list')->where(['user_id'=>$val_id])->toArray();
+			if( count($question_data) > 0){
+				foreach($question_data as $qd){
+					//delete from question answer respect to question id
+					$QuestionAnswersTable = TableRegistry::get('Admin.QuestionAnswers');
+					$ques_answer_data = $QuestionAnswersTable->find('list')->where(['question_id'=>$qd])->toArray();
+					if( count($ques_answer_data) > 0){
+						$QuestionAnswersTable->deleteAll(['id IN' => $ques_answer_data]);
+					}
+					//delete from question comments respect to question id
+					$QuestionCommentsTable = TableRegistry::get('Admin.QuestionComments');
+					$ques_comment_data = $QuestionCommentsTable->find('list')->where(['question_id'=>$qd])->toArray();
+					if( count($ques_comment_data) > 0){
+						$QuestionCommentsTable->deleteAll(['id IN' => $ques_comment_data]);
+					}
+					//delete from question tags respect to question id
+					$QuestionTagsTable = TableRegistry::get('Admin.QuestionTags');
+					$ques_tags_data = $QuestionTagsTable->find('list')->where(['question_id'=>$qd])->toArray();
+					if( count($ques_tags_data) > 0){
+						$QuestionTagsTable->deleteAll(['id IN' => $ques_tags_data]);
+					}
+					//delete from answer comment respect to question id
+					$AnswerCommentTable = TableRegistry::get('Admin.AnswerComment');
+					$del_data = $AnswerCommentTable->find('list', ['conditions'=>array('AnswerComment.question_id'=>$qd),'fields' => ['AnswerComment.id']])->toArray();
+					if( count($del_data) > 0){
+						$AnswerCommentTable->deleteAll(['id IN' => $del_data]);
+					}
+					//delete from answer upvote respect to question id
+					$AnswerUpvoteTable = TableRegistry::get('Admin.AnswerUpvote');
+					$del_answerupvote_data = $AnswerUpvoteTable->find('list',['conditions'=>array('question_id'=>$qd),'fields' => ['id']])->toArray();
+					if( count($del_answerupvote_data) > 0){
+						$AnswerUpvoteTable->deleteAll(['id IN' => $del_answerupvote_data]);
+					}
 				}
-				//delete from question
-				$QuestionsTable = TableRegistry::get('Admin.Questions');
-				$question_data = $QuestionsTable->find('list')->where(['user_id'=>$val_id])->toArray();
-				if( count($question_data) > 0){
-					$QuestionsTable->deleteAll(['id IN' => $question_data]);
-				}
-				//delete from question tags
-				$QuestionTagsTable = TableRegistry::get('Admin.QuestionTags');
-				$question_tags_data = $QuestionTagsTable->find('list')->where(['user_id'=>$val_id])->toArray();
-				if( count($question_tags_data) > 0){
-					$QuestionTagsTable->deleteAll(['id IN' => $question_tags_data]);
-				}
-				//delete from question comments
-				$QuestionCommentsTable = TableRegistry::get('Admin.QuestionComments');
-				$question_comment_data = $QuestionCommentsTable->find('list')->where(['user_id'=>$val_id])->toArray();
-				if( count($question_comment_data) > 0){
-					$QuestionCommentsTable->deleteAll(['id IN' => $question_comment_data]);
-				}			
-				//delete from question answer
-				$QuestionAnswersTable = TableRegistry::get('Admin.QuestionAnswers');
-				$question_answer_data = $QuestionAnswersTable->find('list')->where(['user_id'=>$val_id])->toArray();
-				if( count($question_answer_data) > 0){
-					$QuestionAnswersTable->deleteAll(['id IN' => $question_answer_data]);
-				}
-				//delete from answer comment
-				$AnswerCommentTable = TableRegistry::get('Admin.AnswerComment');
-				$delete_data = $AnswerCommentTable->find('list', ['conditions'=>array('AnswerComment.user_id'=>$val_id),'fields' => ['AnswerComment.id']])->toArray();
-				if( count($delete_data) > 0){
-					$AnswerCommentTable->deleteAll(['id IN' => $delete_data]);
-				}
-				//delete from answer upvote
-				$AnswerUpvoteTable = TableRegistry::get('Admin.AnswerUpvote');
-				$delete_answerupvote_data = $AnswerUpvoteTable->find('list',['conditions'=>array('user_id'=>$val_id),'fields' => ['id']])->toArray();
-				if( count($delete_answerupvote_data) > 0){
-					$AnswerUpvoteTable->deleteAll(['id IN' => $delete_answerupvote_data]);
-				}
-				//delete from news comment
-				$NewsCommentsTable = TableRegistry::get('Admin.NewsComments');
-				$delete_newscomment_data = $NewsCommentsTable->find('list',['conditions'=>array('user_id'=>$val_id),'fields' => ['id']])->toArray();
-				if( count($delete_newscomment_data) > 0){
-					$NewsCommentsTable->deleteAll(['id IN' => $delete_newscomment_data]);
-				}
-				//delete from user account settings
-				$UserAccountSettingTable = TableRegistry::get('Admin.UserAccountSetting');
-				$delete_accountsettings_data = $UserAccountSettingTable->find('list',['conditions'=>array('user_id'=>$val_id),'fields'=>['id']])->toArray();
-				if( count($delete_accountsettings_data) > 0){
-					$UserAccountSettingTable->deleteAll(['id IN' => $delete_accountsettings_data]);
-				}
-				$user_data = $UsersTable->get($val_id);
-				$UsersTable->delete($user_data);
-				
-				$deleted_user_ids[] = $val_id;
-				$deleted_users_count++;
-				$non_deleted_users_count = 0;				
+				$QuestionsTable->deleteAll(['id IN' => $question_data]);
+			}
+			//delete from question tags
+			$QuestionTagsTable = TableRegistry::get('Admin.QuestionTags');
+			$question_tags_data = $QuestionTagsTable->find('list')->where(['user_id'=>$val_id])->toArray();
+			if( count($question_tags_data) > 0){
+				$QuestionTagsTable->deleteAll(['id IN' => $question_tags_data]);
+			}
+			//delete from question comments
+			$QuestionCommentsTable = TableRegistry::get('Admin.QuestionComments');
+			$question_comment_data = $QuestionCommentsTable->find('list')->where(['user_id'=>$val_id])->toArray();
+			if( count($question_comment_data) > 0){
+				$QuestionCommentsTable->deleteAll(['id IN' => $question_comment_data]);
 			}			
-			if( (count($this->request->data['id']) == $deleted_users_count) && ($non_deleted_users_count == 0) ){
-				$deleted_user_ids = $this->request->data['id'];
-				echo json_encode(array('type' => 'success', 'deleted_ids' => $deleted_user_ids, 'delete_count' => '1', 'message' => 'User(s) successfully deleted'));
+			//delete from question answer
+			$QuestionAnswersTable = TableRegistry::get('Admin.QuestionAnswers');
+			$question_answer_data = $QuestionAnswersTable->find('list')->where(['user_id'=>$val_id])->toArray();
+			if( count($question_answer_data) > 0){
+				$QuestionAnswersTable->deleteAll(['id IN' => $question_answer_data]);
 			}
-			else if( ($deleted_users_count == 0) && (count($this->request->data['id']) == $non_deleted_users_count) ){
-				echo json_encode(array('type' => 'error', 'deleted_ids' => '', 'delete_count' => '2', 'message' => 'Selected user(s) related question(s) exist, delete question(s) first!!!'));
+			//delete from answer comment
+			$AnswerCommentTable = TableRegistry::get('Admin.AnswerComment');
+			$delete_data = $AnswerCommentTable->find('list', ['conditions'=>array('AnswerComment.user_id'=>$val_id),'fields' => ['AnswerComment.id']])->toArray();
+			if( count($delete_data) > 0){
+				$AnswerCommentTable->deleteAll(['id IN' => $delete_data]);
 			}
-			else{
-				echo json_encode(array('type' => 'warning', 'deleted_ids' => $deleted_user_ids, 'delete_count' => '3', 'message' => 'Some user(s) related question(s) exist, delete question(s) first!!!'));
+			//delete from answer upvote
+			$AnswerUpvoteTable = TableRegistry::get('Admin.AnswerUpvote');
+			$delete_answerupvote_data = $AnswerUpvoteTable->find('list',['conditions'=>array('user_id'=>$val_id),'fields' => ['id']])->toArray();
+			if( count($delete_answerupvote_data) > 0){
+				$AnswerUpvoteTable->deleteAll(['id IN' => $delete_answerupvote_data]);
 			}
+			//delete from news comment
+			$NewsCommentsTable = TableRegistry::get('Admin.NewsComments');
+			$delete_newscomment_data = $NewsCommentsTable->find('list',['conditions'=>array('user_id'=>$val_id),'fields' => ['id']])->toArray();
+			if( count($delete_newscomment_data) > 0){
+				$NewsCommentsTable->deleteAll(['id IN' => $delete_newscomment_data]);
+			}
+			//delete from user account settings
+			$UserAccountSettingTable = TableRegistry::get('Admin.UserAccountSetting');
+			$delete_accountsettings_data = $UserAccountSettingTable->find('list',['conditions'=>array('user_id'=>$val_id),'fields'=>['id']])->toArray();
+			if( count($delete_accountsettings_data) > 0){
+				$UserAccountSettingTable->deleteAll(['id IN' => $delete_accountsettings_data]);
+			}
+			//delete from anonymous user
+			$AnonymousUserTable = TableRegistry::get('Admin.AnonymousUsers');				
+			$delete_anonymous_user_data = $AnonymousUserTable->find('list',['conditions'=>array('user_id'=>$val_id),'fields'=>['id']])->toArray();
+			if( count($delete_anonymous_user_data) > 0){
+				$AnonymousUserTable->deleteAll(['id IN' => $delete_anonymous_user_data]);
+			}
+			//delete from visitor table
+			$VisitorsTable = TableRegistry::get('Admin.VisitorLogs');				
+			$del_visitor_data = $VisitorsTable->find('list',['conditions'=>array('user_id'=>$val_id),'fields'=>['id']])->toArray();
+			if( count($del_visitor_data) > 0){
+				$VisitorsTable->deleteAll(['id IN' => $del_visitor_data]);
+			}
+			//delete from visitor logs table
+			$VisitorLogsTable = TableRegistry::get('Admin.VisitorLogs');				
+			$del_visitor_log_data = $VisitorLogsTable->find('list',['conditions'=>array('user_id'=>$val_id),'fields'=>['id']])->toArray();
+			if( count($del_visitor_log_data) > 0){
+				$VisitorLogsTable->deleteAll(['id IN' => $del_visitor_log_data]);
+			}
+			
+			$user_data = $UsersTable->get($val_id);
+			$UsersTable->delete($user_data);
+			echo json_encode(array('type' => 'success', 'message' => 'User successfully deleted'));
 		}else{
-			echo json_encode(array('type' => 'error', 'deleted_ids' => '', 'delete_count' => '', 'message' => 'There is an unexpected error. Try contacting the developers'));
+			echo json_encode(array('type' => 'error', 'message' => 'There is an unexpected error. Try contacting the developers'));
 		}
         exit();
     }

@@ -336,37 +336,13 @@ var swalFunction = function () {
 		title: "Are you sure?",
 		type: "warning",
 		showCancelButton: false,
+		showConfirmButton: false,
 		//confirmButtonClass: 'btn-danger',
-		confirmButtonText: "Full",
+		//confirmButtonText: "Full",
 		closeOnConfirm: false,
 		showLoaderOnConfirm: true,
 	},
 	function () {
-		$.ajax({
-			type: 'POST',
-			dataType: 'JSON',
-			url: '<?php echo Router::url("/admin/users/delete-user-with-submission/",true);?>',
-			data: {id: id},			
-			success: function(result) {
-				if(result.type == 'success'){
-					setTimeout(function () {
-						//$('#row_id_'+result.deleted_id).remove();
-						swal({
-							title: result.message,
-							type: result.type,
-							confirmButtonText: "OK",
-							},
-							function(){
-								window.location.reload();
-							});
-					}, 200);
-				}else{
-					setTimeout(function () {
-						swal(result.message, "", result.type);
-					}, 200);
-				}
-			}
-		});
 	});
 }
 
@@ -374,10 +350,37 @@ function make_anonymouos(id){
 	swalExtend({
 		swalFunction: swalFunction,		
 		hasCancelButton: true,		
-		buttonNum: 3,
-		buttonColor: ["blue", "#ff0000",'green'],
-		buttonNames: ["Individual", "Group", "Cancel"],
+		buttonNum: 4,
+		buttonColor: ["#caa961","blue", "#ff0000",'green'],
+		buttonNames: ["Full Delete","Individual<br />Anonymous", "Group<br />Anonymous", "Cancel"],
 		clickFunctionList: [
+			function () {
+				$.ajax({
+					type: 'POST',
+					dataType: 'JSON',
+					url: '<?php echo Router::url("/admin/users/delete-user-with-submission/",true); ?>',
+					data: {id: id, type:'individual'},			
+					success: function(result) {
+						if(result.type == 'success'){
+							setTimeout(function () {
+								//$('#row_id_'+result.deleted_id).remove();
+								swal({
+									title: result.message,
+									type: result.type,
+									confirmButtonText: "OK",
+									},
+									function(){
+										window.location.reload();
+									});
+							}, 200);
+						}else{
+							setTimeout(function () {
+								swal(result.message, "", result.type);
+							}, 200);
+						}
+					}
+				});
+			},
 			function () {
 				$.ajax({
 					type: 'POST',

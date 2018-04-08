@@ -531,6 +531,7 @@ transform: scale(0);
 .Q-left .Q-tags a:hover {
 	background: #886824;
 	color: #fff;
+	border: 1px solid #886824;
 }
 .ased_by {
 	font-size: 12px;
@@ -627,6 +628,7 @@ transform: scale(0);
 .category.side-bar-block li a:hover span, a.tags:hover span {
 	background: #886824;
 	color: #fff;
+	border: 1px solid #886824;
 }
 .category .side-bar-block-box {
 	height: 165px;

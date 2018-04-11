@@ -1155,8 +1155,8 @@ class UsersController extends AppController{
 				$user_update_data['Users']['gplus_link']		= NULL;
 				$user_update_data['Users']['linkedin_link']		= NULL;
 				
-				$existing_user_data = $UsersTable->get($this->request->data['id']);
-				$user_update_data['Users']['status']			= $existing_user_data->status;
+				//$existing_user_data = $UsersTable->get($this->request->data['id']);
+				//$user_update_data['Users']['status']			= $existing_user_data->status;
 			}
 			else if($this->request->data['type'] == 'individual'){
 				$slug											= $AnonymousUserTable->createSlug('Anonymous');
@@ -1185,15 +1185,15 @@ class UsersController extends AppController{
 				$user_update_data['Users']['gplus_link']		= NULL;
 				$user_update_data['Users']['linkedin_link']		= NULL;
 				
-				$existing_user_data = $UsersTable->get($this->request->data['id']);
-				$user_update_data['Users']['status']			= $existing_user_data->status;
+				//$existing_user_data = $UsersTable->get($this->request->data['id']);
+				//$user_update_data['Users']['status']			= $existing_user_data->status;
 			}				
 			
 			$AnonymousUserNewEntity = $AnonymousUserTable->newEntity();
 			$anonymous_insert_data = $AnonymousUserTable->patchEntity($AnonymousUserNewEntity, $anonymous_data);
 			if($AnonymousUserTable->save($anonymous_insert_data)){		
 				$ids = $this->request->data['id'];			
-				
+				$existing_user_data = $UsersTable->get($this->request->data['id']);
 				$update_user_data = $UsersTable->patchEntity($existing_user_data, $user_update_data);
 				
 				pr($update_user_data); die;

@@ -258,7 +258,7 @@ jQuery(function () {
 						$('#signup_form')[0].reset();
 						setTimeout(function(){
 							$('#msg_div').html('');
-							$('#setting_data').modal('show');
+							//$('#setting_data').modal('show');
 					  },3000);
 					}else{
 						var error_msg = "<div class='message error' onclick='this.classList.add('hidden')'>There was an unexpected error. Try again later or contact the developers.</div>";
@@ -302,7 +302,7 @@ jQuery(function () {
 						$('#setting_form')[0].reset();
 						setTimeout(function(){
 							$('#setting_check_error').html('');
-							$('#setting_data').modal('hide');
+							//$('#setting_data').modal('hide');
 						},3000);
 					}else{
 						var error_msg = "<div class='message error' onclick='this.classList.add('hidden')'>There was an unexpected error. Try again later or contact the developers.</div>";

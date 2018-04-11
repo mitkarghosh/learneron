@@ -21,7 +21,7 @@ class UsersController extends AppController{
             'httpOnly' => true
         ]);
 		
-        $this->Auth->allow(['signup','signupSetting','emailExist','verify','login','forgotPassword','resetPassword','allUsers','search','ajaxLogin','ajaxChangeHeader','getUserPublicDetails','facebookLogin','googleLogin','gplusConfirmLogin','twitterLogin','twittercallback','linkedinLogin','linkedinCallBack','viewSubmissions']);
+        $this->Auth->allow(['signup','signupSetting','seeSettingNowUpdate','emailExist','verify','login','forgotPassword','resetPassword','allUsers','search','ajaxLogin','ajaxChangeHeader','getUserPublicDetails','facebookLogin','googleLogin','gplusConfirmLogin','twitterLogin','twittercallback','linkedinLogin','linkedinCallBack','viewSubmissions']);
 		
 		$latest_news_rightpanel = $this->getLatestNews();
 		//$featured_question_rightpanel = $this->getFeaturedQuestions();
@@ -135,6 +135,19 @@ class UsersController extends AppController{
     	}
 		$this->set(compact('title'));
     }
+	//See Setting Now
+	public function seeSettingNowUpdate(){
+		if($this->request->is('post')){
+			$this->request->data['see_setting_page'] = 0;
+			$UsersTable = TableRegistry::get('Users');
+			$user = $UsersTable->get($this->Auth->user('id'));			
+			$updated_data = $UsersTable->patchEntity($user, $this->request->data);
+			$UsersTable->save($updated_data);
+			echo 'success';
+			exit();
+    	}
+	}
+	
 	//Signup page
     public function signupSetting(){
 		$title = 'Setting';
@@ -245,7 +258,11 @@ class UsersController extends AppController{
 								  ->set(['loggedin_status'=>1,'loggedin_time'=>date('Y-m-d H:i:s')])
 								  ->where(['email' => $this->request->data['email']])
 								  ->execute();
-								if($user['is_setting']==0){
+								  
+								$session->write('reset_password','success');
+								echo json_encode(['login'=>'success']);
+								
+								/*if($user['is_setting']==0){
 									$session->write('reset_password','success');
 									echo json_encode(['login'=>'success']);
 								}else{
@@ -256,7 +273,8 @@ class UsersController extends AppController{
 									  ->execute();
 									//$session->write('reset_password','success');
 									echo json_encode(['login'=>'success_to_setting']);
-								}
+								}*/
+								
 								exit();
 							}else{
 								$session->write('Users.login_condition','failed');
@@ -371,7 +389,7 @@ class UsersController extends AppController{
 		$UsersTable = TableRegistry::get('Users');		
 		$option['contain']	  = ['Careereducations'];
 		$option['conditions'] = ['Users.id'=>$user_data['id'], 'Users.status'=>'A'];
-		$option['fields'] 	  = ['id','name','profile_pic','location','title','email','full_name','birthday','about_me','type','facebook_link','twitter_link','gplus_link','linkedin_link','status'];
+		$option['fields'] 	  = ['id','name','profile_pic','location','title','email','full_name','birthday','about_me','type','facebook_link','twitter_link','gplus_link','linkedin_link','see_setting_page','status'];
 		$user_related_details = $UsersTable->find('all', $option)->first();
 		$this->visitorlogs('Users','myAccount','My Account',NULL,NULL,$user_data['id']);	//Log details insertion
 		//pr($user_related_details); die;

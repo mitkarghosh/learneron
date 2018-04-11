@@ -1127,7 +1127,17 @@ class UsersController extends AppController{
 		$UsersTable = TableRegistry::get('Admin.Users');
 		
 		//checking user is already anonymous or not
+		if($this->request->data['type'] == 'individual'){
+			$count = $AnonymousUserTable->find('all',['conditions'=>['AnonymousUsers.user_id'=>$this->request->data['id'],'AnonymousUsers.usertype'=>'individual']])->count();
+			pr($count); die;
+		}
+		else if($this->request->data['type'] == 'group'){
+			
+		}
+		
+		
 		$count = $AnonymousUserTable->find('all',['conditions'=>['AnonymousUsers.user_id'=>$this->request->data['id']]])->count();
+		pr($count); die;
 		if( $count == 0 ){
 			$anonymous_data['AnonymousUsers']['user_id']  		= isset($this->request->data['id'])?$this->request->data['id']:0;		
 			if($this->request->data['type'] == 'group'){

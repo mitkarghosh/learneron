@@ -227,8 +227,52 @@ $session  = $this->request->session();
 		</div>
 	</div>
 </div>
+
+<!-- Setting Popup -->
+<div class="modal fade bd-example-modal-lg" id="redirect_login_setting_data" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLongTitle">See Settings Page</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<?php echo $this->Form->create(false, array('url'=>'javascript:void(0)', 'class'=>'', 'novalidate' =>'novalidate','id'=>'setting_form'));?>
+					<?php echo $this->Form->input('user_id', ['type'=>'hidden','id'=>'user_id','label'=>false]);?>
+					<div class="check-box-set">
+						<input type="checkbox" id="is_setting" name="is_setting" value="1" checked>
+						<!--<label for="is_setting">See Settings Now</label>-->
+					</div>
+					<p id="setting_check_error"></p>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-alt" data-dismiss="modal">No</button>
+						<a href="<?php echo Router::url("/account-setting/",true); ?>" class="btn btn-normal">Yes</a>
+					</div>
+					<div class="setting_loader" style="text-align:center;"></div>
+				<?php echo $this->Form->end(); ?>
+			</div>			
+		</div>
+	</div>
+</div>
+<!-- Setting Popup -->
+
 <script>
 $(document).ready(function(){
+	<?php
+	if($user_related_details->see_setting_page == 1){
+	?>
+		$.ajax({
+            url : '<?php echo Router::url("/users/see_setting_now_update/",true); ?>',
+            type : 'POST',
+            success : function( response ) {
+                $('#redirect_login_setting_data').modal('show');
+            }
+        });		
+	<?php
+	}
+	?>
 	setTimeout(function(){
 		$('#msg_div').html('');
 		$('#profile_msg').html('');

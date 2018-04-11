@@ -1215,7 +1215,8 @@ class UsersController extends AppController{
 					$updated_data = $UsersTable->patchEntity($user, $user_update_data);				
 					$UsersTable->save($updated_data);
 				
-					$updated = $AnonymousUserTable->patchEntity($count, $anonymous_data);				
+					$updated = $AnonymousUserTable->patchEntity($count, $anonymous_data);
+					pr($updated); die;
 					$AnonymousUserTable->save($updated);
 				
 				echo json_encode(array('type' => 'success', 'message' => "You have made that user as Anonymous successfully"));

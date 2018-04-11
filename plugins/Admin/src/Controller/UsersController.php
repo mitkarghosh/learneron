@@ -1129,7 +1129,8 @@ class UsersController extends AppController{
 		//checking user is already anonymous or not
 		$count = $AnonymousUserTable->find('all',['conditions'=>['AnonymousUsers.user_id'=>$this->request->data['id']]])->first();
 		if( count($count) == 0 ){
-			$anonymous_data['AnonymousUsers']['user_id']  		= isset($this->request->data['id'])?$this->request->data['id']:0;		
+			$anonymous_data['AnonymousUsers']['user_id']  		= isset($this->request->data['id'])?$this->request->data['id']:0;
+			
 			if($this->request->data['type'] == 'group'){
 				$anonymous_data['AnonymousUsers']['usertype'] 	= isset($this->request->data['type'])?$this->request->data['type']:'group';
 				$anonymous_data['AnonymousUsers']['slug'] 	 	= 'Anonymous Group';
@@ -1137,19 +1138,6 @@ class UsersController extends AppController{
 				$user_update_data['Users']['name']				= ucwords('Anonymous Group');
 				$user_update_data['Users']['email']				= 'anonymousgroup@learneron.net';
 				$user_update_data['Users']['full_name']			= 'Anonymous Group';
-				
-			}
-			else if($this->request->data['type'] == 'individual'){
-				$slug											= $AnonymousUserTable->createSlug('Anonymous');
-				$exploded_value									= explode('-',$slug);
-				$anonymous_data['AnonymousUsers']['slug'] 	 	= $slug;
-				$anonymous_data['AnonymousUsers']['usertype'] 	= isset($this->request->data['type'])?$this->request->data['type']:'individual';
-				$anonymous_data['AnonymousUsers']['unique_id'] 	= $exploded_value[1];
-				
-				$user_update_data['Users']['name']				= ucwords($slug);
-				$user_update_data['Users']['email']				= $slug.'@learneron.net';
-				$user_update_data['Users']['full_name']			= 'Anonymous User';
-			}
 				$user_update_data['Users']['profile_pic']		= 'user_no_image.png';
 				$user_update_data['Users']['location']			= NULL;
 				$user_update_data['Users']['title']				= NULL;
@@ -1166,16 +1154,49 @@ class UsersController extends AppController{
 				$user_update_data['Users']['twitter_link']		= NULL;
 				$user_update_data['Users']['gplus_link']		= NULL;
 				$user_update_data['Users']['linkedin_link']		= NULL;
+				
+				$existing_user_data = $UsersTable->get($this->request->data['id']);
+				$user_update_data['Users']['status']			= $existing_user_data->status;
+			}
+			else if($this->request->data['type'] == 'individual'){
+				$slug											= $AnonymousUserTable->createSlug('Anonymous');
+				$exploded_value									= explode('-',$slug);
+				$anonymous_data['AnonymousUsers']['slug'] 	 	= $slug;
+				$anonymous_data['AnonymousUsers']['usertype'] 	= isset($this->request->data['type'])?$this->request->data['type']:'individual';
+				$anonymous_data['AnonymousUsers']['unique_id'] 	= $exploded_value[1];
+				
+				$user_update_data['Users']['name']				= ucwords($slug);
+				$user_update_data['Users']['email']				= $slug.'@learneron.net';
+				$user_update_data['Users']['full_name']			= 'Anonymous User';
+				$user_update_data['Users']['profile_pic']		= 'user_no_image.png';
+				$user_update_data['Users']['location']			= NULL;
+				$user_update_data['Users']['title']				= NULL;
+				$user_update_data['Users']['birthday']			= NULL;
+				$user_update_data['Users']['about_me']			= NULL;
+				$user_update_data['Users']['signup_ip']			= NULL;
+				$user_update_data['Users']['signup_string']		= NULL;
+				$user_update_data['Users']['type']				= 'N';
+				$user_update_data['Users']['facebook_id']		= NULL;
+				$user_update_data['Users']['googleplus_id']		= NULL;
+				$user_update_data['Users']['twitter_id']		= NULL;
+				$user_update_data['Users']['linkedin_id']		= NULL;
+				$user_update_data['Users']['facebook_link']		= NULL;
+				$user_update_data['Users']['twitter_link']		= NULL;
+				$user_update_data['Users']['gplus_link']		= NULL;
+				$user_update_data['Users']['linkedin_link']		= NULL;
+				
+				$existing_user_data = $UsersTable->get($this->request->data['id']);
+				$user_update_data['Users']['status']			= $existing_user_data->status;
+			}				
 			
 			$AnonymousUserNewEntity = $AnonymousUserTable->newEntity();
 			$anonymous_insert_data = $AnonymousUserTable->patchEntity($AnonymousUserNewEntity, $anonymous_data);
 			if($AnonymousUserTable->save($anonymous_insert_data)){		
 				$ids = $this->request->data['id'];			
-				$existing_user_data = $UsersTable->get($this->request->data['id']);
-				$user_update_data['Users']['status']			= $existing_user_data['status'];
+				
 				$update_user_data = $UsersTable->patchEntity($existing_user_data, $user_update_data);
 				
-				//pr($update_user_data); die;
+				pr($update_user_data); die;
 				
 				$UsersTable->save($update_user_data);
 				echo json_encode(array('type' => 'success', 'message' => "You have made that user as Anonymous successfully"));

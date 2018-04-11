@@ -1127,18 +1127,8 @@ class UsersController extends AppController{
 		$UsersTable = TableRegistry::get('Admin.Users');
 		
 		//checking user is already anonymous or not
-		if($this->request->data['type'] == 'individual'){
-			$count = $AnonymousUserTable->find('all',['conditions'=>['AnonymousUsers.user_id'=>$this->request->data['id'],'AnonymousUsers.usertype'=>'individual']])->count();
-			pr($count); die;
-		}
-		else if($this->request->data['type'] == 'group'){
-			
-		}
-		
-		
-		$count = $AnonymousUserTable->find('all',['conditions'=>['AnonymousUsers.user_id'=>$this->request->data['id']]])->count();
-		pr($count); die;
-		if( $count == 0 ){
+		$count = $AnonymousUserTable->find('all',['conditions'=>['AnonymousUsers.user_id'=>$this->request->data['id']]])->first();
+		if( count($count) == 0 ){
 			$anonymous_data['AnonymousUsers']['user_id']  		= isset($this->request->data['id'])?$this->request->data['id']:0;		
 			if($this->request->data['type'] == 'group'){
 				$anonymous_data['AnonymousUsers']['usertype'] 	= isset($this->request->data['type'])?$this->request->data['type']:'group';
@@ -1153,7 +1143,7 @@ class UsersController extends AppController{
 				$slug											= $AnonymousUserTable->createSlug('Anonymous');
 				$exploded_value									= explode('-',$slug);
 				$anonymous_data['AnonymousUsers']['slug'] 	 	= $slug;
-				$anonymous_data['AnonymousUsers']['usertype'] 	= isset($this->request->data['type'])?$this->request->data['type']:'group';
+				$anonymous_data['AnonymousUsers']['usertype'] 	= isset($this->request->data['type'])?$this->request->data['type']:'individual';
 				$anonymous_data['AnonymousUsers']['unique_id'] 	= $exploded_value[1];
 				
 				$user_update_data['Users']['name']				= ucwords($slug);
@@ -1166,6 +1156,7 @@ class UsersController extends AppController{
 				$user_update_data['Users']['birthday']			= NULL;
 				$user_update_data['Users']['about_me']			= NULL;
 				$user_update_data['Users']['signup_ip']			= NULL;
+				$user_update_data['Users']['signup_string']		= NULL;
 				$user_update_data['Users']['type']				= 'N';
 				$user_update_data['Users']['facebook_id']		= NULL;
 				$user_update_data['Users']['googleplus_id']		= NULL;
@@ -1193,9 +1184,47 @@ class UsersController extends AppController{
 				echo json_encode(array('type' => 'error', 'message' => "You have already made that user as Anonymous"));
 			}
 		}else{
-			$ids = '';
-			echo json_encode(array('type' => 'error', 'message' => "You have already made that user as Anonymous"));
-		}		
+			if( $count->usertype != $this->request->data['type'] ){
+				$id = $this->request->data['id'];
+				$UsersTable = TableRegistry::get('Admin.Users');
+				$user = $UsersTable->get($id);			
+				//pr($user); die;
+				
+				if($this->request->data['type'] == 'group'){
+					$anonymous_data['AnonymousUsers']['usertype'] 	= isset($this->request->data['type'])?$this->request->data['type']:'group';
+					$anonymous_data['AnonymousUsers']['slug'] 	 	= 'Anonymous Group';
+					
+					$user_update_data['Users']['name']				= ucwords('Anonymous Group');
+					$user_update_data['Users']['email']				= 'anonymousgroup@learneron.net';
+					$user_update_data['Users']['full_name']			= 'Anonymous Group';
+				}
+				else if($this->request->data['type'] == 'individual'){
+					$slug											= $AnonymousUserTable->createSlug('Anonymous');
+					$exploded_value									= explode('-',$slug);
+					$anonymous_data['AnonymousUsers']['slug'] 	 	= $slug;
+					$anonymous_data['AnonymousUsers']['usertype'] 	= isset($this->request->data['type'])?$this->request->data['type']:'individual';
+					$anonymous_data['AnonymousUsers']['unique_id'] 	= $exploded_value[1];
+					
+					$user_update_data['Users']['name']				= ucwords($slug);
+					$user_update_data['Users']['email']				= $slug.'@learneron.net';
+					$user_update_data['Users']['full_name']			= 'Anonymous User';
+				}
+					$user_update_data['Users']['signup_string']		= NULL;
+					$user_update_data['Users']['status']			= $user->status;
+				
+					$updated_data = $UsersTable->patchEntity($user, $user_update_data);				
+					$UsersTable->save($updated_data);
+				
+					$updated = $AnonymousUserTable->patchEntity($count, $anonymous_data);				
+					$AnonymousUserTable->save($updated);
+				
+				echo json_encode(array('type' => 'success', 'message' => "You have made that user as Anonymous successfully"));
+			}
+			else{
+				$ids = '';
+				echo json_encode(array('type' => 'error', 'message' => "You have already made that user as Anonymous"));
+			}			
+		}
         exit();
     }
     

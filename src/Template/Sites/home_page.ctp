@@ -15,7 +15,9 @@
     </div>
 </div>
 <section class="banner-sec">
-	<div class="banner-wrapper container">
+<div class="container">
+<div id="divLoading" class="show"></div>
+	<div class="banner-wrapper">
 <?php
 if(!empty($all_banners)){
 ?>
@@ -56,6 +58,7 @@ if(!empty($all_banners)){
 <?php
 }
 ?>
+	</div>
 	</div>
 </section><a id="perpage"></a>
 <div class="body-section">

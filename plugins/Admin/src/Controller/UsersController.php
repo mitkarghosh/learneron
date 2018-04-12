@@ -334,10 +334,11 @@ class UsersController extends AppController{
 			$objAnswerPosted->getStyle('C1')->getFont()->setBold(true);
 			$objAnswerPosted->getStyle('D1')->getFont()->setBold(true);			
 			$objAnswerPosted->setCellValue('A1', 'Page')
-							->setCellValue('B1', 'Controller')
-							->setCellValue('C1', 'Question Page URL')
-							->setCellValue('D1', 'Question Number')
-							->setCellValue('E1', 'Visited Date & Time');
+							->setCellValue('B1', 'IP Address')
+							->setCellValue('C1', 'Controller')
+							->setCellValue('D1', 'Question Page URL')
+							->setCellValue('E1', 'Question Number')
+							->setCellValue('F1', 'Visited Date & Time');
 			
 			$VisitorTable = TableRegistry::get('Admin.Visitors');
 			$log_details = $VisitorTable->find('all',['contain'=>['VisitorLogs'=>['fields'=>[]]],'conditions'=>['Visitors.user_id'=>$id]])->first();
@@ -351,10 +352,11 @@ class UsersController extends AppController{
 						$ques_no = '#'.$val_ld['question_id'];
 					}
 					$objAnswerPosted->setCellValue('A'.$ld, $val_ld['page_name'])
-									->setCellValue('B'.$ld, $val_ld['controller'])
-									->setCellValue('C'.$ld, $url)
-									->setCellValue('D'.$ld, $ques_no)
-									->setCellValue('E'.$ld, date('jS F Y H:i:s', strtotime($val_ld['visited_time'])));
+									->setCellValue('B'.$ld, $log_details->user_ipaddress)
+									->setCellValue('C'.$ld, $val_ld['controller'])
+									->setCellValue('D'.$ld, $url)
+									->setCellValue('E'.$ld, $ques_no)
+									->setCellValue('F'.$ld, date('jS F Y H:i:s', strtotime($val_ld['visited_time'])));
 					$ld++;
 				}
 			}								
@@ -377,6 +379,84 @@ class UsersController extends AppController{
 			$objWriter->save('php://output');			
 			exit();
 		}
+	}
+	
+	public function downloadReportsNonRegisteredUsers(){
+		$this->viewBuilder()->layout('ajax');
+		$this->autoRender = false;
+		$VisitorsTable = TableRegistry::get('Admin.Visitors');
+		$data = $VisitorsTable->find('all',['contain'=>['VisitorLogs'],'conditions'=>['user_id'=>0]])->toArray();
+		//pr($data); die;
+		
+		$objPHPExcel = new \PHPExcel();
+		$objPHPExcel->getProperties()->setCreator("Tech Times.")
+									 ->setLastModifiedBy("Tech Times")
+									 ->setTitle("Non-registered User's Report")
+									 ->setSubject("Report Document")
+									 ->setDescription("Report, generated using PHP classes.")
+									 ->setKeywords("Report")
+									 ->setCategory("all");
+		
+		/*---------Log Details-----------*/
+		// Set fonts                              
+		$objPHPExcel->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
+		$objPHPExcel->getActiveSheet()->getStyle('B1')->getFont()->setBold(true);
+		$objPHPExcel->getActiveSheet()->getStyle('C1')->getFont()->setBold(true);
+		$objPHPExcel->getActiveSheet()->getStyle('D1')->getFont()->setBold(true);
+		$objPHPExcel->getActiveSheet()->getStyle('E1')->getFont()->setBold(true);
+		$objPHPExcel->getActiveSheet()->getStyle('F1')->getFont()->setBold(true);
+		$objPHPExcel->getActiveSheet()
+					->setCellValue('A1', 'Page')
+					->setCellValue('B1', 'IP Address')
+					->setCellValue('C1', 'Controller')
+					->setCellValue('D1', 'Question Page URL')
+					->setCellValue('E1', 'Question Number')
+					->setCellValue('F1', 'Visited Date & Time');
+		
+		// Rename sheet
+		$objPHPExcel->getActiveSheet()->setTitle('Log Details');
+		
+		if( !empty($data) ){
+			$ld = 2;
+			foreach( $data as $key => $val ){
+				$user_ipaddress = '';
+				$user_ipaddress = $val->user_ipaddress;
+				if( !empty($val['visitor_logs']) ){
+					foreach( $val['visitor_logs'] as $key_1 => $val_1 ){
+						$url = ''; $ques_no = '';
+						if($val_1['question_id'] != '' && strpos($val_1['page_url'], 'questions/details') !== false){
+							$url = $val_1['page_url'];
+							$ques_no = '#'.$val_1['question_id'];
+						}
+						$objPHPExcel->getActiveSheet()
+											->setCellValue('A'.$ld, $val_1['page_name'])
+											->setCellValue('B'.$ld, $user_ipaddress)
+											->setCellValue('C'.$ld, $val_1['controller'])
+											->setCellValue('D'.$ld, $url)
+											->setCellValue('E'.$ld, $ques_no)
+											->setCellValue('F'.$ld, date('jS F Y H:i:s', strtotime($val_1['visited_time'])));
+						$ld++;
+					}
+				}
+			}
+		}
+		/*---------LOG DETAILS-----------*/
+		
+		$objPHPExcel->setActiveSheetIndex(0);
+		
+		$file_name= 'Non_Registered_User_report_'.time().'.xls';
+		header('Content-type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment; filename= '.$file_name);
+		header('Cache-Control: max-age=0');
+		/*header('Expires: Mon, 31 Dec 2030 05:00:00 GMT');
+		header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+		header('Cache-Control: cache, must-revalidate');
+		header('Pragma: public');
+		$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');*/			
+		$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+		ob_clean();
+		$objWriter->save('php://output');			
+		exit();
 	}
 
     public function addUser(){

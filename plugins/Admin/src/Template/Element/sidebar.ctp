@@ -62,7 +62,13 @@ $action = strtolower ($this->request->action);
                         <li class="<?php if($this->request->params['controller'] == 'Users' && $this->request->params['action'] == 'listData'): echo "active"; endif; ?>">
                             <a href="<?php echo Router::url(['controller' => 'Users', 'action' => 'list-data']); ?>">
 								<i class="fa fa-list-alt"></i>&nbsp;
-								View All
+								Registered Users
+							</a>
+                        </li>
+						<li class="<?php if($this->request->params['controller'] == 'Users' && $this->request->params['action'] == 'listData'): echo "active"; endif; ?>">
+                            <a href="<?php echo Router::url(['controller' => 'Users', 'action' => 'download-reports-non-registered-users']);?>">
+								<i class="fa fa-list-alt"></i>&nbsp;
+								Non-registered Users
 							</a>
                         </li>
 					<?php } ?>

@@ -13,7 +13,7 @@ $this->assign('hasDatepicker', true); ?>
          <div class="row">
             <div class="col-md-6">
                <h3 class="title">
-                  Users<?php if(isset($this->request->params['pass'][0])): echo "&nbsp;Trash"; endif; ?>
+                  Registered Users<?php if(isset($this->request->params['pass'][0])): echo "&nbsp;Trash"; endif; ?>
 				<?php if( (array_key_exists('add-user',$session->read('permissions.'.strtolower('Users')))) && $session->read('permissions.'.strtolower('Users').'.'.strtolower('add-user'))==1 ){?>
 					<a href="<?php echo Router::url('/admin/users/add-user',true); ?>" class="btn btn-primary btn-sm rounded-s">
 					Add New

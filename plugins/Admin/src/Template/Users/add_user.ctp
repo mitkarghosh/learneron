@@ -21,7 +21,7 @@ $this->assign('hasDatepicker', true); ?>
       <div class="card card-block">
 		<div class="form-group row">
             <label class="col-sm-2 form-control-label text-xs-right">
-               Nick Name:
+               Nick Name:<span style="color:#ff0000;">*</span>
             </label>
             <div class="col-sm-10">
                <?php echo $this->Form->input('name', ['required' => true, 'label' => false, 'class' => 'form-control boxed', 'placeholder' => 'Eg. Rasmus']); ?>
@@ -29,7 +29,7 @@ $this->assign('hasDatepicker', true); ?>
          </div>
 		 <div class="form-group row">
             <label class="col-sm-2 form-control-label text-xs-right">
-               Password:
+               Password:<span style="color:#ff0000;">*</span>
             </label>
             <div class="col-sm-10">
                <?php echo $this->Form->input('password', ['type' => 'password', 'required' => true, 'label' => false, 'class' => 'form-control boxed', 'placeholder' => 'Eg. admin@123']); ?>
@@ -49,7 +49,7 @@ $this->assign('hasDatepicker', true); ?>
                Location:
             </label>
             <div class="col-sm-10">
-               <?php echo $this->Form->input('location', ['required' => true, 'label' => false, 'class' => 'form-control boxed', 'placeholder' => 'Eg. New York']); ?>
+               <?php echo $this->Form->input('location', ['required' => false, 'label' => false, 'class' => 'form-control boxed', 'placeholder' => 'Eg. New York']); ?>
             </div>
          </div>
          <div class="form-group row">
@@ -57,12 +57,12 @@ $this->assign('hasDatepicker', true); ?>
                Title:
             </label>
             <div class="col-sm-10">
-               <?php echo $this->Form->input('title', ['required' => true, 'label' => false, 'class' => 'form-control boxed', 'placeholder' => 'Eg. Lerdorf']); ?>
+               <?php echo $this->Form->input('title', ['required' => false, 'label' => false, 'class' => 'form-control boxed', 'placeholder' => 'Eg. Lerdorf']); ?>
             </div>
          </div>
          <div class="form-group row">
             <label class="col-sm-2 form-control-label text-xs-right">
-               Email:<br /><span style="color:#ff0000;font-weight:normal;font-size:14px;">(Private)</span>
+               Email:<span style="color:#ff0000;">*</span><br /><span style="color:#ff0000;font-weight:normal;font-size:14px;">(Private)</span>
             </label>
             <div class="col-sm-10">
                <?php echo $this->Form->input('email', ['required' => true, 'label' => false, 'class' => 'form-control boxed', 'placeholder' => 'Eg. example@example.com']); ?>
@@ -73,7 +73,7 @@ $this->assign('hasDatepicker', true); ?>
                Full Name:<br /><span style="color:#ff0000;font-weight:normal;font-size:14px;">(Private)</span>
             </label>
             <div class="col-sm-10">
-               <?php echo $this->Form->input('full_name', ['required' => true, 'label' => false, 'class' => 'form-control boxed', 'placeholder' => 'Eg. SF89GH']); ?>
+               <?php echo $this->Form->input('full_name', ['required' => false, 'label' => false, 'class' => 'form-control boxed', 'placeholder' => 'Eg. SF89GH']); ?>
             </div>
          </div>
 		 <div class="form-group row">
@@ -81,7 +81,7 @@ $this->assign('hasDatepicker', true); ?>
                Date of Birth:<br /><span style="color:#ff0000;font-weight:normal;font-size:14px;">(Private)</span>
             </label>
             <div class="col-sm-3">
-               <?php echo $this->Form->input('birthday', ['type' => 'text', 'id' => 'birthday', 'required' => true, 'label' => false, 'class' => 'form-control boxed', 'id' => 'birthday', 'placeholder' => 'Date of birth', 'value' => '']); ?>
+               <?php echo $this->Form->input('birthday', ['type' => 'text', 'id' => 'birthday', 'required' => false, 'label' => false, 'class' => 'form-control boxed', 'id' => 'birthday', 'placeholder' => 'Date of birth', 'value' => '']); ?>
             </div>
          </div>
          <div class="form-group row">
@@ -89,7 +89,7 @@ $this->assign('hasDatepicker', true); ?>
                About:
             </label>
             <div class="col-sm-10">
-               <?php echo $this->Form->input('about_me', ['type'=>'textarea', 'required' => true, 'label' => false, 'class' => 'form-control boxed', 'placeholder' => 'About me' ]); ?>
+               <?php echo $this->Form->input('about_me', ['type'=>'textarea', 'required' => false, 'label' => false, 'class' => 'form-control boxed', 'placeholder' => 'About me' ]); ?>
             </div>
          </div>
 		 

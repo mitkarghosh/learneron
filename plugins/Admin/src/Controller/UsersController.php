@@ -239,13 +239,14 @@ class UsersController extends AppController{
 			$objQuestionPosted->getStyle('B1')->getFont()->setBold(true);
 			$objQuestionPosted->getStyle('C1')->getFont()->setBold(true);
 			$objQuestionPosted->getStyle('D1')->getFont()->setBold(true);			
-			$objQuestionPosted  ->setCellValue('A1', 'Question')
-								->setCellValue('B1', 'Learning Goal')
-								->setCellValue('C1', 'Budget & other constraints')
-								->setCellValue('D1', 'Optional input on preferred learning mode')
-								->setCellValue('E1', 'Category')
-								->setCellValue('F1', 'Created On')
-								->setCellValue('G1', 'Status');
+			$objQuestionPosted  ->setCellValue('A1', 'Question No.')
+								->setCellValue('B1', 'Question')
+								->setCellValue('C1', 'Learning Goal')
+								->setCellValue('D1', 'Budget & other constraints')
+								->setCellValue('E1', 'Optional input on preferred learning mode')
+								->setCellValue('F1', 'Category')
+								->setCellValue('G1', 'Created On')
+								->setCellValue('H1', 'Status');
 			
 			$QuestionTable = TableRegistry::get('Admin.Questions');
 			$submitted_questions = $QuestionTable->find('all',['contain'=>['QuestionCategories'],'conditions'=>['user_id'=>$id],'fields'=>['id','category_id','user_id','name','learning_goal','budget_constraints','preferred_learning_mode','is_featured','status','created','QuestionCategories.id','QuestionCategories.name'],'order'=>['Questions.id DESC']])->toArray();
@@ -254,13 +255,14 @@ class UsersController extends AppController{
 				foreach($submitted_questions as $val_sq){
 					if($val_sq->question_category->name != '') $catname = $val_sq->question_category->name; else $catname = 'N/A';
 					if($val_sq->status == 'I') $status = 'Inactive'; else $status = 'Active';
-					$objQuestionPosted->setCellValue('A'.$pq, $val_sq->name)
-									  ->setCellValue('B'.$pq, html_entity_decode(strip_tags($val_sq->learning_goal)))
-									  ->setCellValue('C'.$pq, html_entity_decode(strip_tags($val_sq->budget_constraints)))
-									  ->setCellValue('D'.$pq, html_entity_decode(strip_tags($val_sq->preferred_learning_mode)))
-									  ->setCellValue('E'.$pq, $catname)
-									  ->setCellValue('F'.$pq, date('jS F Y H:i:s', strtotime($val_sq->created)))
-									  ->setCellValue('G'.$pq, $status);
+					$objQuestionPosted->setCellValue('A'.$pq, '#'.$val_sq->id)
+									  ->setCellValue('B'.$pq, $val_sq->name)
+									  ->setCellValue('C'.$pq, html_entity_decode(strip_tags($val_sq->learning_goal)))
+									  ->setCellValue('D'.$pq, html_entity_decode(strip_tags($val_sq->budget_constraints)))
+									  ->setCellValue('E'.$pq, html_entity_decode(strip_tags($val_sq->preferred_learning_mode)))
+									  ->setCellValue('F'.$pq, $catname)
+									  ->setCellValue('G'.$pq, date('jS F Y H:i:s', strtotime($val_sq->created)))
+									  ->setCellValue('H'.$pq, $status);
 					$pq++;
 				}
 			}								
@@ -334,7 +336,8 @@ class UsersController extends AppController{
 			$objAnswerPosted->setCellValue('A1', 'Page')
 							->setCellValue('B1', 'Controller')
 							->setCellValue('C1', 'Question Page URL')
-							->setCellValue('D1', 'Visited Date & Time');
+							->setCellValue('D1', 'Question Number')
+							->setCellValue('E1', 'Visited Date & Time');
 			
 			$VisitorTable = TableRegistry::get('Admin.Visitors');
 			$log_details = $VisitorTable->find('all',['contain'=>['VisitorLogs'=>['fields'=>[]]],'conditions'=>['Visitors.user_id'=>$id]])->first();
@@ -342,14 +345,16 @@ class UsersController extends AppController{
 			if( !empty($log_details['visitor_logs']) ){
 				$ld = 2;
 				foreach($log_details['visitor_logs'] as $val_ld){
-					$url = '';
+					$url = ''; $ques_no = '';
 					if($val_ld['question_id'] != '' && strpos($val_ld['page_url'], 'questions/details') !== false){
 						$url = $val_ld['page_url'];
+						$ques_no = '#'.$val_ld['question_id'];
 					}
 					$objAnswerPosted->setCellValue('A'.$ld, $val_ld['page_name'])
 									->setCellValue('B'.$ld, $val_ld['controller'])
 									->setCellValue('C'.$ld, $url)
-									->setCellValue('D'.$ld, date('jS F Y H:i:s', strtotime($val_ld['visited_time'])));
+									->setCellValue('D'.$ld, $ques_no)
+									->setCellValue('E'.$ld, date('jS F Y H:i:s', strtotime($val_ld['visited_time'])));
 					$ld++;
 				}
 			}								
@@ -399,7 +404,11 @@ class UsersController extends AppController{
             }else{
                 $this->request->data['profile_pic'] = '';
             }
-			$this->request->data['birthday']	= date('Y-m-d', strtotime($this->request->data['birthday']));
+			if( $this->request->data['birthday'] != '' ){
+				$this->request->data['birthday']	= date('Y-m-d', strtotime($this->request->data['birthday']));
+			}else{
+				$this->request->data['birthday']	= '';
+			}
             $user = $UsersTable->patchEntity($user, $this->request->data);
             if ($savedData = $UsersTable->save($user)) {
 				$get_last_insert_id = $savedData->id;
@@ -488,7 +497,12 @@ class UsersController extends AppController{
             }else{
                 $this->request->data['profile_pic'] = $user->profile_pic;
             }
-			$this->request->data['birthday']	= date('Y-m-d', strtotime($this->request->data['birthday']));
+			if( $this->request->data['birthday'] != '' ){
+				$this->request->data['birthday']	= date('Y-m-d', strtotime($this->request->data['birthday']));
+			}else{
+				$this->request->data['birthday']	= '';
+			}
+			
 			$inserted_data = $UsersTable->patchEntity($user, $this->request->data);
             if ($savedData = $UsersTable->save($inserted_data)) {
 				$get_last_insert_id = $savedData->id;
@@ -1127,36 +1141,17 @@ class UsersController extends AppController{
 		$UsersTable = TableRegistry::get('Admin.Users');
 		
 		//checking user is already anonymous or not
-		$count = $AnonymousUserTable->find('all',['conditions'=>['AnonymousUsers.user_id'=>$this->request->data['id']]])->first();
-		if( count($count) == 0 ){
+		$count_user = $AnonymousUserTable->find('all',['conditions'=>['AnonymousUsers.user_id'=>$this->request->data['id']]])->count();
+		if( $count_user == 0 ){
 			$anonymous_data['AnonymousUsers']['user_id']  		= isset($this->request->data['id'])?$this->request->data['id']:0;
-			
+
 			if($this->request->data['type'] == 'group'){
 				$anonymous_data['AnonymousUsers']['usertype'] 	= isset($this->request->data['type'])?$this->request->data['type']:'group';
 				$anonymous_data['AnonymousUsers']['slug'] 	 	= 'Anonymous Group';
 				
-				$user_update_data['Users']['name']				= ucwords('Anonymous Group');
-				$user_update_data['Users']['email']				= 'anonymousgroup@learneron.net';
-				$user_update_data['Users']['full_name']			= 'Anonymous Group';
-				$user_update_data['Users']['profile_pic']		= 'user_no_image.png';
-				$user_update_data['Users']['location']			= NULL;
-				$user_update_data['Users']['title']				= NULL;
-				$user_update_data['Users']['birthday']			= NULL;
-				$user_update_data['Users']['about_me']			= NULL;
-				$user_update_data['Users']['signup_ip']			= NULL;
-				$user_update_data['Users']['signup_string']		= NULL;
-				$user_update_data['Users']['type']				= 'N';
-				$user_update_data['Users']['facebook_id']		= NULL;
-				$user_update_data['Users']['googleplus_id']		= NULL;
-				$user_update_data['Users']['twitter_id']		= NULL;
-				$user_update_data['Users']['linkedin_id']		= NULL;
-				$user_update_data['Users']['facebook_link']		= NULL;
-				$user_update_data['Users']['twitter_link']		= NULL;
-				$user_update_data['Users']['gplus_link']		= NULL;
-				$user_update_data['Users']['linkedin_link']		= NULL;
-				
-				//$existing_user_data = $UsersTable->get($this->request->data['id']);
-				//$user_update_data['Users']['status']			= $existing_user_data->status;
+				$this->request->data['name']				= ucwords('Anonymous Group');
+				$this->request->data['email']				= 'anonymousgroup@learneron.net';
+				$this->request->data['full_name']			= 'Anonymous Group';				
 			}
 			else if($this->request->data['type'] == 'individual'){
 				$slug											= $AnonymousUserTable->createSlug('Anonymous');
@@ -1165,59 +1160,52 @@ class UsersController extends AppController{
 				$anonymous_data['AnonymousUsers']['usertype'] 	= isset($this->request->data['type'])?$this->request->data['type']:'individual';
 				$anonymous_data['AnonymousUsers']['unique_id'] 	= $exploded_value[1];
 				
-				$user_update_data['Users']['name']				= ucwords($slug);
-				$user_update_data['Users']['email']				= $slug.'@learneron.net';
-				$user_update_data['Users']['full_name']			= 'Anonymous User';
-				$user_update_data['Users']['profile_pic']		= 'user_no_image.png';
-				$user_update_data['Users']['location']			= NULL;
-				$user_update_data['Users']['title']				= NULL;
-				$user_update_data['Users']['birthday']			= NULL;
-				$user_update_data['Users']['about_me']			= NULL;
-				$user_update_data['Users']['signup_ip']			= NULL;
-				$user_update_data['Users']['signup_string']		= NULL;
-				$user_update_data['Users']['type']				= 'N';
-				$user_update_data['Users']['facebook_id']		= NULL;
-				$user_update_data['Users']['googleplus_id']		= NULL;
-				$user_update_data['Users']['twitter_id']		= NULL;
-				$user_update_data['Users']['linkedin_id']		= NULL;
-				$user_update_data['Users']['facebook_link']		= NULL;
-				$user_update_data['Users']['twitter_link']		= NULL;
-				$user_update_data['Users']['gplus_link']		= NULL;
-				$user_update_data['Users']['linkedin_link']		= NULL;
+				$this->request->data['name']				= ucwords($slug);
+				$this->request->data['email']				= $slug.'@learneron.net';
+				$this->request->data['full_name']			= 'Anonymous User';
+			}
+				$this->request->data['profile_pic']			= 'user_no_image.png';
+				$this->request->data['location']			= '';
+				$this->request->data['title']				= '';
+				$this->request->data['birthday']			= '';
+				$this->request->data['about_me']			= '';
+				$this->request->data['signup_string']		= '';
+				$this->request->data['type']				= 'N';
+				$this->request->data['facebook_id']			= '';
+				$this->request->data['googleplus_id']		= '';
+				$this->request->data['twitter_id']			= '';
+				$this->request->data['linkedin_id']		= '';
+				$this->request->data['facebook_link']		= '';
+				$this->request->data['twitter_link']		= '';
+				$this->request->data['gplus_link']			= '';
+				$this->request->data['linkedin_link']		= '';
 				
-				//$existing_user_data = $UsersTable->get($this->request->data['id']);
-				//$user_update_data['Users']['status']			= $existing_user_data->status;
-			}				
-			
 			$AnonymousUserNewEntity = $AnonymousUserTable->newEntity();
 			$anonymous_insert_data = $AnonymousUserTable->patchEntity($AnonymousUserNewEntity, $anonymous_data);
 			if($AnonymousUserTable->save($anonymous_insert_data)){		
-				$ids = $this->request->data['id'];			
-				$existing_user_data = $UsersTable->get($this->request->data['id']);
-				$update_user_data = $UsersTable->patchEntity($existing_user_data, $user_update_data);
+				$ids = $this->request->data['id'];
 				
-				pr($update_user_data); die;
+				$UsersTable->updateAll(['name'=>$this->request->data['name'],'email'=>$this->request->data['email'],'full_name'=>$this->request->data['full_name'],'profile_pic'=>$this->request->data['profile_pic'],'location'=>$this->request->data['location'],'title'=>$this->request->data['title'],'birthday'=>$this->request->data['birthday'],'facebook_id'=>$this->request->data['facebook_id'],'googleplus_id'=>$this->request->data['googleplus_id'],'twitter_id'=>$this->request->data['twitter_id'],'linkedin_id'=>$this->request->data['linkedin_id'],'facebook_link'=>$this->request->data['facebook_link'],'twitter_link'=>$this->request->data['twitter_link'],'gplus_link'=>$this->request->data['gplus_link'],'linkedin_link'=>$this->request->data['linkedin_link']], ['Users.id'=>$this->request->data['id']]);
 				
-				$UsersTable->save($update_user_data);
 				echo json_encode(array('type' => 'success', 'message' => "You have made that user as Anonymous successfully"));
 			}else{
 				$ids = '';
 				echo json_encode(array('type' => 'error', 'message' => "You have already made that user as Anonymous"));
 			}
 		}else{
+			$count = $AnonymousUserTable->find('all',['conditions'=>['AnonymousUsers.user_id'=>$this->request->data['id']]])->first();			
 			if( $count->usertype != $this->request->data['type'] ){
 				$id = $this->request->data['id'];
 				$UsersTable = TableRegistry::get('Admin.Users');
-				$user = $UsersTable->get($id);			
-				//pr($user); die;
+				$user = $UsersTable->get($id);
 				
 				if($this->request->data['type'] == 'group'){
 					$anonymous_data['AnonymousUsers']['usertype'] 	= isset($this->request->data['type'])?$this->request->data['type']:'group';
 					$anonymous_data['AnonymousUsers']['slug'] 	 	= 'Anonymous Group';
 					
-					$user_update_data['Users']['name']				= ucwords('Anonymous Group');
-					$user_update_data['Users']['email']				= 'anonymousgroup@learneron.net';
-					$user_update_data['Users']['full_name']			= 'Anonymous Group';
+					$this->request->data['name']					= ucwords('Anonymous Group');
+					$this->request->data['email']					= 'anonymousgroup@learneron.net';
+					$this->request->data['full_name']				= 'Anonymous Group';
 				}
 				else if($this->request->data['type'] == 'individual'){
 					$slug											= $AnonymousUserTable->createSlug('Anonymous');
@@ -1226,18 +1214,15 @@ class UsersController extends AppController{
 					$anonymous_data['AnonymousUsers']['usertype'] 	= isset($this->request->data['type'])?$this->request->data['type']:'individual';
 					$anonymous_data['AnonymousUsers']['unique_id'] 	= $exploded_value[1];
 					
-					$user_update_data['Users']['name']				= ucwords($slug);
-					$user_update_data['Users']['email']				= $slug.'@learneron.net';
-					$user_update_data['Users']['full_name']			= 'Anonymous User';
+					$this->request->data['name']					= ucwords($slug);
+					$this->request->data['email']					= $slug.'@learneron.net';
+					$this->request->data['full_name']				= 'Anonymous User';
 				}
-					$user_update_data['Users']['signup_string']		= NULL;
-					$user_update_data['Users']['status']			= $user->status;
-				
-					$updated_data = $UsersTable->patchEntity($user, $user_update_data);				
-					$UsersTable->save($updated_data);
+					$this->request->data['signup_string']			= '';
+					
+					$UsersTable->updateAll(['name'=>$this->request->data['name'],'email'=>$this->request->data['email'],'full_name'=>$this->request->data['full_name'],'signup_string'=>$this->request->data['signup_string']], ['Users.id'=>$this->request->data['id']]);
 				
 					$updated = $AnonymousUserTable->patchEntity($count, $anonymous_data);
-					pr($updated); die;
 					$AnonymousUserTable->save($updated);
 				
 				echo json_encode(array('type' => 'success', 'message' => "You have made that user as Anonymous successfully"));

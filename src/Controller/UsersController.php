@@ -436,8 +436,11 @@ class UsersController extends AppController{
 			$user_data = $session->read('Auth.Users');
 			$UsersTable = TableRegistry::get('Users');
 			$user = $UsersTable->get($user_data['id'], ['contain'=>['Careereducations']]);
-			
-			$this->request->data['birthday']	= date('Y-m-d', strtotime($this->request->data['birthday']));
+			if( $this->request->data['birthday'] != '' ){
+				$this->request->data['birthday'] = date('Y-m-d', strtotime($this->request->data['birthday']));
+			}else{
+				$this->request->data['birthday'] = '';
+			}			
 			$updated_data = $UsersTable->patchEntity($user, $this->request->data);
             if($savedData = $UsersTable->save($updated_data)) {
 				$get_last_insert_id = $savedData->id;

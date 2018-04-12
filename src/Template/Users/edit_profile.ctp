@@ -305,9 +305,9 @@ echo $this->Html->script('/admin/js/jquery-ui.min.js');
 											<?php
 											if($user_related_details['birthday']!='' && $user_related_details['birthday']!=NULL){
 												$dob = date('m/d/Y', strtotime($user_related_details['birthday']));
-												echo $this->Form->input('birthday',['type'=>'text', 'id'=>'birthday', 'placeholder'=>'mm/dd/yyyy', 'label'=>false, 'class'=>'form-control', 'value'=>$dob, 'required'=>'required']);
+												echo $this->Form->input('birthday',['type'=>'text', 'id'=>'birthday', 'placeholder'=>'mm/dd/yyyy', 'label'=>false, 'class'=>'form-control', 'value'=>$dob, 'required'=>false]);
 											}else{
-												echo $this->Form->input('birthday',['type'=>'text', 'id'=>'birthday', 'placeholder'=>'mm/dd/yyyy', 'label'=>false, 'class'=>'form-control', 'value'=>'', 'required'=>'required']);
+												echo $this->Form->input('birthday',['type'=>'text', 'id'=>'birthday', 'placeholder'=>'mm/dd/yyyy', 'label'=>false, 'class'=>'form-control', 'value'=>'', 'required'=>false]);
 											}
 											?>
 										</div>

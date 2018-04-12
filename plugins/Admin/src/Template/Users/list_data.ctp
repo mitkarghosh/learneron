@@ -235,7 +235,7 @@ $this->assign('hasDatepicker', true); ?>
 						    <a class="remove" href="javascript:void(0);" onclick="delete_user('<?php echo $userDetail->id; ?>');" title="Delete">
 								<i class="fa fa-trash-o "></i> 
 							  </a>
-						   </li><br />
+						   </li>
 						<?php
 						}
 						if( (array_key_exists('user-account-setting',$session->read('permissions.'.strtolower('Users')))) && $session->read('permissions.'.strtolower('Users').'.'.strtolower('user-account-setting'))==1 ){
@@ -244,7 +244,7 @@ $this->assign('hasDatepicker', true); ?>
 								<a class="edit" href="<?php echo Router::url("/admin/users/user-account-setting",true).'/'.base64_encode($userDetail->id);?>" title="Account Setting">
 								  <i class="fa fa-cog icon"></i> 
 								</a>
-							</li>
+							</li><br />
 						<?php
 						}
 						if( (array_key_exists('user-change-password',$session->read('permissions.'.strtolower('Users')))) && $session->read('permissions.'.strtolower('Users').'.'.strtolower('user-change-password'))==1 ){

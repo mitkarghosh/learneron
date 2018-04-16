@@ -58,7 +58,11 @@ if(isset($this->request->params) && ($this->request->params['controller']=='Site
 	$(window).load(function(){
 		$('.banner-slider').bxSlider({
 			auto:false,
-			infiniteLoop: false
+			infiniteLoop: false,
+			onSliderLoad: function () {
+				$(".banner-wrapper").css("visibility", "visible");
+				$(".banner-sec #divLoading").removeClass('show');
+			}
 		});
 	});
 	$(document).on('click', '.bx-next', function () {

@@ -755,11 +755,16 @@ p.copy a:hover {
 	height: 48px;
 	right: 15px;
 }
+.banner-wrapper{
+	width: 100%;
+	overflow: hidden;
+	text-align: center;
+	visibility: hidden;
+}
+.banner-sec #divLoading, .banner-sec #divLoading.show{position: absolute;}
 .bx-wrapper {
 	border: 0;
 	box-shadow: 0;
-}
-.bx-wrapper {
 	margin-bottom: 0;
 }
 .register-pages-wrapper {

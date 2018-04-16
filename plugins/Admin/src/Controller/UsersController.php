@@ -559,6 +559,7 @@ class UsersController extends AppController{
         }
         // ***** if data recieved by post or put ***** //
         if ($this->request->is(['post', 'put'])) {
+			//pr($this->request->data); pr($user); die;
 			if(array_key_exists('profile_pic', $this->request->data) && $this->request->data['profile_pic']['name']!=''){
                 $handle = new \Upload($this->request->data['profile_pic']);
                 $handle->file_new_name_body = $new_name = 'profile_'.time().rand(0,99);
@@ -582,6 +583,20 @@ class UsersController extends AppController{
 			}else{
 				$this->request->data['birthday']	= '';
 			}
+			if(array_key_exists('personal_data',$this->request->data) && $this->request->data['personal_data'] == 'Y'){
+				$this->request->data['personal_data']  		= 'Y';
+				$this->request->data['personaldata_checked_time']= date('Y-m-d H:i:s');
+			}else{
+				$this->request->data['personal_data']  		= 'N';
+				$this->request->data['personaldata_unchecked_time']= date('Y-m-d H:i:s');
+			}
+			if(array_key_exists('is_commercialparty',$this->request->data) && $this->request->data['is_commercialparty'] != 0){
+				$this->request->data['is_commercialparty']			= 1;
+				$this->request->data['commercialparty_checked_time']	= date('Y-m-d H:i:s');
+			}else{
+				$this->request->data['is_commercialparty']			= 0;
+				$this->request->data['commercialparty_unchecked_time']	= date('Y-m-d H:i:s');
+			}			
 			
 			$inserted_data = $UsersTable->patchEntity($user, $this->request->data);
             if ($savedData = $UsersTable->save($inserted_data)) {

@@ -16,7 +16,7 @@ $this->assign('hasDatepicker', true); ?>
          <span class="sparkline bar" data-type="bar"></span>
       </h3>
    </div>
-   <?php echo $this->Flash->render() ?>
+   <?php echo $this->Flash->render(); //pr($user); ?>
    <?php echo $this->Form->create($user,['id' => 'login-form', 'novalidate' => 'novalidate', 'enctype'=>'multipart/form-data']); ?>
       <div class="card card-block">
 		<div class="form-group row">
@@ -311,6 +311,45 @@ $this->assign('hasDatepicker', true); ?>
 					
 				</div>
 			</div>
+			<?php //pr($user); ?>
+			<div class="form-group row">
+				<label class="col-sm-2 form-control-label text-xs-right">
+				   &nbsp;
+				</label>
+				<div class="col-sm-10">
+					<?php
+					$pers_checked_button = '';
+					if($user['personal_data']=='Y'){
+						$pers_checked_button = 'checked';
+					}
+					?>
+					<input type="checkbox" id="personal_data" name="personal_data" value="Y" <?php echo $pers_checked_button;?> autocomplete="off">
+					<label for="personal_data" title="I agree with sending commercial communications about LearnerOn.net service by electronic means and with the processing of my personal data, in particular the contact and identification data, by Learneron SE for this purpose. I may withdraw this consent at any time.">
+						I agree with sending LearnerOn.net commercial communication and processing my personal data&nbsp;
+						<!--<img src="<?php echo Router::url('/images/info-icon.png');?>" data-toggle="tooltip_personaldata" data-original-title="I agree with sending commercial communications about LearnerOn.net service by electronic means and with the processing of my personal data, in particular the contact and identification data, by Learneron SE for this purpose. I may withdraw this consent at any time." />-->
+					</label>
+				</div>
+			 </div>
+			 
+			 <div class="form-group row">
+				<label class="col-sm-2 form-control-label text-xs-right">
+				   &nbsp;
+				</label>
+				<div class="col-sm-10">
+					<?php
+					$commer_checked_button = '';
+					if($user['is_commercialparty']=='1'){
+						$commer_checked_button = 'checked';
+					}
+					?>					
+					<input type="checkbox" id="is_commercialparty" name="is_commercialparty" value="1" <?php echo $commer_checked_button;?> autocomplete="off">
+					<label for="is_commercialparty" title="I agree with sending third-party commercial communications by electronic means and with the processing of my personal data, in particular the contact and identification data, by Learneron SE for this purpose. I may withdraw this consent at any time.">
+						I agree with sending 3rd party commercial communication by Learneron, SE and processing my personal data&nbsp;
+						<!--<img src="<?php echo Router::url('/images/info-icon.png');?>" data-toggle="tooltip" data-original-title="I agree with sending third-party commercial communications by electronic means and with the processing of my personal data, in particular the contact and identification data, by Learneron SE for this purpose. I may withdraw this consent at any time." />-->
+					</label>
+				</div>
+			 </div>
+			
 		<?php
 		if( (array_key_exists('change-status',$session->read('permissions.'.strtolower('Users')))) && $session->read('permissions.'.strtolower('Users').'.'.strtolower('change-status'))==1 ){
 		?>
@@ -332,7 +371,14 @@ $this->assign('hasDatepicker', true); ?>
       </div>
    <?php echo $this->Form->end(); ?>
 </article>
-
+<script>
+$('[data-toggle="tooltip"]').tooltip({
+	placement : 'top'
+});
+$('[data-toggle="tooltip_personaldata"]').tooltip({
+	placement : 'top'
+});
+</script>
 <script>
 function image_preview(evt){
 	var files = evt.target.files;

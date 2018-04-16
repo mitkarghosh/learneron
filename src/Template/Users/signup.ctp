@@ -68,7 +68,7 @@ $session  = $this->request->session();
 							<input type="checkbox" id="agree" value="1">
 							<label data-toggle="modal" data-target="#demo">I agree the Terms & Conditions</label>
 							
-							<input type="checkbox" id="personal_data" name="personal_data" value="1" checked>
+							<input type="checkbox" id="personal_data" name="personal_data" value="Y" checked>
 							<label for="personal_data" title="">
 								I agree with sending LearnerOn.net commercial communication and processing my personal data&nbsp;
 								<img src="<?php echo Router::url('/images/info-icon.png');?>" data-toggle="tooltip_personaldata" data-original-title="I agree with sending commercial communications about LearnerOn.net service by electronic means and with the processing of my personal data, in particular the contact and identification data, by Learneron SE for this purpose. I may withdraw this consent at any time." />

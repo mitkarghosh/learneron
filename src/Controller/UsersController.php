@@ -115,10 +115,16 @@ class UsersController extends AppController{
 				if(array_key_exists('is_commercialparty',$this->request->data)){
 					$this->request->data['is_commercialparty']  		= 1;
 					$this->request->data['commercialparty_checked_time']= date('Y-m-d H:i:s');
+					$this->request->data['commercialparty_checked_time']= '';
+				}else{
+					$this->request->data['is_commercialparty']  		= 0;
 				}
 				if(array_key_exists('personal_data',$this->request->data)){
 					$this->request->data['personal_data']  		= 'Y';
 					$this->request->data['personaldata_checked_time']= date('Y-m-d H:i:s');
+					$this->request->data['personaldata_unchecked_time']= '';
+				}else{
+					$this->request->data['personal_data']  		= 'N';
 				}
 				$UsersTable = TableRegistry::get('Users');
 				$newUsers = $UsersTable->newEntity();
@@ -128,10 +134,10 @@ class UsersController extends AppController{
 					$this->visitorlogs('Users','signup','Signup',NULL,NULL,$insert_user_id);	//Log details insertion
 					$url = Router::url('/', true).'users/verify/'.$this->request->data['signup_string'].'/'.base64_encode(time());
 					$settings = $this->getSiteSettings();
-					if($this->Email->userRegister($this->request->data['email'], $url, $this->request->data, $settings)){
+					//if($this->Email->userRegister($this->request->data['email'], $url, $this->request->data, $settings)){
 						echo json_encode(['register'=>'success', 'userid'=>$insert_user_id]);
 						exit();
-					}
+					//}
 				}else{
 					echo json_encode(['register'=>'failed']);
 					exit();

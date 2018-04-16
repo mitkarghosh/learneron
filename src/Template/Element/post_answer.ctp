@@ -292,7 +292,7 @@ $('#signup_form').validate({
 						$('#msg_div').html('');
 						$('#login-modal').modal('hide');
 						//$('#setting_data').modal('show');
-					},3000);
+					},7000);
 				}else{
 					var error_msg = "<div class='message error' onclick='this.classList.add('hidden')'>There was an unexpected error. Try again later or contact the Admin.</div>";
 					$('#msg_div_error').html(error_msg);

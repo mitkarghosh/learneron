@@ -259,7 +259,7 @@ jQuery(function () {
 						setTimeout(function(){
 							$('#msg_div').html('');
 							//$('#setting_data').modal('show');
-					  },3000);
+					  },7000);
 					}else{
 						var error_msg = "<div class='message error' onclick='this.classList.add('hidden')'>There was an unexpected error. Try again later or contact the developers.</div>";
 						$('#msg_div_error').html(error_msg);

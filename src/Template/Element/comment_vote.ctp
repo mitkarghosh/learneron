@@ -386,7 +386,7 @@ $('#signup_form_commentvote').validate({
 						$('#msg_div_commentvote').html('');
 						$('#comment_vote').modal('hide');
 						//$('#setting_data').modal('show');
-				  },3000);
+				  },7000);
 				}else{
 					var error_msg = "<div class='message error' onclick='this.classList.add('hidden')'>There was an unexpected error. Try again later or contact the Admin.</div>";
 					$('#msg_div_commentvote').html(error_msg);

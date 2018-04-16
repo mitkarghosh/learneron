@@ -113,7 +113,12 @@ class UsersController extends AppController{
 				$this->request->data['signup_ip'] = $this->getUserIP();
 				$this->request->data['signup_string'] = $this->generateRandomString(3).time().$this->generateRandomString(3);
 				if(array_key_exists('is_commercialparty',$this->request->data)){
-					$this->request->data['is_commercialparty'] = 1;
+					$this->request->data['is_commercialparty']  		= 1;
+					$this->request->data['commercialparty_checked_time']= date('Y-m-d H:i:s');
+				}
+				if(array_key_exists('personal_data',$this->request->data)){
+					$this->request->data['personal_data']  		= 'Y';
+					$this->request->data['personaldata_checked_time']= date('Y-m-d H:i:s');
 				}
 				$UsersTable = TableRegistry::get('Users');
 				$newUsers = $UsersTable->newEntity();

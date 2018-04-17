@@ -23,7 +23,7 @@ if(!empty($all_banners)){
 ?>
 		<ul class="banner-slider">
 			<li style="background: #000">
-				<iframe class="video_embeded" width="100%" height="100%" src="https://www.youtube.com/embed/tj-k0GQkxDI?vq=hd1080&enablejsapi=true&autoplay=0&rel=0&showinfo=0" frameborder="0" allowfullscreen id="fitvid0"></iframe>
+				<iframe class="video_embeded" width="100%" height="100%" src="https://www.youtube.com/embed/tj-k0GQkxDI?vq=hd720&enablejsapi=true&autoplay=0&rel=0&showinfo=0" frameborder="0" allowfullscreen id="fitvid0"></iframe>
 			</li>
 <?php
 	foreach($all_banners as $banner){

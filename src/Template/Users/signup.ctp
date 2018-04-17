@@ -169,7 +169,8 @@ $session  = $this->request->session();
 	</div>
 </div>
 <!-- Setting Popup -->
-
+<?php echo $this->Html->script('/admin/sweetalert/sweetalert.js') ?>
+<?php echo $this->Html->css('/admin/sweetalert/sweetalert.css'); ?>
 <script>
 $('#agree-btn').click(function(){
 	if(!$('#agree').is(":checked")){
@@ -254,7 +255,8 @@ jQuery(function () {
 					if(data.register=='success'){
 						$('#user_id').val(data.userid);
 						var success_msg = "<div class='message success' onclick='this.classList.add('hidden')'>Registration is successfull. An email has been sent, please verify your account.</div>";
-						$('#msg_div').html(success_msg);
+						swal('Success!', 'Registration is successfull. An email has been sent, please verify your account.','success');
+						//$('#msg_div').html(success_msg);
 						$('#signup_form')[0].reset();
 						setTimeout(function(){
 							$('#msg_div').html('');

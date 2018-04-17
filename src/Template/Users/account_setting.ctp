@@ -66,6 +66,23 @@ if(isset($existing_account_settings) && $existing_account_settings['category_id'
 					</select>
 					<div id="cat_error"><?php echo $this->Flash->render();?></div>
 				</div>
+				
+				<div class="check-box-set">
+					<input type="checkbox" id="personal_data" <?php if($user_details['personal_data']=='Y')echo 'checked';?> disabled>
+					<label for="personal_data" title="">
+						I agree with sending LearnerOn.net commercial communication and processing my personal data&nbsp;
+						<img src="<?php echo Router::url('/images/info-icon.png');?>" data-toggle="tooltip_personaldata" data-original-title="I agree with sending commercial communications about LearnerOn.net service by electronic means and with the processing of my personal data, in particular the contact and identification data, by Learneron SE for this purpose. I may withdraw this consent at any time." />
+					</label>
+				</div>
+				
+				<div class="check-box-set">
+					<input type="checkbox" id="is_commercialparty" <?php if($user_details['is_commercialparty']==1)echo 'checked';?> disabled>
+					<label for="is_commercialparty" title="">
+						I agree with sending 3rd party commercial communication by Learneron, SE and processing my personal data&nbsp;
+						<img src="<?php echo Router::url('/images/info-icon.png');?>" data-toggle="tooltip" data-original-title="I agree with sending third-party commercial communications by electronic means and with the processing of my personal data, in particular the contact and identification data, by Learneron SE for this purpose. I may withdraw this consent at any time." />
+					</label>
+				</div>
+				
 				<input type="submit" value="Change Settings" class="btn-normal">
 				<div id="loader" style="text-align:center;"></div>
 			<?php echo $this->Form->end(); ?>

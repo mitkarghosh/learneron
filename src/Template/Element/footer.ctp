@@ -27,3 +27,13 @@
 		<p class="copy">&copy;<?php echo date('Y');?>  Copyright LearnerOn | Powered By : <a href="http://www.techtimes-in.com/" target="_blank">TechTimes</a></p>
 	</div>
 </footer>
+
+<div class="cookieConcent">
+    <div class="cookieConcentInner">
+        <div class="cookieText">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quae recusandae inventore accusamus quasi, esse ab dolor pariatur quam eius sed, fugit perferendis sint vitae delectus dolores cupiditate velit. Quas, tempora!</div>
+        <div class="button-set">
+            <a class="active" href="">Accept</a>
+            <a href="">Details</a>
+        </div>
+    </div>
+</div>

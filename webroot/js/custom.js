@@ -60,6 +60,12 @@ $('.openLoginCommentvote').click(function(){
 	$('.form-conatiner.login-form-commentvote').fadeIn();
 	$('.form-conatiner.register-from-commentvote').fadeOut();
 });
+    
+$('.cookieConcent .button-set a').on('click', function(e){
+    e.preventDefault();
+    $(this).parents('.cookieConcent').fadeOut();
+    //$(this).parents('.cookieConcent').animate({height: 0}, 800);
+});
 	
 
 

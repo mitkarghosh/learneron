@@ -8,6 +8,7 @@
 				<li><a href="<?php echo $site_settings-> google_plus_link;?>" target="_blank"><i class="fa fa-google-plus"></i></a></li>
 				<li><a href="<?php echo $site_settings->linkedin;?>" target="_blank"><i class="fa fa-linkedin"></i></a></li>
 			</ul>-->
+			<input type="hidden" name="website_url" id="website_url" value="<?php echo Router::url('/',true);?>" />
 			<div class="sharethis-inline-share-buttons"></div>
 		</div>
 		<div class="footer-nav">
@@ -27,13 +28,67 @@
 		<p class="copy">&copy;<?php echo date('Y');?>  Copyright LearnerOn | Powered By : <a href="http://www.techtimes-in.com/" target="_blank">TechTimes</a></p>
 	</div>
 </footer>
-
+<?php
+if( empty($get_details) ){
+?>
 <div class="cookieConcent">
     <div class="cookieConcentInner">
-        <div class="cookieText">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quae recusandae inventore accusamus quasi, esse ab dolor pariatur quam eius sed, fugit perferendis sint vitae delectus dolores cupiditate velit. Quas, tempora!</div>
+        <div class="cookieText"><?php echo substr(strip_tags($cookie_data['description']),0,215);?></div>
         <div class="button-set">
-            <a class="active" href="">Accept</a>
-            <a href="">Details</a>
+            <a class="active" id="cookie_accept" href="javascript:void(0);">Accept</a>
+            <a data-toggle="modal" data-target="#cookie_details" href="javascript:void(0);">Details</a>
         </div>
     </div>
 </div>
+<!-- Modal -->
+<div class="modal fade bd-example-modal-lg" id="cookie_details" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLongTitle">Details</h5>
+				<!--<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>-->
+			</div>
+			<div class="modal-body">
+				<?php echo $cookie_data['description'];?>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-alt" id="cookie_decline" data-dismiss="modal">Cancel</button>
+			</div>			
+		</div>
+	</div>
+</div>
+<!-- Modal -->
+<script>
+$('#cookie_accept').click(function(e){
+	var status = 'Explicit';
+	var website_url = $('#website_url').val();
+	$.ajax({
+		type: 'POST',
+		dataType: 'html',
+		data: {status:status},
+		url : website_url+'users/cookie_consent',
+		success: function(response){
+			
+		}
+	});
+});
+$('#cookie_decline').click(function(e){
+	var status = 'Implicit';
+	var website_url = $('#website_url').val();
+	$.ajax({
+		type: 'POST',
+		dataType: 'html',
+		data: {status:status},
+		url : website_url+'users/cookie_consent',
+		success: function(response){
+			
+		}
+	});
+});
+</script>
+
+<?php
+}
+?>

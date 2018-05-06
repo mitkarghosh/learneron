@@ -328,6 +328,11 @@ $this->assign('hasDatepicker', true); ?>
 						I agree with sending LearnerOn.net commercial communication and processing my personal data&nbsp;
 						<!--<img src="<?php echo Router::url('/images/info-icon.png');?>" data-toggle="tooltip_personaldata" data-original-title="I agree with sending commercial communications about LearnerOn.net service by electronic means and with the processing of my personal data, in particular the contact and identification data, by Learneron SE for this purpose. I may withdraw this consent at any time." />-->
 					</label>
+					<br />
+					<?php
+					//pr($user); die;
+					?>
+					<b>Checked Time:</b> <?php if($user->personaldata_checked_time != '')echo date('dS M Y H:i:s',strtotime($user->personaldata_checked_time));else echo 'N/A'; ?>, <b>Unchecked Time:</b> <?php if($user->personaldata_unchecked_time != '')echo date('dS M Y H:i:s',strtotime($user->personaldata_unchecked_time));else echo 'N/A'; ?>
 				</div>
 			 </div>
 			 
@@ -347,6 +352,11 @@ $this->assign('hasDatepicker', true); ?>
 						I agree with sending 3rd party commercial communication by Learneron, SE and processing my personal data&nbsp;
 						<!--<img src="<?php echo Router::url('/images/info-icon.png');?>" data-toggle="tooltip" data-original-title="I agree with sending third-party commercial communications by electronic means and with the processing of my personal data, in particular the contact and identification data, by Learneron SE for this purpose. I may withdraw this consent at any time." />-->
 					</label>
+					<br />
+					<?php
+					//pr($user); die;
+					?>
+					<b>Checked Time:</b> <?php if($user->commercialparty_checked_time != '')echo date('dS M Y H:i:s',strtotime($user->commercialparty_checked_time));else echo 'N/A'; ?>, <b>Unchecked Time:</b> <?php if($user->commercialparty_unchecked_time != '')echo date('dS M Y H:i:s',strtotime($user->commercialparty_unchecked_time));else echo 'N/A'; ?>
 				</div>
 			 </div>
 			

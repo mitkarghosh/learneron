@@ -21,7 +21,7 @@ class UsersController extends AppController{
             'httpOnly' => true
         ]);
 		
-        $this->Auth->allow(['signup','signupSetting','seeSettingNowUpdate','emailExist','verify','login','forgotPassword','resetPassword','allUsers','search','ajaxLogin','ajaxChangeHeader','getUserPublicDetails','facebookLogin','googleLogin','gplusConfirmLogin','twitterLogin','twittercallback','linkedinLogin','linkedinCallBack','viewSubmissions']);
+        $this->Auth->allow(['signup','signupSetting','seeSettingNowUpdate','emailExist','verify','login','forgotPassword','resetPassword','allUsers','search','ajaxLogin','ajaxChangeHeader','getUserPublicDetails','facebookLogin','googleLogin','gplusConfirmLogin','twitterLogin','twittercallback','linkedinLogin','linkedinCallBack','viewSubmissions','cookieConsent']);
 		
 		$latest_news_rightpanel = $this->getLatestNews();
 		//$featured_question_rightpanel = $this->getFeaturedQuestions();
@@ -113,18 +113,22 @@ class UsersController extends AppController{
 				$this->request->data['signup_ip'] = $this->getUserIP();
 				$this->request->data['signup_string'] = $this->generateRandomString(3).time().$this->generateRandomString(3);
 				if(array_key_exists('is_commercialparty',$this->request->data)){
-					$this->request->data['is_commercialparty']  		= 1;
-					$this->request->data['commercialparty_checked_time']= date('Y-m-d H:i:s');
-					$this->request->data['commercialparty_checked_time']= '';
+					$this->request->data['is_commercialparty']  			= 1;
+					$this->request->data['commercialparty_checked_time']	= date('Y-m-d H:i:s');
+					$this->request->data['commercialparty_unchecked_time']	= '';
 				}else{
-					$this->request->data['is_commercialparty']  		= 0;
+					$this->request->data['is_commercialparty']  			= 0;
+					$this->request->data['commercialparty_checked_time']	= '';
+					$this->request->data['commercialparty_unchecked_time']	= date('Y-m-d H:i:s');
 				}
 				if(array_key_exists('personal_data',$this->request->data)){
-					$this->request->data['personal_data']  		= 'Y';
-					$this->request->data['personaldata_checked_time']= date('Y-m-d H:i:s');
-					$this->request->data['personaldata_unchecked_time']= '';
+					$this->request->data['personal_data']  				= 'Y';
+					$this->request->data['personaldata_checked_time']	= date('Y-m-d H:i:s');
+					$this->request->data['personaldata_unchecked_time']	= '';
 				}else{
-					$this->request->data['personal_data']  		= 'N';
+					$this->request->data['personal_data']  				= 'N';
+					$this->request->data['personaldata_checked_time']	= '';
+					$this->request->data['personaldata_unchecked_time']	= date('Y-m-d H:i:s');
 				}
 				$UsersTable = TableRegistry::get('Users');
 				$newUsers = $UsersTable->newEntity();
@@ -1394,6 +1398,31 @@ class UsersController extends AppController{
 		}
 		exit();
 	}
+	
+	public function cookieConsent(){
+		$this->viewBuilder()->layout = false;
+        $this->render(false);
+		if($this->request->is('post')){
+			$CookieConsentTable = TableRegistry::get('CookieConsent');
+			$userip = $this->getUserIP(); //'192.168.1.127';
+			
+			$this->request->data['user_ipaddress'] 	= $userip;
+			$this->request->data['cookie_type'] 	= $this->request->data['status'];
+			$this->request->data['cookie_time'] 	= date('Y-m-d H:i:s');				
+			$this->request->data['withdrawl_status']= 0;
+			$this->request->data['created'] 		= date('Y-m-d H:i:s');
+			$newEntity 		= $CookieConsentTable->newEntity();
+			$insert_data 	= $CookieConsentTable->patchEntity($newEntity, $this->request->data);
+			if($savedData 	= $CookieConsentTable->save($insert_data)){
+				echo 'success';
+				exit();
+			}else{
+				echo 'error';
+				exit();
+			}			
+		}
+	}
+	
 	public function post_curl($url,$param=""){
 		$ch = curl_init();
 		curl_setopt($ch,CURLOPT_URL,$url);

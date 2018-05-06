@@ -421,6 +421,36 @@ $action = strtolower ($this->request->action);
                 </li>
 			<?php } ?>
                 <!-- Advertisement end -->
+				
+				<!-- Cookie Consent start -->
+			<?php if( (!empty($session->read('AdminUser')) && $session->read('AdminUser.type')=='SA') || (!empty($session->read('permissions.'.strtolower('CookieConsents')))) ){?>
+                <li class="<?php if($this->request->params['controller'] == 'CookieConsents'): echo "active open"; endif; ?>">
+                    <a href="">
+                        <i class="fa fa-picture-o"></i>
+                        Cookie Management
+                        <i class="fa arrow"></i>
+                    </a>
+                    <ul>
+					<?php if( (!empty($session->read('AdminUser')) && $session->read('AdminUser.type')=='SA') || (!empty($session->read('permissions.'.strtolower('CookieConsents'))) && $session->read('permissions.'.strtolower('CookieConsents').'.'.strtolower('list-data'))==1) ){?>
+                        <li class="<?php if($this->request->params['controller'] == 'CookieConsents' && $this->request->params['action'] == 'listData'): echo "active"; endif; ?>">
+                            <a href="<?php echo Router::url(['controller' => 'cookie-consents', 'action' => 'list-data']); ?>">
+                               <i class="fa fa-list-alt"></i>&nbsp;
+                               View All
+                            </a>
+                        </li>
+					<?php } ?>
+					<?php /*if( (!empty($session->read('AdminUser')) && $session->read('AdminUser.type')=='SA') || (!empty($session->read('permissions.'.strtolower('CookieConsents'))) && $session->read('permissions.'.strtolower('CookieConsents').'.'.strtolower('add-cookie-consent'))==1) ){?>
+						<li class="<?php if($this->request->params['controller'] == 'CookieConsents' && $this->request->params['action'] == 'addCookieConsent'): echo "active"; endif; ?>">
+                            <a href="<?php echo Router::url(['controller' => 'cookie-consents', 'action' => 'add-cookie-consent']); ?>">
+                                <i class="fa fa-plus"></i>&nbsp;
+                                Add
+                            </a>
+                        </li>
+					<?php }*/ ?>
+                    </ul>
+                </li>
+			<?php } ?>
+                <!-- Cookie Consent end -->
 
                 <?php /*<!-- Settings Management start -->
                 <li class="<?php if($this->request->params['controller'] == 'Settings'): echo "active open"; endif; ?>">

@@ -158,7 +158,16 @@ class UsersController extends AppController{
 			$objQuestionPosted  ->setCellValue('A1', 'Receive Email Notifications on New Responses to My Questions')
 								->setCellValue('B1', 'Subscribe for News & Views')
 								->setCellValue('C1', 'Follow us on Twitter')
-								->setCellValue('D1', 'Send Me Notifications on Posting New Question in Below Defined Category');
+								->setCellValue('D1', 'Send Me Notifications on Posting New Question in Below Defined Category')
+								->setCellValue('E1', 'I agree with sending LearnerOn.net commercial communication and processing my personal data - Checked Time')
+								->setCellValue('F1', 'I agree with sending LearnerOn.net commercial communication and processing my personal data - Unchecked Time')
+								->setCellValue('G1', 'I agree with sending 3rd party commercial communication by Learneron, SE and processing my personal data - Checked Time')
+								->setCellValue('H1', 'I agree with sending 3rd party commercial communication by Learneron, SE and processing my personal data - Unchecked Time');
+								
+			if($details['personaldata_checked_time'] != '')$personal = date('dS M Y H:i:s',strtotime($details['personaldata_checked_time']));else $personal = 'N/A';
+			if($details['personaldata_unchecked_time'] != '')$personal_un = date('dS M Y H:i:s',strtotime($details['personaldata_unchecked_time']));else $personal_un = 'N/A';
+			if($details['commercialparty_checked_time'] != '')$commercialparty = date('dS M Y H:i:s',strtotime($details['commercialparty_checked_time']));else $commercialparty = 'N/A';
+			if($details['commercialparty_unchecked_time'] != '')$commercialparty_un = date('dS M Y H:i:s',strtotime($details['commercialparty_unchecked_time']));else $commercialparty_un = 'N/A';
 			
 			if( !empty($details['user_account_setting']) ){
 				$as = 2;
@@ -174,10 +183,14 @@ class UsersController extends AppController{
 					$objQuestionPosted->setCellValue('A'.$as, $question_notification)
 								  ->setCellValue('B'.$as, $news_notification)
 								  ->setCellValue('C'.$as, $follow_twitter)
-								  ->setCellValue('D'.$as, $catname);
+								  ->setCellValue('D'.$as, $catname)
+								  ->setCellValue('E'.$as, $personal)
+								  ->setCellValue('F'.$as, $personal_un)
+								  ->setCellValue('G'.$as, $commercialparty)
+								  ->setCellValue('H'.$as, $commercialparty_un);
 					$as++;					
 				}
-			}								
+			}
 			$objQuestionPosted->setTitle('Account Settings');
 			/*---------Account Settings Section-----------*/
 			

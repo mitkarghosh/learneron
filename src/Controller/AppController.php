@@ -29,8 +29,7 @@ use Cake\Routing\Router;
  *
  * @link http://book.cakephp.org/3.0/en/controllers.html#the-app-controller
  */
-class AppController extends Controller
-{
+class AppController extends Controller{
 
     /**
      * Initialization hook method.
@@ -110,6 +109,7 @@ class AppController extends Controller
 		}		
 		$terms_and_conditions	= $this->getTermsAndConditions();
 		$personal_data 			= $this->getPersonalData();
+		$cookie_data 			= $this->getCookieConsent();
 		
 		$UsersTable = TableRegistry::get('Users');
 		$query_inactive = $UsersTable->query();
@@ -123,8 +123,14 @@ class AppController extends Controller
 		$query_active->update()
 			->set(['loggedin_status'=>1,'loggedin_time'=>date('Y-m-d H:i:s')])
 			->where(['id'=>$this->Auth->user('id')])
-			->execute();		
-		$this->set(compact('site_settings','user_related_details','terms_and_conditions','personal_data'));		
+			->execute();
+		
+		//Cookie Consent
+		$get_details = '';
+		$CookieConsentTable = TableRegistry::get('CookieConsent');
+		$userip = $this->getUserIP();//'192.168.1.127';
+		$get_details = $CookieConsentTable->find('all', ['conditions'=>array('CookieConsent.user_ipaddress'=>$userip,'CookieConsent.withdrawl_status'=>0)])->first();		
+		$this->set(compact('site_settings','user_related_details','terms_and_conditions','personal_data','get_details','cookie_data'));
     }
 
     /**
@@ -404,6 +410,13 @@ class AppController extends Controller
 	public function getPersonalData(){
         $CmsTable = TableRegistry::get('Cms');
         $data = $CmsTable->find('all',['conditions'=>['id'=>7],'fields'=>['id','description']])->first()->toArray();
+		return $data;
+    }
+	
+	//getCookieConsent
+	public function getCookieConsent(){
+        $CmsTable = TableRegistry::get('Cms');
+        $data = $CmsTable->find('all',['conditions'=>['id'=>8],'fields'=>['id','description']])->first()->toArray();
 		return $data;
     }
 	

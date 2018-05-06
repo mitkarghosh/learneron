@@ -1922,6 +1922,7 @@ a.twitter-btn {
     font-size: 14px;
     line-height: 21px;
     overflow: hidden;
+	z-index:9 !important;
 }
 .cookieConcentInner{
     position: absolute;

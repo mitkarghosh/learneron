@@ -155,6 +155,10 @@ class UsersController extends AppController{
 			$objQuestionPosted->getStyle('B1')->getFont()->setBold(true);
 			$objQuestionPosted->getStyle('C1')->getFont()->setBold(true);
 			$objQuestionPosted->getStyle('D1')->getFont()->setBold(true);			
+			$objQuestionPosted->getStyle('E1')->getFont()->setBold(true);
+			$objQuestionPosted->getStyle('F1')->getFont()->setBold(true);			
+			$objQuestionPosted->getStyle('G1')->getFont()->setBold(true);			
+			$objQuestionPosted->getStyle('H1')->getFont()->setBold(true);
 			$objQuestionPosted  ->setCellValue('A1', 'Receive Email Notifications on New Responses to My Questions')
 								->setCellValue('B1', 'Subscribe for News & Views')
 								->setCellValue('C1', 'Follow us on Twitter')
@@ -164,13 +168,14 @@ class UsersController extends AppController{
 								->setCellValue('G1', 'I agree with sending 3rd party commercial communication by Learneron, SE and processing my personal data - Checked Time')
 								->setCellValue('H1', 'I agree with sending 3rd party commercial communication by Learneron, SE and processing my personal data - Unchecked Time');
 								
-			if($details['personaldata_checked_time'] != '')$personal = date('dS M Y H:i:s',strtotime($details['personaldata_checked_time']));else $personal = 'N/A';
-			if($details['personaldata_unchecked_time'] != '')$personal_un = date('dS M Y H:i:s',strtotime($details['personaldata_unchecked_time']));else $personal_un = 'N/A';
-			if($details['commercialparty_checked_time'] != '')$commercialparty = date('dS M Y H:i:s',strtotime($details['commercialparty_checked_time']));else $commercialparty = 'N/A';
-			if($details['commercialparty_unchecked_time'] != '')$commercialparty_un = date('dS M Y H:i:s',strtotime($details['commercialparty_unchecked_time']));else $commercialparty_un = 'N/A';
+			if($details['personaldata_checked_time'] != '' || $details['personaldata_checked_time'] != '0000-00-00 00:00:00')$personal = date('dS M Y H:i:s',strtotime($details['personaldata_checked_time']));else $personal = 'N/A';
+			if($details['personaldata_unchecked_time'] != '' || $details['personaldata_unchecked_time'] != '0000-00-00 00:00:00')$personal_un = date('dS M Y H:i:s',strtotime($details['personaldata_unchecked_time']));else $personal_un = 'N/A';
+			if($details['commercialparty_checked_time'] != '' || $details['commercialparty_checked_time'] != '0000-00-00 00:00:00')$commercialparty = date('dS M Y H:i:s',strtotime($details['commercialparty_checked_time']));else $commercialparty = 'N/A';
+			if($details['commercialparty_unchecked_time'] != '' || $details['commercialparty_unchecked_time'] != '0000-00-00 00:00:00')$commercialparty_un = date('dS M Y H:i:s',strtotime($details['commercialparty_unchecked_time']));else $commercialparty_un = 'N/A';
 			
+			$as = 2;
+			$question_notification = ''; $news_notification = ''; $follow_twitter = ''; $catname = '';
 			if( !empty($details['user_account_setting']) ){
-				$as = 2;
 				foreach($details['user_account_setting'] as $val_as){
 					if($val_as['response_to_my_question_notification'] == 1) $question_notification = 'Yes'; else $question_notification = 'No';
 					if($val_as['news_notification'] == 1) $news_notification = 'Yes'; else $news_notification = 'No';
@@ -190,6 +195,15 @@ class UsersController extends AppController{
 								  ->setCellValue('H'.$as, $commercialparty_un);
 					$as++;					
 				}
+			}else{
+				$objQuestionPosted->setCellValue('A'.$as, $question_notification)
+								  ->setCellValue('B'.$as, $news_notification)
+								  ->setCellValue('C'.$as, $follow_twitter)
+								  ->setCellValue('D'.$as, $catname)
+								  ->setCellValue('E'.$as, $personal)
+								  ->setCellValue('F'.$as, $personal_un)
+								  ->setCellValue('G'.$as, $commercialparty)
+								  ->setCellValue('H'.$as, $commercialparty_un);
 			}
 			$objQuestionPosted->setTitle('Account Settings');
 			/*---------Account Settings Section-----------*/

@@ -743,16 +743,15 @@ p.copy a:hover {
 .serach-from button:hover {
 	color: #caa961;
 }
-.banner-sec .bx-wrapper .bx-prev {
+.banner-sec .bx-wrapper .bx-prev, .banner-sec .bx-wrapper .bx-next {
 	background: url(../images/prev.png);
 	width: 48px;
 	height: 48px;
 	left: 15px;
+    z-index: 2;
 }
 .banner-sec .bx-wrapper .bx-next {
-	background: url(../images/next.png);
-	width: 48px;
-	height: 48px;
+	left: auto;
 	right: 15px;
 }
 .banner-wrapper{
@@ -1916,7 +1915,7 @@ a.twitter-btn {
     bottom: 0;
     left: 0;
     right: 0;
-    height: 20%;
+    height: 25%;
     background: rgba(0,0,0,0.7);
     color: #fff;
     font-size: 14px;
@@ -1936,6 +1935,7 @@ a.twitter-btn {
 .cookieText{
     padding: 0 200px 0 0;
 }
+.cookieText p:last-child{margin-bottom: 0; padding-bottom: 0;}
 .cookieConcent .button-set{
     position: absolute;
     top: 30px;

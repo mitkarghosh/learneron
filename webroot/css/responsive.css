@@ -357,6 +357,10 @@ nav.site-nav ul li {
     width: 55px;
 }
 
+    .cookieConcent{height: auto;}
+    .cookieConcentInner{position: relative; top: auto; -webkit-transform: none; transform: none; padding: 20px;}
+    .cookieText{padding: 0 0 20px;}
+    .cookieConcent .button-set{position: static; text-align: right;}
 
 }
 

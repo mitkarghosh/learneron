@@ -1,6 +1,6 @@
 <?php use Cake\Routing\Router; 
 $this->assign('needEditor', true);
-$this->assign('editor_id', '#description');
+$this->assign('editor_id', '.editorClass');
 ?>
 <style>.btn-default{width:auto !important;}</style>
 <article class="content item-editor-page">
@@ -22,12 +22,20 @@ $this->assign('editor_id', '#description');
                <?php echo $this->Form->input('title', ['required' => true, 'label' => false, 'class' => 'form-control boxed', 'placeholder' => 'Eg. Title' ]); ?>
             </div>
          </div>
+		 <div class="form-group row">
+            <label class="col-sm-2 form-control-label text-xs-right">
+               Short Description:
+            </label>
+            <div class="col-sm-10">
+               <?php echo $this->Form->input('short_description', ['type' => 'textarea', 'required' => false, 'label' => false, 'class' => 'editorClass form-control boxed', 'placeholder' => 'Eg. Short Description']); ?>
+            </div>
+         </div>
          <div class="form-group row">
             <label class="col-sm-2 form-control-label text-xs-right">
                Description:
             </label>
             <div class="col-sm-10">
-               <?php echo $this->Form->input('description', ['type' => 'textarea', 'required' => true, 'label' => false, 'class' => 'form-control boxed', 'placeholder' => 'Eg. Description']); ?>
+               <?php echo $this->Form->input('description', ['type' => 'textarea', 'required' => true, 'label' => false, 'class' => 'editorClass form-control boxed', 'placeholder' => 'Eg. Description']); ?>
             </div>
          </div>
          <div class="form-group row">

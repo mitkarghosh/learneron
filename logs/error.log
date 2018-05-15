@@ -5817,3 +5817,503 @@ Stack Trace:
 #2 {main}
 
 
+2018-05-06 18:13:51 Error: [Cake\Routing\Exception\MissingControllerException] Controller class Js could not be found.
+Exception Attributes: array (
+  'class' => 'Js',
+  'plugin' => false,
+  'prefix' => false,
+  '_ext' => false,
+)
+Request URL: /js/jquery.min.map
+Stack Trace:
+#0 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\ControllerFactory.php(72): Cake\Http\ControllerFactory->missingController(Object(Cake\Network\Request))
+#1 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\ActionDispatcher.php(92): Cake\Http\ControllerFactory->create(Object(Cake\Network\Request), Object(Cake\Network\Response))
+#2 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\BaseApplication.php(83): Cake\Http\ActionDispatcher->dispatch(Object(Cake\Network\Request), Object(Cake\Network\Response))
+#3 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Http\BaseApplication->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#4 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Routing\Middleware\RoutingMiddleware.php(62): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#5 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Routing\Middleware\RoutingMiddleware->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#6 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Routing\Middleware\AssetMiddleware.php(93): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#7 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Routing\Middleware\AssetMiddleware->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#8 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Error\Middleware\ErrorHandlerMiddleware.php(81): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#9 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Error\Middleware\ErrorHandlerMiddleware->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#10 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(51): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#11 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Server.php(90): Cake\Http\Runner->run(Object(Cake\Http\MiddlewareQueue), Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#12 D:\xampp\htdocs\learneron\webroot\index.php(37): Cake\Http\Server->run()
+#13 {main}
+
+
+2018-05-06 18:14:53 Error: [Cake\Routing\Exception\MissingControllerException] Controller class Js could not be found.
+Exception Attributes: array (
+  'class' => 'Js',
+  'plugin' => false,
+  'prefix' => false,
+  '_ext' => false,
+)
+Request URL: /js/jquery.min.map
+Stack Trace:
+#0 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\ControllerFactory.php(72): Cake\Http\ControllerFactory->missingController(Object(Cake\Network\Request))
+#1 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\ActionDispatcher.php(92): Cake\Http\ControllerFactory->create(Object(Cake\Network\Request), Object(Cake\Network\Response))
+#2 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\BaseApplication.php(83): Cake\Http\ActionDispatcher->dispatch(Object(Cake\Network\Request), Object(Cake\Network\Response))
+#3 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Http\BaseApplication->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#4 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Routing\Middleware\RoutingMiddleware.php(62): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#5 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Routing\Middleware\RoutingMiddleware->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#6 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Routing\Middleware\AssetMiddleware.php(93): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#7 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Routing\Middleware\AssetMiddleware->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#8 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Error\Middleware\ErrorHandlerMiddleware.php(81): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#9 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Error\Middleware\ErrorHandlerMiddleware->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#10 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(51): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#11 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Server.php(90): Cake\Http\Runner->run(Object(Cake\Http\MiddlewareQueue), Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#12 D:\xampp\htdocs\learneron\webroot\index.php(37): Cake\Http\Server->run()
+#13 {main}
+
+
+2018-05-14 17:40:33 Error: Fatal Error (4): syntax error, unexpected '$insert_into_term' (T_VARIABLE) in [D:\xampp\htdocs\learneron\src\Controller\UsersController.php, line 147]
+Request URL: /learneron/logout
+Referer URL: http://localhost/learneron/account-setting
+Trace:
+Cake\Error\BaseErrorHandler::handleFatalError() - CORE\src\Error\BaseErrorHandler.php, line 216
+Cake\Error\BaseErrorHandler::Cake\Error\{closure}() - CORE\src\Error\BaseErrorHandler.php, line 98
+[main] - [internal], line ??
+
+
+
+2018-05-14 17:40:33 Error: [Cake\Error\FatalErrorException] syntax error, unexpected '$insert_into_term' (T_VARIABLE)
+Request URL: /learneron/logout
+Referer URL: http://localhost/learneron/account-setting
+Stack Trace:
+#0 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Error\BaseErrorHandler.php(98): Cake\Error\BaseErrorHandler->handleFatalError(4, 'syntax error, u...', 'D:\\xampp\\htdocs...', 147)
+#1 [internal function]: Cake\Error\BaseErrorHandler->Cake\Error\{closure}()
+#2 {main}
+
+
+2018-05-14 17:40:59 Error: Fatal Error (4): syntax error, unexpected '$settings' (T_VARIABLE) in [D:\xampp\htdocs\learneron\src\Controller\UsersController.php, line 164]
+Request URL: /learneron/logout
+Referer URL: http://localhost/learneron/account-setting
+Trace:
+Cake\Error\BaseErrorHandler::handleFatalError() - CORE\src\Error\BaseErrorHandler.php, line 216
+Cake\Error\BaseErrorHandler::Cake\Error\{closure}() - CORE\src\Error\BaseErrorHandler.php, line 98
+[main] - [internal], line ??
+
+
+
+2018-05-14 17:40:59 Error: [Cake\Error\FatalErrorException] syntax error, unexpected '$settings' (T_VARIABLE)
+Request URL: /learneron/logout
+Referer URL: http://localhost/learneron/account-setting
+Stack Trace:
+#0 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Error\BaseErrorHandler.php(98): Cake\Error\BaseErrorHandler->handleFatalError(4, 'syntax error, u...', 'D:\\xampp\\htdocs...', 164)
+#1 [internal function]: Cake\Error\BaseErrorHandler->Cake\Error\{closure}()
+#2 {main}
+
+
+2018-05-14 17:42:49 Error: [Cake\Network\Exception\SocketException] Could not send email: mail(): Failed to connect to mailserver at &quot;localhost&quot; port 25, verify your &quot;SMTP&quot; and &quot;smtp_port&quot; setting in php.ini or use ini_set()
+Request URL: /users/signup/
+Referer URL: http://localhost/learneron/signup
+Stack Trace:
+#0 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Mailer\Transport\MailTransport.php(54): Cake\Mailer\Transport\MailTransport->_mail('new@ghot.com', 'LearnerOn Accou...', '<!DOCTYPE html ...', 'From: LearnerOn...', NULL)
+#1 D:\xampp\htdocs\learneron\vendor\cakephp\debug_kit\src\Mailer\Transport\DebugKitTransport.php(79): Cake\Mailer\Transport\MailTransport->send(Object(Cake\Mailer\Email))
+#2 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Mailer\Email.php(1344): DebugKit\Mailer\Transport\DebugKitTransport->send(Object(Cake\Mailer\Email))
+#3 D:\xampp\htdocs\learneron\src\Controller\Component\EmailComponent.php(92): Cake\Mailer\Email->send()
+#4 D:\xampp\htdocs\learneron\src\Controller\UsersController.php(165): App\Controller\Component\EmailComponent::userRegister('new@ghot.com', 'http://localhos...', Array, Object(Cake\ORM\Entity))
+#5 [internal function]: App\Controller\UsersController->signup()
+#6 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Controller\Controller.php(435): call_user_func_array(Array, Array)
+#7 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\ActionDispatcher.php(121): Cake\Controller\Controller->invokeAction()
+#8 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\ActionDispatcher.php(95): Cake\Http\ActionDispatcher->_invoke(Object(App\Controller\UsersController))
+#9 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\BaseApplication.php(83): Cake\Http\ActionDispatcher->dispatch(Object(Cake\Network\Request), Object(Cake\Network\Response))
+#10 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Http\BaseApplication->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#11 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Routing\Middleware\RoutingMiddleware.php(62): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#12 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Routing\Middleware\RoutingMiddleware->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#13 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Routing\Middleware\AssetMiddleware.php(88): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#14 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Routing\Middleware\AssetMiddleware->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#15 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Error\Middleware\ErrorHandlerMiddleware.php(81): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#16 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Error\Middleware\ErrorHandlerMiddleware->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#17 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(51): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#18 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Server.php(90): Cake\Http\Runner->run(Object(Cake\Http\MiddlewareQueue), Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#19 D:\xampp\htdocs\learneron\webroot\index.php(37): Cake\Http\Server->run()
+#20 {main}
+
+
+2018-05-14 18:01:43 Error: Fatal Error (4): syntax error, unexpected 'date' (T_STRING) in [D:\xampp\htdocs\learneron\plugins\Admin\src\Controller\UsersController.php, line 618]
+Request URL: /learneron/admin/users/edit-user/Nzc=
+Trace:
+Cake\Error\BaseErrorHandler::handleFatalError() - CORE\src\Error\BaseErrorHandler.php, line 216
+Cake\Error\BaseErrorHandler::Cake\Error\{closure}() - CORE\src\Error\BaseErrorHandler.php, line 98
+[main] - [internal], line ??
+
+
+
+2018-05-14 18:01:43 Error: [Cake\Error\FatalErrorException] syntax error, unexpected 'date' (T_STRING)
+Request URL: /learneron/admin/users/edit-user/Nzc=
+Stack Trace:
+#0 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Error\BaseErrorHandler.php(98): Cake\Error\BaseErrorHandler->handleFatalError(4, 'syntax error, u...', 'D:\\xampp\\htdocs...', 618)
+#1 [internal function]: Cake\Error\BaseErrorHandler->Cake\Error\{closure}()
+#2 {main}
+
+
+2018-05-14 18:02:22 Error: [Cake\Database\Exception] SQLSTATE[42S02]: Base table or view not found: 1146 Table 'learneron.terms' doesn't exist
+Request URL: /admin/users/edit-user/Nzc=
+Referer URL: http://localhost/learneron/admin/users/edit-user/Nzc=
+Stack Trace:
+#0 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Database\Schema\Collection.php(97): Cake\Database\Schema\Collection->_reflect('Column', 'terms', Array, Object(Cake\Database\Schema\Table))
+#1 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Database\Schema\CachedCollection.php(63): Cake\Database\Schema\Collection->describe('terms', Array)
+#2 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\ORM\Table.php(440): Cake\Database\Schema\CachedCollection->describe('terms')
+#3 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\ORM\Marshaller.php(533): Cake\ORM\Table->schema()
+#4 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\ORM\Table.php(2235): Cake\ORM\Marshaller->merge(Object(Cake\ORM\Entity), Array, Array)
+#5 D:\xampp\htdocs\learneron\plugins\Admin\src\Controller\UsersController.php(650): Cake\ORM\Table->patchEntity(Object(Cake\ORM\Entity), Array)
+#6 [internal function]: Admin\Controller\UsersController->editUser('Nzc=')
+#7 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Controller\Controller.php(435): call_user_func_array(Array, Array)
+#8 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\ActionDispatcher.php(121): Cake\Controller\Controller->invokeAction()
+#9 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\ActionDispatcher.php(95): Cake\Http\ActionDispatcher->_invoke(Object(Admin\Controller\UsersController))
+#10 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\BaseApplication.php(83): Cake\Http\ActionDispatcher->dispatch(Object(Cake\Network\Request), Object(Cake\Network\Response))
+#11 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Http\BaseApplication->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#12 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Routing\Middleware\RoutingMiddleware.php(62): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#13 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Routing\Middleware\RoutingMiddleware->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#14 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Routing\Middleware\AssetMiddleware.php(88): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#15 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Routing\Middleware\AssetMiddleware->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#16 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Error\Middleware\ErrorHandlerMiddleware.php(81): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#17 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Error\Middleware\ErrorHandlerMiddleware->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#18 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(51): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#19 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Server.php(90): Cake\Http\Runner->run(Object(Cake\Http\MiddlewareQueue), Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#20 D:\xampp\htdocs\learneron\webroot\index.php(37): Cake\Http\Server->run()
+#21 {main}
+
+
+2018-05-14 18:05:33 Error: [Cake\Database\Exception] SQLSTATE[42S02]: Base table or view not found: 1146 Table 'learneron.terms' doesn't exist
+Request URL: /admin/users/edit-user/Nzc=
+Referer URL: http://localhost/learneron/admin/users/edit-user/Nzc=
+Stack Trace:
+#0 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Database\Schema\Collection.php(97): Cake\Database\Schema\Collection->_reflect('Column', 'terms', Array, Object(Cake\Database\Schema\Table))
+#1 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Database\Schema\CachedCollection.php(63): Cake\Database\Schema\Collection->describe('terms', Array)
+#2 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\ORM\Table.php(440): Cake\Database\Schema\CachedCollection->describe('terms')
+#3 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\ORM\Marshaller.php(533): Cake\ORM\Table->schema()
+#4 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\ORM\Table.php(2235): Cake\ORM\Marshaller->merge(Object(Cake\ORM\Entity), Array, Array)
+#5 D:\xampp\htdocs\learneron\plugins\Admin\src\Controller\UsersController.php(650): Cake\ORM\Table->patchEntity(Object(Cake\ORM\Entity), Array)
+#6 [internal function]: Admin\Controller\UsersController->editUser('Nzc=')
+#7 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Controller\Controller.php(435): call_user_func_array(Array, Array)
+#8 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\ActionDispatcher.php(121): Cake\Controller\Controller->invokeAction()
+#9 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\ActionDispatcher.php(95): Cake\Http\ActionDispatcher->_invoke(Object(Admin\Controller\UsersController))
+#10 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\BaseApplication.php(83): Cake\Http\ActionDispatcher->dispatch(Object(Cake\Network\Request), Object(Cake\Network\Response))
+#11 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Http\BaseApplication->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#12 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Routing\Middleware\RoutingMiddleware.php(62): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#13 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Routing\Middleware\RoutingMiddleware->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#14 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Routing\Middleware\AssetMiddleware.php(88): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#15 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Routing\Middleware\AssetMiddleware->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#16 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Error\Middleware\ErrorHandlerMiddleware.php(81): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#17 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Error\Middleware\ErrorHandlerMiddleware->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#18 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(51): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#19 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Server.php(90): Cake\Http\Runner->run(Object(Cake\Http\MiddlewareQueue), Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#20 D:\xampp\htdocs\learneron\webroot\index.php(37): Cake\Http\Server->run()
+#21 {main}
+
+
+2018-05-14 18:06:58 Error: [Cake\Database\Exception] SQLSTATE[42S02]: Base table or view not found: 1146 Table 'learneron.terms' doesn't exist
+Request URL: /admin/users/edit-user/Nzc=
+Referer URL: http://localhost/learneron/admin/users/edit-user/Nzc=
+Stack Trace:
+#0 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Database\Schema\Collection.php(97): Cake\Database\Schema\Collection->_reflect('Column', 'terms', Array, Object(Cake\Database\Schema\Table))
+#1 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Database\Schema\CachedCollection.php(63): Cake\Database\Schema\Collection->describe('terms', Array)
+#2 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\ORM\Table.php(440): Cake\Database\Schema\CachedCollection->describe('terms')
+#3 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\ORM\Marshaller.php(533): Cake\ORM\Table->schema()
+#4 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\ORM\Table.php(2235): Cake\ORM\Marshaller->merge(Object(Cake\ORM\Entity), Array, Array)
+#5 D:\xampp\htdocs\learneron\plugins\Admin\src\Controller\UsersController.php(650): Cake\ORM\Table->patchEntity(Object(Cake\ORM\Entity), Array)
+#6 [internal function]: Admin\Controller\UsersController->editUser('Nzc=')
+#7 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Controller\Controller.php(435): call_user_func_array(Array, Array)
+#8 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\ActionDispatcher.php(121): Cake\Controller\Controller->invokeAction()
+#9 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\ActionDispatcher.php(95): Cake\Http\ActionDispatcher->_invoke(Object(Admin\Controller\UsersController))
+#10 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\BaseApplication.php(83): Cake\Http\ActionDispatcher->dispatch(Object(Cake\Network\Request), Object(Cake\Network\Response))
+#11 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Http\BaseApplication->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#12 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Routing\Middleware\RoutingMiddleware.php(62): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#13 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Routing\Middleware\RoutingMiddleware->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#14 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Routing\Middleware\AssetMiddleware.php(88): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#15 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Routing\Middleware\AssetMiddleware->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#16 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Error\Middleware\ErrorHandlerMiddleware.php(81): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#17 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Error\Middleware\ErrorHandlerMiddleware->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#18 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(51): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#19 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Server.php(90): Cake\Http\Runner->run(Object(Cake\Http\MiddlewareQueue), Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#20 D:\xampp\htdocs\learneron\webroot\index.php(37): Cake\Http\Server->run()
+#21 {main}
+
+
+2018-05-14 18:07:05 Error: [Cake\Database\Exception] SQLSTATE[42S02]: Base table or view not found: 1146 Table 'learneron.terms' doesn't exist
+Request URL: /admin/users/edit-user/Nzc=
+Referer URL: http://localhost/learneron/admin/users/edit-user/Nzc=
+Stack Trace:
+#0 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Database\Schema\Collection.php(97): Cake\Database\Schema\Collection->_reflect('Column', 'terms', Array, Object(Cake\Database\Schema\Table))
+#1 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Database\Schema\CachedCollection.php(63): Cake\Database\Schema\Collection->describe('terms', Array)
+#2 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\ORM\Table.php(440): Cake\Database\Schema\CachedCollection->describe('terms')
+#3 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\ORM\Marshaller.php(533): Cake\ORM\Table->schema()
+#4 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\ORM\Table.php(2235): Cake\ORM\Marshaller->merge(Object(Cake\ORM\Entity), Array, Array)
+#5 D:\xampp\htdocs\learneron\plugins\Admin\src\Controller\UsersController.php(650): Cake\ORM\Table->patchEntity(Object(Cake\ORM\Entity), Array)
+#6 [internal function]: Admin\Controller\UsersController->editUser('Nzc=')
+#7 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Controller\Controller.php(435): call_user_func_array(Array, Array)
+#8 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\ActionDispatcher.php(121): Cake\Controller\Controller->invokeAction()
+#9 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\ActionDispatcher.php(95): Cake\Http\ActionDispatcher->_invoke(Object(Admin\Controller\UsersController))
+#10 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\BaseApplication.php(83): Cake\Http\ActionDispatcher->dispatch(Object(Cake\Network\Request), Object(Cake\Network\Response))
+#11 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Http\BaseApplication->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#12 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Routing\Middleware\RoutingMiddleware.php(62): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#13 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Routing\Middleware\RoutingMiddleware->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#14 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Routing\Middleware\AssetMiddleware.php(88): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#15 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Routing\Middleware\AssetMiddleware->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#16 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Error\Middleware\ErrorHandlerMiddleware.php(81): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#17 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Error\Middleware\ErrorHandlerMiddleware->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#18 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(51): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#19 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Server.php(90): Cake\Http\Runner->run(Object(Cake\Http\MiddlewareQueue), Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#20 D:\xampp\htdocs\learneron\webroot\index.php(37): Cake\Http\Server->run()
+#21 {main}
+
+
+2018-05-14 18:07:51 Error: [Cake\Database\Exception] SQLSTATE[42S02]: Base table or view not found: 1146 Table 'learneron.terms' doesn't exist
+Request URL: /admin/users/edit-user/Nzc=
+Referer URL: http://localhost/learneron/admin/users/edit-user/Nzc=
+Stack Trace:
+#0 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Database\Schema\Collection.php(97): Cake\Database\Schema\Collection->_reflect('Column', 'terms', Array, Object(Cake\Database\Schema\Table))
+#1 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Database\Schema\CachedCollection.php(63): Cake\Database\Schema\Collection->describe('terms', Array)
+#2 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\ORM\Table.php(440): Cake\Database\Schema\CachedCollection->describe('terms')
+#3 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\ORM\Marshaller.php(533): Cake\ORM\Table->schema()
+#4 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\ORM\Table.php(2235): Cake\ORM\Marshaller->merge(Object(Cake\ORM\Entity), Array, Array)
+#5 D:\xampp\htdocs\learneron\plugins\Admin\src\Controller\UsersController.php(650): Cake\ORM\Table->patchEntity(Object(Cake\ORM\Entity), Array)
+#6 [internal function]: Admin\Controller\UsersController->editUser('Nzc=')
+#7 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Controller\Controller.php(435): call_user_func_array(Array, Array)
+#8 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\ActionDispatcher.php(121): Cake\Controller\Controller->invokeAction()
+#9 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\ActionDispatcher.php(95): Cake\Http\ActionDispatcher->_invoke(Object(Admin\Controller\UsersController))
+#10 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\BaseApplication.php(83): Cake\Http\ActionDispatcher->dispatch(Object(Cake\Network\Request), Object(Cake\Network\Response))
+#11 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Http\BaseApplication->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#12 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Routing\Middleware\RoutingMiddleware.php(62): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#13 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Routing\Middleware\RoutingMiddleware->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#14 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Routing\Middleware\AssetMiddleware.php(88): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#15 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Routing\Middleware\AssetMiddleware->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#16 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Error\Middleware\ErrorHandlerMiddleware.php(81): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#17 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Error\Middleware\ErrorHandlerMiddleware->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#18 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(51): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#19 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Server.php(90): Cake\Http\Runner->run(Object(Cake\Http\MiddlewareQueue), Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#20 D:\xampp\htdocs\learneron\webroot\index.php(37): Cake\Http\Server->run()
+#21 {main}
+
+
+2018-05-14 18:55:02 Error: [InvalidArgumentException] CookieConsents is not associated with CookieConsents
+Request URL: /admin/users/download-reports-non-registered-users
+Referer URL: http://localhost/learneron/admin/users/list-data
+Stack Trace:
+#0 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\ORM\EagerLoader.php(257): Cake\ORM\EagerLoader->_normalizeContain(Object(Admin\Model\Table\CookieConsentsTable), 'CookieConsents', Array, Array)
+#1 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\ORM\EagerLoader.php(382): Cake\ORM\EagerLoader->normalized(Object(Admin\Model\Table\CookieConsentsTable))
+#2 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\ORM\EagerLoader.php(353): Cake\ORM\EagerLoader->attachableAssociations(Object(Admin\Model\Table\CookieConsentsTable))
+#3 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\ORM\Query.php(984): Cake\ORM\EagerLoader->attachAssociations(Object(Cake\ORM\Query), Object(Admin\Model\Table\CookieConsentsTable), true)
+#4 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\ORM\Query.php(935): Cake\ORM\Query->_transformQuery()
+#5 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Database\Driver\Mysql.php(136): Cake\ORM\Query->sql()
+#6 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Database\Connection.php(221): Cake\Database\Driver\Mysql->prepare(Object(Cake\ORM\Query))
+#7 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Database\Connection.php(274): Cake\Database\Connection->prepare(Object(Cake\ORM\Query))
+#8 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Database\Query.php(190): Cake\Database\Connection->run(Object(Cake\ORM\Query))
+#9 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\ORM\Query.php(957): Cake\Database\Query->execute()
+#10 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Datasource\QueryTrait.php(276): Cake\ORM\Query->_execute()
+#11 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\ORM\Query.php(905): Cake\ORM\Query->_all()
+#12 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Datasource\QueryTrait.php(293): Cake\ORM\Query->all()
+#13 D:\xampp\htdocs\learneron\plugins\Admin\src\Controller\UsersController.php(446): Cake\ORM\Query->toArray()
+#14 [internal function]: Admin\Controller\UsersController->downloadReportsNonRegisteredUsers()
+#15 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Controller\Controller.php(435): call_user_func_array(Array, Array)
+#16 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\ActionDispatcher.php(121): Cake\Controller\Controller->invokeAction()
+#17 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\ActionDispatcher.php(95): Cake\Http\ActionDispatcher->_invoke(Object(Admin\Controller\UsersController))
+#18 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\BaseApplication.php(83): Cake\Http\ActionDispatcher->dispatch(Object(Cake\Network\Request), Object(Cake\Network\Response))
+#19 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Http\BaseApplication->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#20 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Routing\Middleware\RoutingMiddleware.php(62): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#21 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Routing\Middleware\RoutingMiddleware->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#22 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Routing\Middleware\AssetMiddleware.php(88): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#23 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Routing\Middleware\AssetMiddleware->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#24 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Error\Middleware\ErrorHandlerMiddleware.php(81): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#25 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(65): Cake\Error\Middleware\ErrorHandlerMiddleware->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response), Object(Cake\Http\Runner))
+#26 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Runner.php(51): Cake\Http\Runner->__invoke(Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#27 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Http\Server.php(90): Cake\Http\Runner->run(Object(Cake\Http\MiddlewareQueue), Object(Zend\Diactoros\ServerRequest), Object(Zend\Diactoros\Response))
+#28 D:\xampp\htdocs\learneron\webroot\index.php(37): Cake\Http\Server->run()
+#29 {main}
+
+
+2018-05-14 19:04:39 Error: Fatal Error (4): syntax error, unexpected ')' in [D:\xampp\htdocs\learneron\plugins\Admin\src\Controller\UsersController.php, line 535]
+Request URL: /learneron/admin/users/download-reports-non-registered-users
+Referer URL: http://localhost/learneron/admin/users/list-data
+Trace:
+Cake\Error\BaseErrorHandler::handleFatalError() - CORE\src\Error\BaseErrorHandler.php, line 216
+Cake\Error\BaseErrorHandler::Cake\Error\{closure}() - CORE\src\Error\BaseErrorHandler.php, line 98
+[main] - [internal], line ??
+
+
+
+2018-05-14 19:04:40 Error: [Cake\Error\FatalErrorException] syntax error, unexpected ')'
+Request URL: /learneron/admin/users/download-reports-non-registered-users
+Referer URL: http://localhost/learneron/admin/users/list-data
+Stack Trace:
+#0 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Error\BaseErrorHandler.php(98): Cake\Error\BaseErrorHandler->handleFatalError(4, 'syntax error, u...', 'D:\\xampp\\htdocs...', 535)
+#1 [internal function]: Cake\Error\BaseErrorHandler->Cake\Error\{closure}()
+#2 {main}
+
+
+2018-05-14 19:04:56 Error: Fatal Error (4): syntax error, unexpected ')' in [D:\xampp\htdocs\learneron\plugins\Admin\src\Controller\UsersController.php, line 535]
+Request URL: /learneron/admin/users/download-reports-non-registered-users
+Referer URL: http://localhost/learneron/admin/users/list-data
+Trace:
+Cake\Error\BaseErrorHandler::handleFatalError() - CORE\src\Error\BaseErrorHandler.php, line 216
+Cake\Error\BaseErrorHandler::Cake\Error\{closure}() - CORE\src\Error\BaseErrorHandler.php, line 98
+[main] - [internal], line ??
+
+
+
+2018-05-14 19:04:56 Error: [Cake\Error\FatalErrorException] syntax error, unexpected ')'
+Request URL: /learneron/admin/users/download-reports-non-registered-users
+Referer URL: http://localhost/learneron/admin/users/list-data
+Stack Trace:
+#0 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Error\BaseErrorHandler.php(98): Cake\Error\BaseErrorHandler->handleFatalError(4, 'syntax error, u...', 'D:\\xampp\\htdocs...', 535)
+#1 [internal function]: Cake\Error\BaseErrorHandler->Cake\Error\{closure}()
+#2 {main}
+
+
+2018-05-14 19:05:25 Error: Fatal Error (1): Call to a member function getActiveSheet() on null in [D:\xampp\htdocs\learneron\plugins\Admin\src\Controller\UsersController.php, line 505]
+Request URL: /learneron/admin/users/download-reports-non-registered-users
+Referer URL: http://localhost/learneron/admin/users/list-data
+Trace:
+Cake\Error\BaseErrorHandler::handleFatalError() - CORE\src\Error\BaseErrorHandler.php, line 216
+Cake\Error\BaseErrorHandler::Cake\Error\{closure}() - CORE\src\Error\BaseErrorHandler.php, line 98
+[main] - [internal], line ??
+
+
+
+2018-05-14 19:05:25 Warning: Headers already sent in D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Error\Debugger.php:754
+2018-05-14 19:05:25 Error: [Cake\Error\FatalErrorException] Call to a member function getActiveSheet() on null
+Request URL: /learneron/admin/users/download-reports-non-registered-users
+Referer URL: http://localhost/learneron/admin/users/list-data
+Stack Trace:
+#0 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Error\BaseErrorHandler.php(98): Cake\Error\BaseErrorHandler->handleFatalError(1, 'Call to a membe...', 'D:\\xampp\\htdocs...', 505)
+#1 [internal function]: Cake\Error\BaseErrorHandler->Cake\Error\{closure}()
+#2 {main}
+
+
+2018-05-14 19:09:08 Error: Fatal Error (1): Call to undefined method PHPExcel_Worksheet::getActiveSheet() in [D:\xampp\htdocs\learneron\plugins\Admin\src\Controller\UsersController.php, line 506]
+Request URL: /learneron/admin/users/download-reports-non-registered-users
+Referer URL: http://localhost/learneron/admin/users/list-data
+Trace:
+Cake\Error\BaseErrorHandler::handleFatalError() - CORE\src\Error\BaseErrorHandler.php, line 216
+Cake\Error\BaseErrorHandler::Cake\Error\{closure}() - CORE\src\Error\BaseErrorHandler.php, line 98
+[main] - [internal], line ??
+
+
+
+2018-05-14 19:09:09 Error: [Cake\Error\FatalErrorException] Call to undefined method PHPExcel_Worksheet::getActiveSheet()
+Request URL: /learneron/admin/users/download-reports-non-registered-users
+Referer URL: http://localhost/learneron/admin/users/list-data
+Stack Trace:
+#0 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Error\BaseErrorHandler.php(98): Cake\Error\BaseErrorHandler->handleFatalError(1, 'Call to undefin...', 'D:\\xampp\\htdocs...', 506)
+#1 [internal function]: Cake\Error\BaseErrorHandler->Cake\Error\{closure}()
+#2 {main}
+
+
+2018-05-14 19:11:29 Error: Fatal Error (1): Call to undefined method PHPExcel_Worksheet::getActiveSheet() in [D:\xampp\htdocs\learneron\plugins\Admin\src\Controller\UsersController.php, line 506]
+Request URL: /learneron/admin/users/download-reports-non-registered-users
+Referer URL: http://localhost/learneron/admin/users/list-data
+Trace:
+Cake\Error\BaseErrorHandler::handleFatalError() - CORE\src\Error\BaseErrorHandler.php, line 216
+Cake\Error\BaseErrorHandler::Cake\Error\{closure}() - CORE\src\Error\BaseErrorHandler.php, line 98
+[main] - [internal], line ??
+
+
+
+2018-05-14 19:11:30 Error: [Cake\Error\FatalErrorException] Call to undefined method PHPExcel_Worksheet::getActiveSheet()
+Request URL: /learneron/admin/users/download-reports-non-registered-users
+Referer URL: http://localhost/learneron/admin/users/list-data
+Stack Trace:
+#0 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Error\BaseErrorHandler.php(98): Cake\Error\BaseErrorHandler->handleFatalError(1, 'Call to undefin...', 'D:\\xampp\\htdocs...', 506)
+#1 [internal function]: Cake\Error\BaseErrorHandler->Cake\Error\{closure}()
+#2 {main}
+
+
+2018-05-14 19:11:49 Error: Fatal Error (1): Call to undefined method PHPExcel_Worksheet::getActiveSheet() in [D:\xampp\htdocs\learneron\plugins\Admin\src\Controller\UsersController.php, line 566]
+Request URL: /learneron/admin/users/download-reports-non-registered-users
+Referer URL: http://localhost/learneron/admin/users/list-data
+Trace:
+Cake\Error\BaseErrorHandler::handleFatalError() - CORE\src\Error\BaseErrorHandler.php, line 216
+Cake\Error\BaseErrorHandler::Cake\Error\{closure}() - CORE\src\Error\BaseErrorHandler.php, line 98
+[main] - [internal], line ??
+
+
+
+2018-05-14 19:11:49 Error: [Cake\Error\FatalErrorException] Call to undefined method PHPExcel_Worksheet::getActiveSheet()
+Request URL: /learneron/admin/users/download-reports-non-registered-users
+Referer URL: http://localhost/learneron/admin/users/list-data
+Stack Trace:
+#0 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Error\BaseErrorHandler.php(98): Cake\Error\BaseErrorHandler->handleFatalError(1, 'Call to undefin...', 'D:\\xampp\\htdocs...', 566)
+#1 [internal function]: Cake\Error\BaseErrorHandler->Cake\Error\{closure}()
+#2 {main}
+
+
+2018-05-14 19:18:51 Error: Fatal Error (1): Call to a member function setTitle() on null in [D:\xampp\htdocs\learneron\plugins\Admin\src\Controller\UsersController.php, line 533]
+Request URL: /learneron/admin/users/download-reports-non-registered-users
+Referer URL: http://localhost/learneron/admin/users/list-data
+Trace:
+Cake\Error\BaseErrorHandler::handleFatalError() - CORE\src\Error\BaseErrorHandler.php, line 216
+Cake\Error\BaseErrorHandler::Cake\Error\{closure}() - CORE\src\Error\BaseErrorHandler.php, line 98
+[main] - [internal], line ??
+
+
+
+2018-05-14 19:18:52 Warning: Headers already sent in D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Error\Debugger.php:754
+2018-05-14 19:18:52 Error: [Cake\Error\FatalErrorException] Call to a member function setTitle() on null
+Request URL: /learneron/admin/users/download-reports-non-registered-users
+Referer URL: http://localhost/learneron/admin/users/list-data
+Stack Trace:
+#0 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Error\BaseErrorHandler.php(98): Cake\Error\BaseErrorHandler->handleFatalError(1, 'Call to a membe...', 'D:\\xampp\\htdocs...', 533)
+#1 [internal function]: Cake\Error\BaseErrorHandler->Cake\Error\{closure}()
+#2 {main}
+
+
+2018-05-14 19:20:15 Error: Fatal Error (4): syntax error, unexpected '[', expecting identifier (T_STRING) or variable (T_VARIABLE) or '{' or '$' in [D:\xampp\htdocs\learneron\plugins\Admin\src\Controller\UsersController.php, line 520]
+Request URL: /learneron/admin/users/download-reports-non-registered-users
+Referer URL: http://localhost/learneron/admin/users/list-data
+Trace:
+Cake\Error\BaseErrorHandler::handleFatalError() - CORE\src\Error\BaseErrorHandler.php, line 216
+Cake\Error\BaseErrorHandler::Cake\Error\{closure}() - CORE\src\Error\BaseErrorHandler.php, line 98
+[main] - [internal], line ??
+
+
+
+2018-05-14 19:20:16 Error: [Cake\Error\FatalErrorException] syntax error, unexpected '[', expecting identifier (T_STRING) or variable (T_VARIABLE) or '{' or '$'
+Request URL: /learneron/admin/users/download-reports-non-registered-users
+Referer URL: http://localhost/learneron/admin/users/list-data
+Stack Trace:
+#0 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Error\BaseErrorHandler.php(98): Cake\Error\BaseErrorHandler->handleFatalError(4, 'syntax error, u...', 'D:\\xampp\\htdocs...', 520)
+#1 [internal function]: Cake\Error\BaseErrorHandler->Cake\Error\{closure}()
+#2 {main}
+
+
+2018-05-14 19:21:07 Error: Fatal Error (4): syntax error, unexpected '->' (T_OBJECT_OPERATOR) in [D:\xampp\htdocs\learneron\plugins\Admin\src\Controller\UsersController.php, line 529]
+Request URL: /learneron/admin/users/download-reports-non-registered-users
+Referer URL: http://localhost/learneron/admin/users/list-data
+Trace:
+Cake\Error\BaseErrorHandler::handleFatalError() - CORE\src\Error\BaseErrorHandler.php, line 216
+Cake\Error\BaseErrorHandler::Cake\Error\{closure}() - CORE\src\Error\BaseErrorHandler.php, line 98
+[main] - [internal], line ??
+
+
+
+2018-05-14 19:21:07 Error: [Cake\Error\FatalErrorException] syntax error, unexpected '->' (T_OBJECT_OPERATOR)
+Request URL: /learneron/admin/users/download-reports-non-registered-users
+Referer URL: http://localhost/learneron/admin/users/list-data
+Stack Trace:
+#0 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Error\BaseErrorHandler.php(98): Cake\Error\BaseErrorHandler->handleFatalError(4, 'syntax error, u...', 'D:\\xampp\\htdocs...', 529)
+#1 [internal function]: Cake\Error\BaseErrorHandler->Cake\Error\{closure}()
+#2 {main}
+
+
+2018-05-14 19:21:08 Error: Fatal Error (4): syntax error, unexpected '->' (T_OBJECT_OPERATOR) in [D:\xampp\htdocs\learneron\plugins\Admin\src\Controller\UsersController.php, line 529]
+Request URL: /learneron/admin/users/download-reports-non-registered-users
+Referer URL: http://localhost/learneron/admin/users/list-data
+Trace:
+Cake\Error\BaseErrorHandler::handleFatalError() - CORE\src\Error\BaseErrorHandler.php, line 216
+Cake\Error\BaseErrorHandler::Cake\Error\{closure}() - CORE\src\Error\BaseErrorHandler.php, line 98
+[main] - [internal], line ??
+
+
+
+2018-05-14 19:21:08 Error: [Cake\Error\FatalErrorException] syntax error, unexpected '->' (T_OBJECT_OPERATOR)
+Request URL: /learneron/admin/users/download-reports-non-registered-users
+Referer URL: http://localhost/learneron/admin/users/list-data
+Stack Trace:
+#0 D:\xampp\htdocs\learneron\vendor\cakephp\cakephp\src\Error\BaseErrorHandler.php(98): Cake\Error\BaseErrorHandler->handleFatalError(4, 'syntax error, u...', 'D:\\xampp\\htdocs...', 529)
+#1 [internal function]: Cake\Error\BaseErrorHandler->Cake\Error\{closure}()
+#2 {main}
+
+

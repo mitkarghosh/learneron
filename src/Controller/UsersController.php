@@ -147,9 +147,9 @@ class UsersController extends AppController{
 					$insert_into_term['personaldata_unchecked_time']		= date('Y-m-d H:i:s');
 				}
 				$UsersTable = TableRegistry::get('Users');
-				$newUsers = $UsersTable->newEntity();
+				$newUsers 	= $UsersTable->newEntity();
 				$data_to_insert = $UsersTable->patchEntity($newUsers, $this->request->data);
-				if($savedData = $UsersTable->save($data_to_insert)){
+				if($savedData 	= $UsersTable->save($data_to_insert)){
 					$insert_user_id = $savedData->id;
 					$this->visitorlogs('Users','signup','Signup',NULL,NULL,$insert_user_id);	//Log details insertion
 					$url = Router::url('/', true).'users/verify/'.$this->request->data['signup_string'].'/'.base64_encode(time());
@@ -158,9 +158,8 @@ class UsersController extends AppController{
 					$insert_into_term['user_id']							= $insert_user_id;
 					$TermTable 		= TableRegistry::get('Term');
 					$newterm 		= $TermTable->newEntity();
-					$data_insert 	= $newterm->patchEntity($newterm, $insert_into_term);
-					$TermTable->save($data_insert);
-					
+					$data_insert 	= $TermTable->patchEntity($newterm, $insert_into_term);					
+					$TermTable->save($data_insert);					
 					$settings = $this->getSiteSettings();
 					if($this->Email->userRegister($this->request->data['email'], $url, $this->request->data, $settings)){
 						echo json_encode(['register'=>'success', 'userid'=>$insert_user_id]);

@@ -158,15 +158,15 @@
 								   </li>
 								<?php
 								}
-								/*if( (array_key_exists('delete-banner',$session->read('permissions.'.strtolower('CookieConsents')))) && $session->read('permissions.'.strtolower('CookieConsents').'.'.strtolower('delete-banner'))==1 ){
+								if( (array_key_exists('delete-cookie-consent',$session->read('permissions.'.strtolower('CookieConsents')))) && $session->read('permissions.'.strtolower('CookieConsents').'.'.strtolower('delete-cookie-consent'))==1 ){
 								?>
 								   <li>
-									<a class="remove" href="javascript:void(0);" onclick="delete_banner('<?php echo $cookieSectionDetail->id; ?>');" title="Delete">
+									<a class="remove" href="javascript:void(0);" onclick="delete_cookie_consent('<?php echo $cookieSectionDetail->id; ?>');" title="Delete">
 										<i class="fa fa-trash-o "></i> 
 									  </a>
 								   </li>
 								<?php
-								}*/
+								}
 								?>
                                   </ul>
                              </div>
@@ -202,21 +202,21 @@
 
 <script type="text/javascript">
 <?php
-/*if( ((array_key_exists('change-status',$session->read('permissions.'.strtolower('CookieConsents')))) && $session->read('permissions.'.strtolower('CookieConsents').'.'.strtolower('change-status'))==1) && ((array_key_exists('delete-banner',$session->read('permissions.'.strtolower('CookieConsents')))) && $session->read('permissions.'.strtolower('CookieConsents').'.'.strtolower('delete-banner'))==1) ){
+if( ((array_key_exists('change-status',$session->read('permissions.'.strtolower('CookieConsents')))) && $session->read('permissions.'.strtolower('CookieConsents').'.'.strtolower('change-status'))==1) && ((array_key_exists('delete-cookie-consent',$session->read('permissions.'.strtolower('CookieConsents')))) && $session->read('permissions.'.strtolower('CookieConsents').'.'.strtolower('delete-cookie-consent'))==1) ){
 ?>
 	var selectedCheckBox = new checkbox(<?php echo $this->Paginator->param('count'); ?>,'deleteAll','Delete','activeAll','Active','inactiveAll','Inactive');
 <?php
-}else*/
-if( ((array_key_exists('change-status',$session->read('permissions.'.strtolower('CookieConsents')))) && $session->read('permissions.'.strtolower('CookieConsents').'.'.strtolower('change-status'))==1) /*&& ((!array_key_exists('delete-cookie-consent',$session->read('permissions.'.strtolower('CookieConsents')))) && $session->read('permissions.'.strtolower('CookieConsents').'.'.strtolower('delete-cookie-consent'))!=1)*/ ){
+}else
+if( ((array_key_exists('change-status',$session->read('permissions.'.strtolower('CookieConsents')))) && $session->read('permissions.'.strtolower('CookieConsents').'.'.strtolower('change-status'))==1) && ((!array_key_exists('delete-cookie-consent',$session->read('permissions.'.strtolower('CookieConsents')))) && $session->read('permissions.'.strtolower('CookieConsents').'.'.strtolower('delete-cookie-consent'))!=1) ){
 ?>
 	var selectedCheckBox = new checkbox(<?php echo $this->Paginator->param('count'); ?>,'activeAll','Active','inactiveAll','Inactive');
 <?php
 }
-/*else if( ((!array_key_exists('change-status',$session->read('permissions.'.strtolower('CookieConsents')))) && $session->read('permissions.'.strtolower('CookieConsents').'.'.strtolower('change-status'))!=1) && ((array_key_exists('delete-banner',$session->read('permissions.'.strtolower('CookieConsents')))) && $session->read('permissions.'.strtolower('CookieConsents').'.'.strtolower('delete-banner'))==1) ){
+else if( ((!array_key_exists('change-status',$session->read('permissions.'.strtolower('CookieConsents')))) && $session->read('permissions.'.strtolower('CookieConsents').'.'.strtolower('change-status'))!=1) && ((array_key_exists('delete-cookie-consent',$session->read('permissions.'.strtolower('CookieConsents')))) && $session->read('permissions.'.strtolower('CookieConsents').'.'.strtolower('delete-cookie-consent'))==1) ){
 ?>
 	var selectedCheckBox = new checkbox(<?php echo $this->Paginator->param('count'); ?>,'deleteAll','Delete');
 <?php
-}*/
+}
 ?>
 
 function change_status(id,status){
@@ -255,7 +255,7 @@ function change_status(id,status){
 		});
 	});
 }
-function delete_banner(id){
+function delete_cookie_consent(id){
 	swal({
 	  title: "Are you sure?",
 	  type: "error",
@@ -268,7 +268,7 @@ function delete_banner(id){
 		$.ajax({
 			type: 'POST',
 			dataType: 'JSON',
-			url: '<?php echo Router::url("/admin/banner-sections/delete-banner/",true); ?>',
+			url: '<?php echo Router::url("/admin/cookie-consents/delete-cookie-consent/",true); ?>',
 			data: {id: id},			
 			success: function(result) {
 				if(result.type == 'success'){
@@ -306,7 +306,7 @@ function deleteAll(){
 			$.ajax({
 				type: 'POST',
 				dataType: 'JSON',
-				url: '<?php echo Router::url("/admin/banner-sections/delete-multiple/",true); ?>',
+				url: '<?php echo Router::url("/admin/cookie-consents/delete-multiple/",true); ?>',
 				data: {
 					id: selectedCheckBox.id
 				},

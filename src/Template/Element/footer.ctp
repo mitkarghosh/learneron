@@ -33,7 +33,7 @@ if( empty($get_details) ){
 ?>
 <div class="cookieConcent">
     <div class="cookieConcentInner">
-        <div class="cookieText"><?php echo substr(strip_tags($cookie_data['description']),0,215);?></div>
+        <div class="cookieText"><?php echo $cookie_data['short_description'];?></div>
         <div class="button-set">
             <a class="active" id="cookie_accept" href="javascript:void(0);">Accept</a>
             <a data-toggle="modal" data-target="#cookie_details" href="javascript:void(0);">Details</a>

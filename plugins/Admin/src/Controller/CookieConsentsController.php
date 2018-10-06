@@ -100,9 +100,9 @@ class CookieConsentsController extends AppController{
         exit();
     }
 	
-	/*public function deleteBanner($id = NULL){
+	public function deleteCookieConsent($id = NULL){
 		$session = $this->request->session();
-		if( (empty($session->read('permissions.'.strtolower('BannerSections'))) || (!array_key_exists('delete-banner',$session->read('permissions.'.strtolower('BannerSections')))) || $session->read('permissions.'.strtolower('BannerSections').'.'.strtolower('delete-banner'))!=1) ){
+		if( (empty($session->read('permissions.'.strtolower('CookieConsents'))) || (!array_key_exists('delete-cookie-consent',$session->read('permissions.'.strtolower('CookieConsents')))) || $session->read('permissions.'.strtolower('CookieConsents').'.'.strtolower('delete-cookie-consent'))!=1) ){
 			$this->Flash->error(__("You don't have permission to access this page"));
 			return $this->redirect(['plugin' => 'admin', 'controller' => 'admin-details', 'action' => 'dashboard']);
 		}
@@ -114,17 +114,15 @@ class CookieConsentsController extends AppController{
         }
 		$this->request->allowMethod(['post', 'delete']);
 		if($id != ''){
-			$BannerSectionsTable = TableRegistry::get('Admin.BannerSections');
-			$banner_data = $BannerSectionsTable->get($id);
-			@unlink(WWW_ROOT."uploads/banner/".$banner_data->image);
-			@unlink(WWW_ROOT."uploads/banner/thumb/".$banner_data->image);
-			$BannerSectionsTable->delete($banner_data);
-			echo json_encode(array('type' => 'success', 'deleted_id' => $id, 'message' => 'Banner successfully deleted'));
+			$CookieTable = TableRegistry::get('Admin.CookieConsents');
+			$data = $CookieTable->get($id);
+			$CookieTable->delete($data);
+			echo json_encode(array('type' => 'success', 'deleted_id' => $id, 'message' => 'Cookie consent successfully deleted'));
 		}else{
 			echo json_encode(array('type' => 'error', 'message' => 'There is an unexpected error. Try contacting the developers'));
 		}
 		exit();
-    }*/
+    }
 	
 	public function activeMultiple($id = NULL){
 		$session = $this->request->session();
@@ -172,9 +170,9 @@ class CookieConsentsController extends AppController{
         exit();
     }
 	
-	/*public function deleteMultiple($id = NULL){
+	public function deleteMultiple($id = NULL){
 		$session = $this->request->session();
-		if( (empty($session->read('permissions.'.strtolower('BannerSections'))) || (!array_key_exists('delete-banner',$session->read('permissions.'.strtolower('BannerSections')))) || $session->read('permissions.'.strtolower('BannerSections').'.'.strtolower('delete-banner'))!=1) ){
+		if( (empty($session->read('permissions.'.strtolower('CookieConsents'))) || (!array_key_exists('delete-cookie-consent',$session->read('permissions.'.strtolower('CookieConsents')))) || $session->read('permissions.'.strtolower('CookieConsents').'.'.strtolower('delete-cookie-consent'))!=1) ){
 			$this->Flash->error(__("You don't have permission to access this page"));
 			return $this->redirect(['plugin' => 'admin', 'controller' => 'admin-details', 'action' => 'dashboard']);
 		}
@@ -183,19 +181,17 @@ class CookieConsentsController extends AppController{
         $this->request->allowMethod(['post', 'delete']);
 		if(!empty($this->request->data['id'])){
 			$deleted_ids = array();
-			$BannerSectionsTable = TableRegistry::get('Admin.BannerSections');
+			$CookieTable = TableRegistry::get('Admin.CookieConsents');
 			foreach($this->request->data['id'] as $val_id){	
-				$banner_data = $BannerSectionsTable->get($val_id);
-				@unlink(WWW_ROOT."uploads/banner/".$banner_data->image);
-				@unlink(WWW_ROOT."uploads/banner/thumb/".$banner_data->image);
-				$BannerSectionsTable->delete($banner_data);
+				$data = $CookieTable->get($val_id);
+				$CookieTable->delete($data);
 				$deleted_ids[] = $val_id;
 			}
-			echo json_encode(array('type' => 'success', 'deleted_id' => $deleted_ids, 'message' => 'Banner successfully deleted'));
+			echo json_encode(array('type' => 'success', 'deleted_ids' => $deleted_ids, 'message' => 'Cookie consent(s) successfully deleted'));
 		}else{
-			echo json_encode(array('type' => 'error', 'deleted_id' => '', 'message' => 'There is an unexpected error. Try contacting the developers'));
+			echo json_encode(array('type' => 'error', 'deleted_ids' => '', 'message' => 'There is an unexpected error. Try contacting the developers'));
 		}
         exit();
-    }*/
+    }
 	
 }

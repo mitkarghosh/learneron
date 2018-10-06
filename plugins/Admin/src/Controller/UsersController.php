@@ -104,7 +104,7 @@ class UsersController extends AppController{
 										 ->setCategory("all");
 			
 			/*---------Personal Details-----------*/
-			$options['contain'] 	= ['Visitors','Visitors.VisitorLogs','Careereducations','UserAccountSetting','UserAccountSetting.QuestionCategories'];			
+			$options['contain'] 	= ['Terms','Visitors','Visitors.VisitorLogs','Careereducations','UserAccountSetting','UserAccountSetting.QuestionCategories'];			
 			$options['conditions'] 	= ['Users.id'=>$id];
 			$options['order'] 		= ['Users.id'=>'ASC'];
 			//$options['fields'] 	= ['Users.*'];
@@ -155,23 +155,23 @@ class UsersController extends AppController{
 			$objQuestionPosted->getStyle('B1')->getFont()->setBold(true);
 			$objQuestionPosted->getStyle('C1')->getFont()->setBold(true);
 			$objQuestionPosted->getStyle('D1')->getFont()->setBold(true);			
-			$objQuestionPosted->getStyle('E1')->getFont()->setBold(true);
+			/*$objQuestionPosted->getStyle('E1')->getFont()->setBold(true);
 			$objQuestionPosted->getStyle('F1')->getFont()->setBold(true);			
 			$objQuestionPosted->getStyle('G1')->getFont()->setBold(true);			
-			$objQuestionPosted->getStyle('H1')->getFont()->setBold(true);
+			$objQuestionPosted->getStyle('H1')->getFont()->setBold(true);*/
 			$objQuestionPosted  ->setCellValue('A1', 'Receive Email Notifications on New Responses to My Questions')
 								->setCellValue('B1', 'Subscribe for News & Views')
 								->setCellValue('C1', 'Follow us on Twitter')
-								->setCellValue('D1', 'Send Me Notifications on Posting New Question in Below Defined Category')
-								->setCellValue('E1', 'I agree with sending LearnerOn.net commercial communication and processing my personal data - Checked Time')
-								->setCellValue('F1', 'I agree with sending LearnerOn.net commercial communication and processing my personal data - Unchecked Time')
-								->setCellValue('G1', 'I agree with sending 3rd party commercial communication by Learneron, SE and processing my personal data - Checked Time')
-								->setCellValue('H1', 'I agree with sending 3rd party commercial communication by Learneron, SE and processing my personal data - Unchecked Time');
+								->setCellValue('D1', 'Send Me Notifications on Posting New Question in Below Defined Category');
+								/*->setCellValue('E1', 'Terms for personal data - Checked Time')
+								->setCellValue('F1', 'Terms for personal data - Unchecked Time')
+								->setCellValue('G1', 'Terms for 3rd party commercial communication by Learneron - Checked Time')
+								->setCellValue('H1', 'Terms for 3rd party commercial communication by Learneron - Unchecked Time');*/
 								
-			if($details['personaldata_checked_time'] != '' || $details['personaldata_checked_time'] != '0000-00-00 00:00:00')$personal = date('dS M Y H:i:s',strtotime($details['personaldata_checked_time']));else $personal = 'N/A';
+			/*if($details['personaldata_checked_time'] != '' || $details['personaldata_checked_time'] != '0000-00-00 00:00:00')$personal = date('dS M Y H:i:s',strtotime($details['personaldata_checked_time']));else $personal = 'N/A';
 			if($details['personaldata_unchecked_time'] != '' || $details['personaldata_unchecked_time'] != '0000-00-00 00:00:00')$personal_un = date('dS M Y H:i:s',strtotime($details['personaldata_unchecked_time']));else $personal_un = 'N/A';
 			if($details['commercialparty_checked_time'] != '' || $details['commercialparty_checked_time'] != '0000-00-00 00:00:00')$commercialparty = date('dS M Y H:i:s',strtotime($details['commercialparty_checked_time']));else $commercialparty = 'N/A';
-			if($details['commercialparty_unchecked_time'] != '' || $details['commercialparty_unchecked_time'] != '0000-00-00 00:00:00')$commercialparty_un = date('dS M Y H:i:s',strtotime($details['commercialparty_unchecked_time']));else $commercialparty_un = 'N/A';
+			if($details['commercialparty_unchecked_time'] != '' || $details['commercialparty_unchecked_time'] != '0000-00-00 00:00:00')$commercialparty_un = date('dS M Y H:i:s',strtotime($details['commercialparty_unchecked_time']));else $commercialparty_un = 'N/A';*/
 			
 			$as = 2;
 			$question_notification = ''; $news_notification = ''; $follow_twitter = ''; $catname = '';
@@ -188,22 +188,22 @@ class UsersController extends AppController{
 					$objQuestionPosted->setCellValue('A'.$as, $question_notification)
 								  ->setCellValue('B'.$as, $news_notification)
 								  ->setCellValue('C'.$as, $follow_twitter)
-								  ->setCellValue('D'.$as, $catname)
-								  ->setCellValue('E'.$as, $personal)
+								  ->setCellValue('D'.$as, $catname);
+								  /*->setCellValue('E'.$as, $personal)
 								  ->setCellValue('F'.$as, $personal_un)
 								  ->setCellValue('G'.$as, $commercialparty)
-								  ->setCellValue('H'.$as, $commercialparty_un);
+								  ->setCellValue('H'.$as, $commercialparty_un);*/
 					$as++;					
 				}
 			}else{
 				$objQuestionPosted->setCellValue('A'.$as, $question_notification)
 								  ->setCellValue('B'.$as, $news_notification)
 								  ->setCellValue('C'.$as, $follow_twitter)
-								  ->setCellValue('D'.$as, $catname)
-								  ->setCellValue('E'.$as, $personal)
+								  ->setCellValue('D'.$as, $catname);
+								  /*->setCellValue('E'.$as, $personal)
 								  ->setCellValue('F'.$as, $personal_un)
 								  ->setCellValue('G'.$as, $commercialparty)
-								  ->setCellValue('H'.$as, $commercialparty_un);
+								  ->setCellValue('H'.$as, $commercialparty_un);*/
 			}
 			$objQuestionPosted->setTitle('Account Settings');
 			/*---------Account Settings Section-----------*/
@@ -390,6 +390,35 @@ class UsersController extends AppController{
 			$objAnswerPosted->setTitle('Log Details');
 			/*---------LOG DETAILS-----------*/
 			
+			/*---------Terms Section-----------*/
+			$objTerms = $objPHPExcel->createSheet(8); //Setting index when creating
+			$objTerms->getStyle('A1')->getFont()->setBold(true);
+			$objTerms->getStyle('B1')->getFont()->setBold(true);
+			$objTerms->getStyle('C1')->getFont()->setBold(true);
+			$objTerms->getStyle('D1')->getFont()->setBold(true);			
+			$objTerms->setCellValue('A1', 'Terms for personal data - Checked Time')
+					 ->setCellValue('B1', 'Terms for personal data - Unchecked Time')
+					 ->setCellValue('C1', 'Terms for 3rd party commercial communication by Learneron - Checked Time')
+					 ->setCellValue('D1', 'Terms for 3rd party commercial communication by Learneron - Unchecked Time');
+			
+			if( !empty($details['terms']) ){
+				$lt = 2;
+				foreach($details['terms'] as $val_lt){
+					if($val_lt['personaldata_checked_time'] != '' && $val_lt['personaldata_checked_time'] != '0000-00-00 00:00:00')$personal = date('dS M Y H:i:s',strtotime($val_lt['personaldata_checked_time']));else $personal = 'N/A';
+					if($val_lt['personaldata_unchecked_time'] != '' && $val_lt['personaldata_unchecked_time'] != '0000-00-00 00:00:00')$personal_un = date('dS M Y H:i:s',strtotime($val_lt['personaldata_unchecked_time']));else $personal_un = 'N/A';
+					if($val_lt['commercialparty_checked_time'] != '' && $val_lt['commercialparty_checked_time'] != '0000-00-00 00:00:00')$commercialparty = date('dS M Y H:i:s',strtotime($val_lt['commercialparty_checked_time']));else $commercialparty = 'N/A';
+					if($val_lt['commercialparty_unchecked_time'] != '' && $val_lt['commercialparty_unchecked_time'] != '0000-00-00 00:00:00')$commercialparty_un = date('dS M Y H:i:s',strtotime($val_lt['commercialparty_unchecked_time']));else $commercialparty_un = 'N/A';
+					
+					$objTerms->setCellValue('A'.$lt, $personal)
+							 ->setCellValue('B'.$lt, $personal_un)
+							 ->setCellValue('C'.$lt, $commercialparty)
+							 ->setCellValue('D'.$lt, $commercialparty_un);
+					$lt++;
+				}
+			}
+			$objTerms->setTitle('Terms Section');
+			/*---------Terms Section-----------*/
+			
 			$objPHPExcel->setActiveSheetIndex(0);
 			
 			$file_name= 'User_report_'.time().'.xls';
@@ -413,7 +442,9 @@ class UsersController extends AppController{
 		$this->autoRender = false;
 		$VisitorsTable = TableRegistry::get('Admin.Visitors');
 		$data = $VisitorsTable->find('all',['contain'=>['VisitorLogs'],'conditions'=>['user_id'=>0]])->toArray();
-		//pr($data); die;
+		$CookieTable = TableRegistry::get('Admin.CookieConsents');
+		$cookie_data = $CookieTable->find('all',['contain'=>[],'conditions'=>[]])->toArray();
+		//pr($cookie_data); die;
 		
 		$objPHPExcel = new \PHPExcel();
 		$objPHPExcel->getProperties()->setCreator("Tech Times.")
@@ -468,6 +499,39 @@ class UsersController extends AppController{
 			}
 		}
 		/*---------LOG DETAILS-----------*/
+		
+		/*---------Cookie Section-----------*/
+		$objCookie = $objPHPExcel->createSheet(1); //Setting index when creating
+		$objCookie->getStyle('A1')->getFont()->setBold(true);
+		$objCookie->getStyle('B1')->getFont()->setBold(true);
+		$objCookie->getStyle('C1')->getFont()->setBold(true);
+		$objCookie->getStyle('D1')->getFont()->setBold(true);			
+		$objCookie  ->setCellValue('A1', 'IP Address')
+					->setCellValue('B1', 'Type')
+					->setCellValue('C1', 'Time')
+					->setCellValue('D1', 'Withdraw Status');							
+		$ak = 2;
+		$question_notification = ''; $news_notification = ''; $follow_twitter = ''; $catname = '';
+		if( !empty($cookie_data) ){
+			foreach($cookie_data as $val_as){
+				$user_ipaddress = ''; $cookie_type = ''; $cookie_time = ''; $withdrawl_status = '';
+				$user_ipaddress = $val_as['user_ipaddress'];
+				$cookie_type 	= $val_as['cookie_type'];
+				$cookie_time 	= $val_as['cookie_time'];
+				if( $val_as['withdrawl_status'] == '1' ){
+					$withdrawl_status = 'Accepted';
+				}else{
+					$withdrawl_status = 'Declined';
+				}
+				$objCookie->setCellValue('A'.$ak, $user_ipaddress)
+						  ->setCellValue('B'.$ak, $cookie_type)
+						  ->setCellValue('C'.$ak, date('jS F Y H:i:s', strtotime($cookie_time)))
+						  ->setCellValue('D'.$ak, $withdrawl_status);
+				$ak++;					
+			}
+		}
+		$objCookie->setTitle('Cookie Consent');
+		/*---------Cookie Section-----------*/
 		
 		$objPHPExcel->setActiveSheetIndex(0);
 		
@@ -586,7 +650,7 @@ class UsersController extends AppController{
         }
         // ***** if data recieved by post or put ***** //
         if ($this->request->is(['post', 'put'])) {
-			//pr($this->request->data); pr($user); die;
+			//pr($this->request->data); die;
 			if(array_key_exists('profile_pic', $this->request->data) && $this->request->data['profile_pic']['name']!=''){
                 $handle = new \Upload($this->request->data['profile_pic']);
                 $handle->file_new_name_body = $new_name = 'profile_'.time().rand(0,99);
@@ -610,24 +674,185 @@ class UsersController extends AppController{
 			}else{
 				$this->request->data['birthday']	= '';
 			}
+			
+			//pr($user); die;
+			$insert_into_term['user_id']	= $id;
+			$TermsTable 					= TableRegistry::get('Admin.Terms');
+			$newterm 						= $TermsTable->newEntity();
+				
+			if( ( ( $user->personal_data == 'N' ) && ( array_key_exists('personal_data',$this->request->data) && $this->request->data['personal_data'] == 'Y' ) ) && ( ( $user->is_commercialparty == 0 ) && ( array_key_exists('is_commercialparty',$this->request->data) && $this->request->data['is_commercialparty'] != 0 ) ) ){
+				$this->request->data['personal_data']  				= 'Y';
+				$this->request->data['personaldata_checked_time']	= date('Y-m-d H:i:s');
+				
+				$this->request->data['is_commercialparty']  		= 1;
+				$this->request->data['commercialparty_checked_time']= date('Y-m-d H:i:s');
+				
+				$insert_into_term['personal_data']  				= 'Y';
+				$insert_into_term['personaldata_checked_time']		= date('Y-m-d H:i:s');
+				$insert_into_term['personaldata_unchecked_time']	= '';
+				
+				$insert_into_term['is_commercialparty']				= 1;
+				$insert_into_term['commercialparty_checked_time']	= date('Y-m-d H:i:s');
+				$insert_into_term['commercialparty_unchecked_time']	= '';
+				
+				/*insert into terms*/
+				$data_insert 	= $TermsTable->patchEntity($newterm, $insert_into_term);
+				$TermsTable->save($data_insert);
+			}
+			else if( ( ( $user->personal_data == 'N' ) && ( array_key_exists('personal_data',$this->request->data) && $this->request->data['personal_data'] == 'Y' ) ) && ( ( $user->is_commercialparty == 1 ) && ( array_key_exists('is_commercialparty',$this->request->data) && $this->request->data['is_commercialparty'] != 0 ) ) ){
+				$this->request->data['personal_data']  				= 'Y';
+				$this->request->data['personaldata_checked_time']	= date('Y-m-d H:i:s');
+				
+				$insert_into_term['personal_data']  				= 'Y';
+				$insert_into_term['personaldata_checked_time']		= date('Y-m-d H:i:s');
+				$insert_into_term['personaldata_unchecked_time']	= '';
+				
+				$insert_into_term['is_commercialparty']				= 1;
+				$insert_into_term['commercialparty_checked_time']	= '';
+				$insert_into_term['commercialparty_unchecked_time']	= '';
+				
+				/*insert into terms*/
+				$data_insert 	= $TermsTable->patchEntity($newterm, $insert_into_term);
+				$TermsTable->save($data_insert);
+			}
+			else if( ( ( $user->personal_data == 'Y' ) && ( !array_key_exists('personal_data',$this->request->data) ) ) && ( ( $user->is_commercialparty == 1 ) && ( array_key_exists('is_commercialparty',$this->request->data) && $this->request->data['is_commercialparty'] != 0 ) ) ){
+				$this->request->data['personal_data']  				= 'N';
+				$this->request->data['personaldata_unchecked_time']	= date('Y-m-d H:i:s');
+				
+				$insert_into_term['personal_data']  				= 'N';
+				$insert_into_term['personaldata_checked_time']		= '';
+				$insert_into_term['personaldata_unchecked_time']	= date('Y-m-d H:i:s');
+				
+				$insert_into_term['is_commercialparty']				= 1;
+				$insert_into_term['commercialparty_checked_time']	= '';
+				$insert_into_term['commercialparty_unchecked_time']	= '';
+				
+				/*insert into terms*/
+				$data_insert 	= $TermsTable->patchEntity($newterm, $insert_into_term);
+				$TermsTable->save($data_insert);
+			}
+			else if( ( ( $user->is_commercialparty == 0 ) && ( array_key_exists('is_commercialparty',$this->request->data) && $this->request->data['is_commercialparty'] == 1 ) ) && ( ( $user->personal_data == 'Y' ) && ( array_key_exists('personal_data',$this->request->data) && $this->request->data['personal_data'] != 'N' ) ) ){
+				$this->request->data['is_commercialparty']  		= 1;
+				$this->request->data['commercialparty_checked_time']= date('Y-m-d H:i:s');
+				
+				$insert_into_term['personal_data']  				= 'Y';
+				$insert_into_term['personaldata_checked_time']		= '';
+				$insert_into_term['personaldata_unchecked_time']	= '';
+				
+				$insert_into_term['is_commercialparty']				= 1;
+				$insert_into_term['commercialparty_checked_time']	= date('Y-m-d H:i:s');
+				$insert_into_term['commercialparty_unchecked_time']	= '';
+				
+				/*insert into terms*/
+				$data_insert 	= $TermsTable->patchEntity($newterm, $insert_into_term);
+				$TermsTable->save($data_insert);
+			}
+			else if( ( ( $user->is_commercialparty == 1 ) && ( !array_key_exists('is_commercialparty',$this->request->data) ) ) && ( ( $user->personal_data == 'Y' ) && ( array_key_exists('personal_data',$this->request->data) && $this->request->data['personal_data'] != 'N' ) ) ){
+				$this->request->data['is_commercialparty']  			= 0;
+				$this->request->data['commercialparty_unchecked_time']	= date('Y-m-d H:i:s');
+				
+				$insert_into_term['personal_data']  					= 'Y';
+				$insert_into_term['personaldata_checked_time']			= '';
+				$insert_into_term['personaldata_unchecked_time']		= '';
+				
+				$insert_into_term['is_commercialparty']					= 1;
+				$insert_into_term['commercialparty_checked_time']		= '';
+				$insert_into_term['commercialparty_unchecked_time']		= date('Y-m-d H:i:s');
+				
+				/*insert into terms*/
+				$data_insert 	= $TermsTable->patchEntity($newterm, $insert_into_term);
+				$TermsTable->save($data_insert);
+			}
+			else if( ( ( $user->personal_data == 'Y' ) && ( !array_key_exists('personal_data',$this->request->data) ) ) && ( ( $user->is_commercialparty == 1 ) && ( !array_key_exists('is_commercialparty',$this->request->data) ) ) ){
+				$this->request->data['personal_data']  					= 'N';
+				$this->request->data['personaldata_unchecked_time']		= date('Y-m-d H:i:s');
+				
+				$this->request->data['is_commercialparty']  			= 1;
+				$this->request->data['commercialparty_unchecked_time']	= date('Y-m-d H:i:s');
+				
+				$insert_into_term['personal_data']  					= 'N';
+				$insert_into_term['personaldata_checked_time']			= '';
+				$insert_into_term['personaldata_unchecked_time']		= date('Y-m-d H:i:s');
+				
+				$insert_into_term['is_commercialparty']					= 0;
+				$insert_into_term['commercialparty_checked_time']		= '';
+				$insert_into_term['commercialparty_unchecked_time']		= date('Y-m-d H:i:s');
+				
+				/*insert into terms*/
+				$data_insert 	= $TermsTable->patchEntity($newterm, $insert_into_term);
+				$TermsTable->save($data_insert);
+			}
+			else if( ( ( $user->personal_data == 'Y' ) && ( !array_key_exists('personal_data',$this->request->data) ) ) && ( ( $user->is_commercialparty == 0 ) && ( !array_key_exists('is_commercialparty',$this->request->data) ) ) ){
+				$this->request->data['personal_data']  					= 'N';
+				$this->request->data['personaldata_unchecked_time']		= date('Y-m-d H:i:s');
+				
+				//$this->request->data['is_commercialparty']  			= 1;
+				//$this->request->data['commercialparty_unchecked_time']= date('Y-m-d H:i:s');
+				
+				$insert_into_term['personal_data']  					= 'N';
+				$insert_into_term['personaldata_checked_time']			= '';
+				$insert_into_term['personaldata_unchecked_time']		= date('Y-m-d H:i:s');
+				
+				$insert_into_term['is_commercialparty']					= 0;
+				$insert_into_term['commercialparty_checked_time']		= '';
+				$insert_into_term['commercialparty_unchecked_time']		= '';
+				
+				/*insert into terms*/
+				$data_insert 	= $TermsTable->patchEntity($newterm, $insert_into_term);
+				$TermsTable->save($data_insert);
+			}
+			else if( ( ( $user->personal_data == 'N' ) && ( !array_key_exists('personal_data',$this->request->data) ) ) && ( ( $user->is_commercialparty == 1 ) && ( !array_key_exists('is_commercialparty',$this->request->data) ) ) ){
+				//$this->request->data['personal_data']  				= 'N';
+				//$this->request->data['personaldata_unchecked_time']	= date('Y-m-d H:i:s');
+				
+				$this->request->data['is_commercialparty']  			= 0;
+				$this->request->data['commercialparty_unchecked_time']	= date('Y-m-d H:i:s');
+				
+				$insert_into_term['personal_data']  					= 'N';
+				$insert_into_term['personaldata_checked_time']			= '';
+				$insert_into_term['personaldata_unchecked_time']		= '';
+				
+				$insert_into_term['is_commercialparty']					= 0;
+				$insert_into_term['commercialparty_checked_time']		= '';
+				$insert_into_term['commercialparty_unchecked_time']		= date('Y-m-d H:i:s');
+				
+				/*insert into terms*/
+				$data_insert 	= $TermsTable->patchEntity($newterm, $insert_into_term);
+				$TermsTable->save($data_insert);
+			}
+			/*
 			if(array_key_exists('personal_data',$this->request->data) && $this->request->data['personal_data'] == 'Y'){
-				$this->request->data['personal_data']  		= 'Y';
-				$this->request->data['personaldata_checked_time']= date('Y-m-d H:i:s');
+				$this->request->data['personal_data']  				= 'Y';
+				$this->request->data['personaldata_checked_time']	= date('Y-m-d H:i:s');
+				
+				$insert_into_term['personal_data']  				= 'Y';
+				$insert_into_term['personaldata_checked_time']		= date('Y-m-d H:i:s');
 			}else{
-				$this->request->data['personal_data']  		= 'N';
-				$this->request->data['personaldata_unchecked_time']= date('Y-m-d H:i:s');
+				$this->request->data['personal_data']  				= 'N';
+				$this->request->data['personaldata_unchecked_time']	= date('Y-m-d H:i:s');
+				
+				$insert_into_term['personal_data']  				= 'N';
+				$insert_into_term['personaldata_unchecked_time']	= date('Y-m-d H:i:s');
 			}
 			if(array_key_exists('is_commercialparty',$this->request->data) && $this->request->data['is_commercialparty'] != 0){
 				$this->request->data['is_commercialparty']			= 1;
-				$this->request->data['commercialparty_checked_time']	= date('Y-m-d H:i:s');
+				$this->request->data['commercialparty_checked_time']= date('Y-m-d H:i:s');
+				
+				$insert_into_term['is_commercialparty']				= 1;
+				$insert_into_term['commercialparty_checked_time']	= date('Y-m-d H:i:s');
 			}else{
-				$this->request->data['is_commercialparty']			= 0;
+				$this->request->data['is_commercialparty']				= 0;
 				$this->request->data['commercialparty_unchecked_time']	= date('Y-m-d H:i:s');
-			}			
+				
+				$insert_into_term['is_commercialparty']				= 0;
+				$insert_into_term['commercialparty_unchecked_time']	= date('Y-m-d H:i:s');
+			}
+			*/
 			
 			$inserted_data = $UsersTable->patchEntity($user, $this->request->data);
             if ($savedData = $UsersTable->save($inserted_data)) {
 				$get_last_insert_id = $savedData->id;
+				
 				$CareereducationsTable = TableRegistry::get('Admin.Careereducations');
 				//education section start//
 				if( $this->request->data['education_chk'] == 'education' ){	//checking education section is checked (then update/insert)

@@ -73,6 +73,8 @@ if(isset($existing_account_settings) && $existing_account_settings['category_id'
 						I agree with sending LearnerOn.net commercial communication and processing my personal data&nbsp;
 						<img src="<?php echo Router::url('/images/info-icon.png');?>" data-toggle="tooltip_personaldata" data-original-title="I agree with sending commercial communications about LearnerOn.net service by electronic means and with the processing of my personal data, in particular the contact and identification data, by Learneron SE for this purpose. I may withdraw this consent at any time." />
 					</label>
+					<br />
+					<span style="font-size:14px;"><b>Checked Time:</b> <?php if($user_details['personaldata_checked_time'] != '' && $user_details['personaldata_checked_time'] != '0000-00-00 00:00:00')echo date('dS M Y H:i:s',strtotime($user_details['personaldata_checked_time']));else echo 'N/A'; ?>, <b>Unchecked Time:</b> <?php if($user_details['personaldata_unchecked_time'] != '' && $user_details['personaldata_unchecked_time'] != '0000-00-00 00:00:00')echo date('dS M Y H:i:s',strtotime($user_details['personaldata_unchecked_time']));else echo 'N/A'; ?></span>
 				</div>
 				
 				<div class="check-box-set">
@@ -81,6 +83,8 @@ if(isset($existing_account_settings) && $existing_account_settings['category_id'
 						I agree with sending 3rd party commercial communication by Learneron, SE and processing my personal data&nbsp;
 						<img src="<?php echo Router::url('/images/info-icon.png');?>" data-toggle="tooltip" data-original-title="I agree with sending third-party commercial communications by electronic means and with the processing of my personal data, in particular the contact and identification data, by Learneron SE for this purpose. I may withdraw this consent at any time." />
 					</label>
+					<br />
+					<span style="font-size:14px;"><b>Checked Time:</b> <?php if($user_details['commercialparty_checked_time'] != '' && $user_details['commercialparty_checked_time'] != '0000-00-00 00:00:00')echo date('dS M Y H:i:s',strtotime($user_details['commercialparty_checked_time']));else echo 'N/A'; ?>, <b>Unchecked Time:</b> <?php if($user_details['commercialparty_unchecked_time'] != '' && $user_details['commercialparty_unchecked_time'] != '0000-00-00 00:00:00')echo date('dS M Y H:i:s',strtotime($user_details['commercialparty_unchecked_time']));else echo 'N/A'; ?></span>
 				</div>
 				
 				<input type="submit" value="Change Settings" class="btn-normal">

@@ -36,6 +36,10 @@ class UsersTable extends Table{
 							'className'=>'Admin.Visitors',
 							'foreignKey'=>'user_id'               
 						]);
+		$this->hasMany('Terms',[
+							'className'=>'Admin.Terms',
+							'foreignKey'=>'user_id'               
+						]);
     }
 	
     public function beforeFind(Event $event, Query $query){

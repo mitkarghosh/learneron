@@ -332,7 +332,7 @@ $this->assign('hasDatepicker', true); ?>
 					<?php
 					//pr($user); die;
 					?>
-					<b>Checked Time:</b> <?php if($user->personaldata_checked_time != '')echo date('dS M Y H:i:s',strtotime($user->personaldata_checked_time));else echo 'N/A'; ?>, <b>Unchecked Time:</b> <?php if($user->personaldata_unchecked_time != '')echo date('dS M Y H:i:s',strtotime($user->personaldata_unchecked_time));else echo 'N/A'; ?>
+					<b>Checked Time:</b> <?php if($user->personaldata_checked_time != '' && $user->personaldata_checked_time != '0000-00-00 00:00:00')echo date('dS M Y H:i:s',strtotime($user->personaldata_checked_time));else echo 'N/A'; ?>, <b>Unchecked Time:</b> <?php if($user->personaldata_unchecked_time != '' && $user->personaldata_unchecked_time != '0000-00-00 00:00:00')echo date('dS M Y H:i:s',strtotime($user->personaldata_unchecked_time));else echo 'N/A'; ?>
 				</div>
 			 </div>
 			 
@@ -356,7 +356,7 @@ $this->assign('hasDatepicker', true); ?>
 					<?php
 					//pr($user); die;
 					?>
-					<b>Checked Time:</b> <?php if($user->commercialparty_checked_time != '')echo date('dS M Y H:i:s',strtotime($user->commercialparty_checked_time));else echo 'N/A'; ?>, <b>Unchecked Time:</b> <?php if($user->commercialparty_unchecked_time != '')echo date('dS M Y H:i:s',strtotime($user->commercialparty_unchecked_time));else echo 'N/A'; ?>
+					<b>Checked Time:</b> <?php if($user->commercialparty_checked_time != '' && $user->commercialparty_checked_time != '0000-00-00 00:00:00')echo date('dS M Y H:i:s',strtotime($user->commercialparty_checked_time));else echo 'N/A'; ?>, <b>Unchecked Time:</b> <?php if($user->commercialparty_unchecked_time != '' && $user->commercialparty_unchecked_time != '0000-00-00 00:00:00')echo date('dS M Y H:i:s',strtotime($user->commercialparty_unchecked_time));else echo 'N/A'; ?>
 				</div>
 			 </div>
 			

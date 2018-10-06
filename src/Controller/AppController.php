@@ -416,7 +416,7 @@ class AppController extends Controller{
 	//getCookieConsent
 	public function getCookieConsent(){
         $CmsTable = TableRegistry::get('Cms');
-        $data = $CmsTable->find('all',['conditions'=>['id'=>8],'fields'=>['id','description']])->first()->toArray();
+        $data = $CmsTable->find('all',['conditions'=>['id'=>8],'fields'=>['id','short_description','description']])->first()->toArray();
 		return $data;
     }
 	

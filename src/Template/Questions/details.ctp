@@ -69,7 +69,7 @@ $answer_upvote=0;
 							?>
 								<h5>Starting level </h5>
 							<?php
-								echo $detail->education_history.'<br />';
+								echo $detail->education_history.'<br /><br />';
 							}
 							if($detail->budget_constraints != ''){
 							?>

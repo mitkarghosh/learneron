@@ -2,12 +2,12 @@
 <footer class="site-footer">
     <div class="conatiner">
 		<div class="social-menu-container">
-			<!--<ul>
+			<?php /*<!--<ul>
 				<li><a href="<?php echo $site_settings->facebook_link;?>" target="_blank"><i class="fa fa-facebook"></i></a></li>
 				<li><a href="<?php echo $site_settings->twitter_link;?>" target="_blank"><i class="fa fa-twitter"></i></a></li>
 				<li><a href="<?php echo $site_settings-> google_plus_link;?>" target="_blank"><i class="fa fa-google-plus"></i></a></li>
 				<li><a href="<?php echo $site_settings->linkedin;?>" target="_blank"><i class="fa fa-linkedin"></i></a></li>
-			</ul>-->
+			</ul>-->*/?>
 			<input type="hidden" name="website_url" id="website_url" value="<?php echo Router::url('/',true);?>" />
 			<div class="sharethis-inline-share-buttons"></div>
 		</div>
@@ -46,15 +46,15 @@ if( empty($get_details) ){
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title" id="exampleModalLongTitle">Details</h5>
-				<!--<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<?php /*<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
-				</button>-->
+				</button>*/ ?>
 			</div>
 			<div class="modal-body">
 				<?php echo $cookie_data['description'];?>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-alt" id="cookie_decline" data-dismiss="modal">Cancel</button>
+				<button type="button" class="btn btn-alt" id="cookie_decline" data-dismiss="modal">OK</button>
 			</div>			
 		</div>
 	</div>

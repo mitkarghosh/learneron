@@ -751,6 +751,7 @@ p.copy a:hover {
     z-index: 2;
 }
 .banner-sec .bx-wrapper .bx-next {
+	background: url(../images/next.png);
 	left: auto;
 	right: 15px;
 }
@@ -1956,4 +1957,30 @@ a.twitter-btn {
 .cookieConcent .button-set a:hover, .cookieConcent .button-set a.active, .cookieConcent .button-set span:hover, .cookieConcent .button-set span.active {
 	color: #fff;
 	background: #caa961;
+}
+.modal-dialog {
+position: absolute;
+top: 30px;
+bottom: 50px;
+left: 50%;
+-webkit-transform: translate(-50%, 0) !important;
+-o-transform: translate(-50%, 0) !important;
+transform: translate(-50%, 0) !important;
+margin: 0;
+overflow: hidden;
+}
+.modal.show .modal-dialog{
+-webkit-transform: translate(-50%, 0) !important;
+-o-transform: translate(-50%, 0) !important;
+transform: translate(-50%, 0) !important;
+}
+.modal-content{height: 100%;}
+.modal-body{padding: 15px 15px 90px; height: 100%; overflow-y: auto;}
+.modal-footer{
+position: fixed;
+left: 1px;
+right: 1px;
+bottom: 0;
+background: #fff;
+border-radius: 0 0 .3rem .3rem;
 }

@@ -70,6 +70,11 @@ $session  = $this->request->session();
 										</div>
 									</div>
 								</div>
+								<div class="form-group">
+									<label for="">Tags Not In The List?</label>
+									<?php echo $this->Form->input('new_tags',['type'=>'text', 'placeholder'=>'New Tags', 'label'=>false, 'class'=>'form-control']); ?>
+									<p><small>Enter each tags separated by comma ( , )</small></p>
+								</div>
 								<div class="check-box-set">
 									<input type="checkbox" name="response_email" id="response_email" value="Y" autocomplete="off">
 									<label for="response_email">Send me new responses to my post via email</label>

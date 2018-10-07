@@ -1,4 +1,0 @@
-Cms table data
-new table cookie_consents
-
-CookieConsentTable (model), AppController.php, footer.ctp, UsersController.php

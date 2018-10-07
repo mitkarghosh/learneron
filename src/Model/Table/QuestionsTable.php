@@ -6,6 +6,8 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\Utility\Inflector;
+use Cake\ORM\TableRegistry;
 
 class QuestionsTable extends Table{
     /**
@@ -50,5 +52,5 @@ class QuestionsTable extends Table{
     }
 
     public function beforeFind(Event $event, Query $query){
-    }
+    }	
 }

@@ -6,6 +6,7 @@ use Cake\Event\Event;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\Mailer\Email;
+use Cake\Utility\Inflector;
 use Cake\Routing\Router;
 
 class QuestionsController extends AppController{
@@ -37,6 +38,32 @@ class QuestionsController extends AppController{
 		$advertise = $AdvertisementsTable->find('all',['conditions'=>['page_name'=>'postQuestion','status'=>'A'],'fields'=>['id','link','image'],'order'=>['id desc']])->first();
 		$this->set(compact('all_faqs','question_categories','all_tags','new_question','title','advertise'));
     }
+	
+	//Create Tag Slug//
+	public function createTagsSlug ($string=NULL, $id=NULL){
+		$this->name = 'Tags';
+		$slug = Inflector::slug ($string,'-');
+		$slug = strtolower($slug);
+		$i = 0;
+		$params = array ();
+		$params ['conditions']= array();
+		$params ['conditions'][$this->name.'.slug']= $slug;
+		if (!is_null($id)){
+			$params ['conditions']['not'] = array($this->name.'.id'=>$id);
+		}
+		$TagsTable = TableRegistry::get('Tags');
+		while (count($TagsTable->find('all',$params)->toArray())) {
+			if (!preg_match ('/-{1}[0-9]+$/', $slug )) {
+				$slug .= '-' . ++$i;
+			} else {
+				$slug = preg_replace ('/[0-9]+$/', ++$i, $slug );
+			}
+			$params ['conditions'][$this->name . '.slug']= $slug;
+		}
+		return $slug;
+	}
+	//Create Tag Slug//
+	
 	public function postQuestionSubmission(){
 		$this->viewBuilder()->layout = false;
         $this->render(false);
@@ -44,6 +71,55 @@ class QuestionsController extends AppController{
 			if(!empty($this->Auth->user())){
 				$QuestionTable = TableRegistry::get('Questions');
 				$new_question = $QuestionTable->newEntity();
+				//pr($this->request->data);
+				$new_generated_tag_ids = array();
+				if( isset($this->request->data['new_tags']) && array_key_exists('new_tags', $this->request->data) ) {
+					$TagsTable = TableRegistry::get('Tags');					
+					if( strpos($this->request->data['new_tags'], ',') !== false ) {
+						$exploded_tags = explode(',',$this->request->data['new_tags']);
+						//echo '<pre>'; print_r($exploded_tags); die;
+						foreach( $exploded_tags as $key_tag => $val_tag ) {							
+							$chk = $TagsTable->find('all',['conditions'=>['title'=>trim($val_tag)]])->first();
+							if( count($chk) > 0 ) {
+								$new_generated_tag_ids[] = $chk->id;
+							}else{
+								$slug = $this->createTagsSlug($val_tag);
+								$newtag['title'] 	= trim(ucwords($val_tag));
+								$newtag['slug'] 	= $slug;
+								$newtag['status'] 	= 'A';
+								
+								$new_tag 		= $TagsTable->newEntity();
+								$insertdata 	= $TagsTable->patchEntity($new_tag, $newtag);
+								$save 			= $TagsTable->save($insertdata);
+								$tag_insert_id 	= $save->id;
+								$new_generated_tag_ids[] = $tag_insert_id;
+								$tag_insert_id = '';
+							}
+						}
+					}else{
+						$chk = $TagsTable->find('all',['conditions'=>['title'=>trim($this->request->data['title'])]])->first();
+						if( count($chk) > 0 ) {
+							$new_generated_tag_ids[] = $chk->id;
+						}else{							
+							$slug = $this->createTagsSlug($this->request->data['title']);						
+							$newtag['title']	= trim(ucwords($this->request->data['new_tags']));
+							$newtag['slug'] 	= $slug;
+							$newtag['status'] 	= 'A';
+							
+							$new_tag 		= $TagsTable->newEntity();
+							$inserted_data = $TagsTable->patchEntity($new_tag, $newtag);
+							$save = $TagsTable->save($inserted_data);
+							$tag_insert_id = $save->id;
+							$new_generated_tag_ids[] = $tag_insert_id;
+						}
+					}
+				}
+				if( !empty($new_generated_tag_ids) ) {
+					$main_tags = $this->request->data['tags'];
+					$merge_array = array_merge( $main_tags,$new_generated_tag_ids );
+					$this->request->data['tags'] = $merge_array;
+				}
+				
 				$this->request->data['user_id'] 	= $this->Auth->user('id');
 				$this->request->data['user_type'] 	= 'U';
 				$active_permission = $this->getSiteSettings();	//getting approval permission mentioned in AppController

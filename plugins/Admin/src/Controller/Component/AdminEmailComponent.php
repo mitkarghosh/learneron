@@ -55,6 +55,23 @@ class AdminEmailComponent extends Component
             return false;
         }
     }
+	
+	//Resend verification link to Customers
+	public function resendToCustomer($user_email, $user, $url, $settings){
+        $admin_email = self::getAdminEmail(['mail_email']);
+        $email = new Email('default');
+        $email->to(array($user_email));
+        $email->subject('LearnerOn Account Verification');
+        $email->from(array($admin_email->mail_email => WEBSITE_NAME));
+        $email->emailFormat('html');              
+        $email->template('Admin.user_verification',Null);
+        $email->viewVars(array('verify_url'=>$url, 'url'=>Router::url("/",true),'user_details' => $user,'settings'=>$settings));
+        if($email->send()){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
 
     /**

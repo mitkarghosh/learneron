@@ -17,6 +17,7 @@ require_once(ROOT . DS . 'vendor' . DS . "Classes" . DS . "PHPExcel.php");
 class UsersController extends AppController{
 
     public function beforeFilter(Event $event){
+		$this->loadComponent('Admin.AdminEmail');
         parent::beforeFilter($event);
     }
 
@@ -1754,5 +1755,40 @@ class UsersController extends AppController{
 		$this->set(compact('submitted_questions','comment_details','answer_details','answer_comment_details'));
 		//pr($answer_comment_details); die;
 	}	
+	
+	//Resend Verification Link
+	public function resendUserNotification(){
+		$this->viewBuilder()->layout(false);
+		$this->render(false);
+		$this->request->allowMethod(['post']);
+		
+		$UsersTable = TableRegistry::get('Admin.Users');
+		
+		//checking user is already verified or not
+		$count_user = $UsersTable->find('all',['conditions'=>['Users.id'=>$this->request->data['id'], 'Users.signup_string IS NOT NULL']])->count();
+		if( $count_user > 0 ) {
+			$user = $UsersTable->get($this->request->data['id']);
+			$signup_string = $this->generateRandomString(3).time().$this->generateRandomString(3);
+			$query = $UsersTable->query();
+			$query->update()
+						->set(['signup_string' => $signup_string])
+						->where(['id' => $this->request->data['id']])
+						->execute();
+						
+			$url = Router::url('/', true).'users/verify/'.$signup_string.'/'.base64_encode(time());
+			$settings = $this->getSiteSettings();
+			if($this->AdminEmail->resendToCustomer($user->email,$user,$url,$settings)){				
+                echo json_encode(['status'=>'mail_sent', 'message'=>'Email sent successfully.']);
+				exit();
+            }else{
+                echo json_encode(['status'=>'failed', 'message'=>'There was an unexpected error. Try again later or contact the developers.']);
+				exit();
+            }
+		}else{
+			echo json_encode(['status'=>'already_verified', 'message'=>'User already verified.']);
+			exit();
+		}
+		exit();
+    }
 	
 }

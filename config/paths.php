@@ -87,5 +87,5 @@ define('CAKE', CORE_PATH . 'src' . DS);
 define('DB_PREFIX', 'learn_');
 define('WEBSITE_NAME', 'LearnerOn');
 define("LINK_TIME", 7200); //2 hours
-define("SIGNUP_VERIFY_LINK_TIME", 86400); //24 hours
+define("SIGNUP_VERIFY_LINK_TIME", 172800); //48 hours
 define("FACEBOOK_APP_KEY", 1680856478640200);	//facebook api key

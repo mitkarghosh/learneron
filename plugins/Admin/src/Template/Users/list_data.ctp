@@ -281,7 +281,19 @@ $this->assign('hasDatepicker', true); ?>
 									<i class="fa fa-user"></i> 
 								</a>
 						   </li>
-						
+							<?php
+							if( $userDetail->signup_string != NULL ) {
+							?>
+							<!-- Verify Email Sending -->
+							<li>
+								<a href="javascript:void(0);" onclick="resend_verify_link('<?php echo $userDetail->id;?>');" title="Resend Verification Link">
+									<i class="fa fa-paper-plane"></i> 
+								</a>
+							</li>
+							<!-- Verify Email Sending -->
+							<?php
+							}
+							?>
 						  </ul>
 					 </div>
 				  </div>
@@ -418,6 +430,47 @@ function make_anonymouos(id){
 						if(result.type == 'success'){
 							setTimeout(function () {
 								//$('#row_id_'+result.deleted_id).remove();
+								swal({
+									title: result.message,
+									type: result.type,
+									confirmButtonText: "OK",
+									},
+									function(){
+										window.location.reload();
+									});
+							}, 200);
+						}else{
+							setTimeout(function () {
+								swal(result.message, "", result.type);
+							}, 200);
+						}
+					}
+				});
+			},
+			function () {
+				window.location.reload();
+			}
+		]
+	});
+}
+
+function resend_verify_link(id){
+	swalExtend({
+		swalFunction: swalFunction,		
+		hasCancelButton: true,		
+		buttonNum: 2,
+		buttonColor: ["#caa961",'green'],
+		buttonNames: ["Send", "Cancel"],
+		clickFunctionList: [
+			function () {
+				$.ajax({
+					type: 'POST',
+					dataType: 'JSON',
+					url: '<?php echo Router::url("/admin/users/resend-user-notification/",true); ?>',
+					data: {id: id},			
+					success: function(result) {
+						if(result.status == 'mail_sent'){
+							setTimeout(function () {
 								swal({
 									title: result.message,
 									type: result.type,

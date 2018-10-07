@@ -23,7 +23,7 @@
 									<td>Please <a href="<?php echo $verify_url; ?>">click here</a> to verify your email.</td>
 								</tr>
 								<tr>
-									<td>URL will expire in 24 hours from now.</b></td>
+									<td>URL will expire in 48 hours from now.</b></td>
 								</tr>
 							</table>
 						</p>

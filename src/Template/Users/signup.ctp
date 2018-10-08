@@ -68,6 +68,7 @@ $session  = $this->request->session();
 							<input type="checkbox" id="agree" value="1">
 							<label data-toggle="modal" data-target="#demo">I agree the Terms & Conditions</label>
 							
+							<?php /* 09.10.2018
 							<input type="checkbox" id="personal_data" name="personal_data" value="Y" checked>
 							<label for="personal_data" title="">
 								I agree with sending LearnerOn.net commercial communication and processing my personal data&nbsp;
@@ -79,6 +80,7 @@ $session  = $this->request->session();
 								I agree with sending 3rd party commercial communication by Learneron, SE and processing my personal data&nbsp;
 								<img src="<?php echo Router::url('/images/info-icon.png');?>" data-toggle="tooltip" data-original-title="I agree with sending third-party commercial communications by electronic means and with the processing of my personal data, in particular the contact and identification data, by Learneron SE for this purpose. I may withdraw this consent at any time." />
 							</label>
+							09.10.2018 */ ?>
 							
 							<!--<input type="checkbox" id="personal_data" value="1">
 							<label data-toggle="modal" data-target="#demo_personal_data" title="I agree with sending third-party commercial communications by electronic means and with the processing of my personal data, in particular the contact and identification data, by Learneron SE for this purpose. I may withdraw this consent at any time.">I agree with sending LearnerOn.net commercial communication and processing my personal data</label>-->
@@ -185,7 +187,7 @@ $session  = $this->request->session();
 						<h2>Terms</h2>
 						<div class="log-in-form-wrapper">
 							<?php echo $this->Form->create(false, array('url'=>'javascript:void(0)', 'class'=>'', 'novalidate' =>'novalidate','id'=>'signup_terms_form'));?>
-								<?php echo $this->Form->input('userid', ['type'=>'text','id'=>'userid','label'=>false]);?>
+								<?php echo $this->Form->input('userid', ['type'=>'hidden','id'=>'userid','label'=>false]);?>
 								<div class=""> <!-- check-box-set -->									
 									<input type="checkbox" id="personal_data" name="personal_data" value="Y" checked>
 									<label for="personal_data" title="">
@@ -302,13 +304,16 @@ jQuery(function () {
 						$('#user_id').val(data.userid);
 						$('#userid').val(data.userid);
 						var success_msg = "<div class='message success' onclick='this.classList.add('hidden')'>Registration is successfull. An email has been sent, please verify your account.</div>";
-						swal('Success!', 'Registration is successfull. An email has been sent, please verify your account.','success');
+						/* 09.10.2018 swal('Success!', 'Registration is successfull. An email has been sent, please verify your account.','success'); 09.10.2018 */
+						
+						$('#terms-modal').modal('show');
+						
 						//$('#msg_div').html(success_msg);
 						$('#signup_form')[0].reset();
 						setTimeout(function(){
-							$('#msg_div').html('');
+							$('#msg_div').html('');							
 							//$('#setting_data').modal('show');
-					  },7000);
+						},5000);
 					}else{
 						var error_msg = "<div class='message error' onclick='this.classList.add('hidden')'>There was an unexpected error. Try again later or contact the developers.</div>";
 						$('#msg_div_error').html(error_msg);
@@ -372,7 +377,7 @@ jQuery(function () {
 		}
 	});
 	
-	
+	/* 09.10.2018 */
 	$('#signup_terms_form').validate({
 		submitHandler:function(){
 			$('#personal_data').html('');
@@ -386,6 +391,7 @@ jQuery(function () {
 					$('#signup_terms_form').modal('hide');
 					swal('Success!', 'Thank you.','success');
 					$('#signup_terms_form')[0].reset();
+					window.location.href = '<?php echo Router::url(array('controller'=>'Users','action'=>'login'),true); ?>';
 				}else{
 					var error_msg = "<div class='message error' onclick='this.classList.add('hidden')'>There was an unexpected error. Try again later or contact the developers.</div>";
 					$('#terms_agree_error').html(error_msg);
@@ -403,7 +409,7 @@ jQuery(function () {
 			});
 		}
     });
-	
+	/* 09.10.2018 */
 	
 	setTimeout(function(){
 		$('#msg_div_error').html('');

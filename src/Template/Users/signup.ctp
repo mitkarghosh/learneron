@@ -169,6 +169,52 @@ $session  = $this->request->session();
 	</div>
 </div>
 <!-- Setting Popup -->
+
+<!-- Checkbox for terms -->
+<div class="modal fade terms-modal" id="terms-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">   
+		<div class="modal-content">
+			<div class="modal-header text-right">
+				<a href="javascript:void(0);" class="modal-close" onclick="close_to_homepage()">
+      	     		<i class="fa fa-close" aria-hidden="true" data-dismiss="modal"></i>
+      	     	</a>
+			</div>
+			<div class="form-conatiner register-from">
+				<div class="form-conatiner-inner">
+					<div class="form-right">
+						<h2>Terms</h2>
+						<div class="log-in-form-wrapper">
+							<?php echo $this->Form->create(false, array('url'=>'javascript:void(0)', 'class'=>'', 'novalidate' =>'novalidate','id'=>'signup_terms_form'));?>
+								<?php echo $this->Form->input('userid', ['type'=>'text','id'=>'userid','label'=>false]);?>
+								<div class=""> <!-- check-box-set -->									
+									<input type="checkbox" id="personal_data" name="personal_data" value="Y" checked>
+									<label for="personal_data" title="">
+										I agree with sending LearnerOn.net commercial communication and processing my personal data&nbsp;
+										<img src="<?php echo Router::url('/images/info-icon.png');?>" data-toggle="tooltip_personaldata" data-original-title="I agree with sending commercial communications about LearnerOn.net service by electronic means and with the processing of my personal data, in particular the contact and identification data, by Learneron SE for this purpose. I may withdraw this consent at any time." />
+									</label>
+									
+									<input type="checkbox" id="is_commercialparty" name="is_commercialparty" value="1">
+									<label for="is_commercialparty" title="">
+										I agree with sending 3rd party commercial communication by Learneron, SE and processing my personal data&nbsp;
+										<img src="<?php echo Router::url('/images/info-icon.png');?>" data-toggle="tooltip" data-original-title="I agree with sending third-party commercial communications by electronic means and with the processing of my personal data, in particular the contact and identification data, by Learneron SE for this purpose. I may withdraw this consent at any time." />
+									</label>
+									
+									<p id="terms_agree_error"></p>
+								</div>    	        	
+								<div class="btn-set">
+									<input type="submit" value="Submit">
+								</div>
+								<div class="signup_terms_loader" style="text-align:center;"></div>								
+							<?php echo $this->Form->end(); ?>
+						</div>						
+					</div>      	     
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Checkbox for terms -->
+
 <?php echo $this->Html->script('/admin/sweetalert/sweetalert.js') ?>
 <?php echo $this->Html->css('/admin/sweetalert/sweetalert.css'); ?>
 <script>
@@ -254,6 +300,7 @@ jQuery(function () {
 					$('.signup_loader').html('');
 					if(data.register=='success'){
 						$('#user_id').val(data.userid);
+						$('#userid').val(data.userid);
 						var success_msg = "<div class='message success' onclick='this.classList.add('hidden')'>Registration is successfull. An email has been sent, please verify your account.</div>";
 						swal('Success!', 'Registration is successfull. An email has been sent, please verify your account.','success');
 						//$('#msg_div').html(success_msg);
@@ -324,6 +371,40 @@ jQuery(function () {
 			}
 		}
 	});
+	
+	
+	$('#signup_terms_form').validate({
+		submitHandler:function(){
+			$('#personal_data').html('');
+			$('.signup_terms_loader').html('<img src="<?php echo Router::url('/images/loader.gif');?>" alt="" />');
+			var data = $('#signup_terms_form').serialize();
+			var promise = $.post('<?php echo Router::url("/users/signupterms/",true); ?>',data);
+			promise.done(function(response){
+				var data = JSON.parse(response);
+				$('.signup_terms_loader').html('');
+				if(data.register=='success'){
+					$('#signup_terms_form').modal('hide');
+					swal('Success!', 'Thank you.','success');
+					$('#signup_terms_form')[0].reset();
+				}else{
+					var error_msg = "<div class='message error' onclick='this.classList.add('hidden')'>There was an unexpected error. Try again later or contact the developers.</div>";
+					$('#terms_agree_error').html(error_msg);
+					setTimeout(function(){
+						$('#terms_agree_error').html('');
+					},5000);
+				}
+			});
+			promise.fail(function(){
+				var msg = "<div class='message error' onclick='this.classList.add('hidden')'>There was an unexpected error. Try again later or contact the developers.</div>";
+				$('#terms_agree_error').html(msg);
+				setTimeout(function(){
+					$('#terms_agree_error').html('');
+				},5000);
+			});
+		}
+    });
+	
+	
 	setTimeout(function(){
 		$('#msg_div_error').html('');
 	},5000);

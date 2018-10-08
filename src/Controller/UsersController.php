@@ -173,6 +173,82 @@ class UsersController extends AppController{
     	}
 		$this->set(compact('title'));
     }
+	
+	//Signup Terms Popup
+    public function signupterms(){
+		$this->viewBuilder()->layout = false;
+        $this->render(false);
+		$title = 'Sign Up';
+		if($this->request->is('post')){
+			
+			echo '<pre>'; print_r($this->request->data); die;
+			
+			
+			if($this->request->data['email'] != ''){
+				$this->request->data['type'] = 'N';
+				$this->request->data['signup_ip'] = $this->getUserIP();
+				$this->request->data['signup_string'] = $this->generateRandomString(3).time().$this->generateRandomString(3);
+				if(array_key_exists('is_commercialparty',$this->request->data)){
+					$this->request->data['is_commercialparty']  			= 1;
+					$this->request->data['commercialparty_checked_time']	= date('Y-m-d H:i:s');
+					$this->request->data['commercialparty_unchecked_time']	= '';
+					
+					$insert_into_term['is_commercialparty']  				= 1;
+					$insert_into_term['commercialparty_checked_time']		= date('Y-m-d H:i:s');
+					$insert_into_term['commercialparty_unchecked_time']		= '';					
+				}else{
+					$this->request->data['is_commercialparty']  			= 0;
+					$this->request->data['commercialparty_checked_time']	= '';
+					$this->request->data['commercialparty_unchecked_time']	= date('Y-m-d H:i:s');
+					
+					$insert_into_term['is_commercialparty']  				= 0;
+					$insert_into_term['commercialparty_checked_time']		= '';
+					$insert_into_term['commercialparty_unchecked_time']		= date('Y-m-d H:i:s');
+				}
+				if(array_key_exists('personal_data',$this->request->data)){
+					$this->request->data['personal_data']  					= 'Y';
+					$this->request->data['personaldata_checked_time']		= date('Y-m-d H:i:s');
+					$this->request->data['personaldata_unchecked_time']		= '';
+					
+					$insert_into_term['personal_data']  					= 'Y';
+					$insert_into_term['personaldata_checked_time']			= date('Y-m-d H:i:s');
+					$insert_into_term['personaldata_unchecked_time']		= '';
+				}else{
+					$this->request->data['personal_data']  					= 'N';
+					$this->request->data['personaldata_checked_time']		= '';
+					$this->request->data['personaldata_unchecked_time']		= date('Y-m-d H:i:s');
+					
+					$insert_into_term['personal_data']  					= 'N';
+					$insert_into_term['personaldata_checked_time']			= '';
+					$insert_into_term['personaldata_unchecked_time']		= date('Y-m-d H:i:s');
+				}
+				$UsersTable = TableRegistry::get('Users');
+				$newUsers 	= $UsersTable->newEntity();
+				$data_to_insert = $UsersTable->patchEntity($newUsers, $this->request->data);
+				if($savedData 	= $UsersTable->save($data_to_insert)){
+					$insert_user_id = $savedData->id;
+					$this->visitorlogs('Users','signup','Signup',NULL,NULL,$insert_user_id);	//Log details insertion
+					$url = Router::url('/', true).'users/verify/'.$this->request->data['signup_string'].'/'.base64_encode(time());
+					
+					/*insert into terms*/
+					$insert_into_term['user_id']							= $insert_user_id;
+					$TermTable 		= TableRegistry::get('Term');
+					$newterm 		= $TermTable->newEntity();
+					$data_insert 	= $TermTable->patchEntity($newterm, $insert_into_term);					
+					$TermTable->save($data_insert);					
+					$settings = $this->getSiteSettings();
+					if($this->Email->userRegister($this->request->data['email'], $url, $this->request->data, $settings)){
+						echo json_encode(['register'=>'success', 'userid'=>$insert_user_id]);
+						exit();
+					}
+				}else{
+					echo json_encode(['register'=>'failed']);
+					exit();
+				}
+			}
+    	}
+		$this->set(compact('title'));
+    }
 	//See Setting Now
 	public function seeSettingNowUpdate(){
 		if($this->request->is('post')){

@@ -81,6 +81,9 @@ Router::scope('/', function (RouteBuilder $routes) {
 	$routes->connect('/privacy', ['controller' => 'Sites', 'action' => 'privacy']);
 	$routes->connect('/faqs', ['controller' => 'Sites', 'action' => 'faqs']);
 	$routes->connect('/signup', ['controller' => 'Users', 'action' => 'signup']);
+	
+	$routes->connect('/signupterms', ['controller' => 'Users', 'action' => 'signupterms']);	
+	
 	$routes->connect('/login', ['controller' => 'Users', 'action' => 'login']);
 	$routes->connect('/logout', ['controller' => 'Users', 'action' => 'logout']);
 	$routes->connect('/my-account', ['controller' => 'Users', 'action' => 'my-account']);

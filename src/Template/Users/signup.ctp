@@ -391,7 +391,16 @@ jQuery(function () {
 					$('#signup_terms_form').modal('hide');
 					swal('Success!', 'Thank you.','success');
 					$('#signup_terms_form')[0].reset();
-					window.location.href = '<?php echo Router::url(array('controller'=>'Users','action'=>'login'),true); ?>';
+					
+					swal({
+						title: 'Success!',
+						type: 'success',
+						confirmButtonText: "OK",
+						},
+						function(){
+							window.location.href = '<?php echo Router::url(array('controller'=>'Users','action'=>'login'),true); ?>';
+						}
+					);
 				}else{
 					var error_msg = "<div class='message error' onclick='this.classList.add('hidden')'>There was an unexpected error. Try again later or contact the developers.</div>";
 					$('#terms_agree_error').html(error_msg);

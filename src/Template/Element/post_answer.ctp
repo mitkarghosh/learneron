@@ -52,7 +52,8 @@ use Cake\Routing\Router;
 								<div class="btn-set">
 									<input type="submit" value="Login">
 								</div>    	        	
-								<span class="sign-link">Not a Member? &nbsp; <a href="javascript:void(0);" class="openRegister">Sign Up </a></span>
+								<?php /*<span class="sign-link">Not a Member? &nbsp; <a href="javascript:void(0);" class="openRegister">Sign Up </a></span>*/ ?>
+								<span class="sign-link">Not a Member? &nbsp; <a href="<?php echo Router::url('/signup', true);?>">Sign Up </a></span>
 							</form>    	     	
 						</div>    	        
 					</div>      	     

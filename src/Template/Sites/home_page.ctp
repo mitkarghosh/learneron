@@ -34,7 +34,7 @@
                             <h3><?php echo $banner->title;?></h3>
                             <p><?php echo substr($banner->sub_title,0,750);?></p>
                         <?php
-                        if($banner->link2){
+                        if($banner->link){
                         ?>
                             <a href="<?php echo $banner->link;?>" class="btn btn-normal"><?php echo $banner->link_text;?></a>
                         <?php
@@ -58,7 +58,7 @@
                             <p class="subtittle"><?php echo substr($banner->sub_title_mobile,0,85);?></p>
                         <?php
                         }
-                        if($banner->link2){
+                        if($banner->link){
                         ?>
                             <a href="<?php echo $banner->link;?>" class="btn btn-normal"><?php echo $banner->link_text;?></a>
                         <?php

@@ -177,9 +177,9 @@ $session  = $this->request->session();
 	<div class="modal-dialog modal-lg">   
 		<div class="modal-content">
 			<div class="modal-header text-right">
-				<a href="javascript:void(0);" class="modal-close" onclick="close_to_homepage()">
+				<!-- <a href="javascript:void(0);" class="modal-close" onclick="close_to_homepage()">
       	     		<i class="fa fa-close" aria-hidden="true" data-dismiss="modal"></i>
-      	     	</a>
+      	     	</a> -->
 			</div>
 			<div class="form-conatiner register-from">
 				<div class="form-conatiner-inner noshdw">
@@ -310,7 +310,12 @@ jQuery(function () {
 						var success_msg = "<div class='message success' onclick='this.classList.add('hidden')'>Registration is successfull. An email has been sent, please verify your account.</div>";
 						/* 09.10.2018 swal('Success!', 'Registration is successfull. An email has been sent, please verify your account.','success'); 09.10.2018 */
 						
-						$('#terms-modal').modal('show');
+						//$('#terms-modal').modal('show');
+						$('#terms-modal').modal({
+							show: true,
+							backdrop: 'static',
+    						keyboard: false
+						});
 						
 						//$('#msg_div').html(success_msg);
 						$('#signup_form')[0].reset();

@@ -182,24 +182,28 @@ $session  = $this->request->session();
       	     	</a>
 			</div>
 			<div class="form-conatiner register-from">
-				<div class="form-conatiner-inner">
+				<div class="form-conatiner-inner noshdw">
 					<div class="form-right">
-						<h2>Terms</h2>
+						<h3>Congratulations! You will per return receive an email with a link to validate your registration. For a smooth communication with you on the LearnerOn.Net matters, and potential communication on third-party materials, we also wanted to ask you for two more consents below – thank you:</h3>
 						<div class="log-in-form-wrapper">
 							<?php echo $this->Form->create(false, array('url'=>'javascript:void(0)', 'class'=>'', 'novalidate' =>'novalidate','id'=>'signup_terms_form'));?>
 								<?php echo $this->Form->input('userid', ['type'=>'hidden','id'=>'userid','label'=>false]);?>
-								<div class=""> <!-- check-box-set -->									
-									<input type="checkbox" id="personal_data" name="personal_data" value="Y" checked>
-									<label for="personal_data" title="">
-										I agree with sending LearnerOn.net commercial communication and processing my personal data&nbsp;
-										<img src="<?php echo Router::url('/images/info-icon.png');?>" data-toggle="tooltip_personaldata" data-original-title="I agree with sending commercial communications about LearnerOn.net service by electronic means and with the processing of my personal data, in particular the contact and identification data, by Learneron SE for this purpose. I may withdraw this consent at any time." />
-									</label>
+								<div class=""> <!-- check-box-set -->
+									<div class="check-box-set">
+										<input type="checkbox" id="personal_data" name="personal_data" value="Y" checked>
+										<label for="personal_data" title="">
+											I agree with sending LearnerOn.net commercial communication and processing my personal data&nbsp;
+											<img src="<?php echo Router::url('/images/info-icon.png');?>" data-toggle="tooltip_personaldata" data-original-title="I agree with sending commercial communications about LearnerOn.net service by electronic means and with the processing of my personal data, in particular the contact and identification data, by Learneron SE for this purpose. I may withdraw this consent at any time." />
+										</label>
+									</div>
 									
-									<input type="checkbox" id="is_commercialparty" name="is_commercialparty" value="1">
-									<label for="is_commercialparty" title="">
-										I agree with sending 3rd party commercial communication by Learneron, SE and processing my personal data&nbsp;
-										<img src="<?php echo Router::url('/images/info-icon.png');?>" data-toggle="tooltip" data-original-title="I agree with sending third-party commercial communications by electronic means and with the processing of my personal data, in particular the contact and identification data, by Learneron SE for this purpose. I may withdraw this consent at any time." />
-									</label>
+									<div class="check-box-set">
+										<input type="checkbox" id="is_commercialparty" name="is_commercialparty" value="1">
+										<label for="is_commercialparty" title="">
+											I agree with sending 3rd party commercial communication by Learneron, SE and processing my personal data&nbsp;
+											<img src="<?php echo Router::url('/images/info-icon.png');?>" data-toggle="tooltip" data-original-title="I agree with sending third-party commercial communications by electronic means and with the processing of my personal data, in particular the contact and identification data, by Learneron SE for this purpose. I may withdraw this consent at any time." />
+										</label>
+									</div>
 									
 									<p id="terms_agree_error"></p>
 								</div>    	        	

@@ -377,6 +377,7 @@ transform: scale(0);
 	top: 47%;
 	transform: translateY(-50%);
 }
+.caption_mob{display: none;}
 
 /* .banner-sec ul li{
 	width: 100%;
@@ -802,6 +803,7 @@ p.copy a:hover {
 	overflow: hidden;
 	box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.16);
 }
+.form-conatiner .form-conatiner-inner.noshdw{box-shadow: none;}
 .form-conatiner .form-conatiner-inner .form-left {
 	width: 50%;
 	display: table-cell;
@@ -876,6 +878,11 @@ p.copy a:hover {
 	font-size: 26px;
 	margin-top: 0;
 	margin-bottom: 30px;
+}
+.form-conatiner .form-conatiner-inner .form-right h3 {
+	font-size: 20px;
+    line-height: 24px;
+    margin: 0 0 30px;
 }
 /*.form-conatiner .form-conatiner-inner .form-right*/ label {
 	font-size: 14px;
@@ -2002,4 +2009,8 @@ right: 1px;
 bottom: 0;
 background: #fff;
 border-radius: 0 0 .3rem .3rem;
+}
+.checklabel input[type="checkbox"]{
+	margin: 4px 4px 0 0;
+	vertical-align: top;
 }

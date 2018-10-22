@@ -15,50 +15,71 @@
     </div>
 </div>
 <section class="banner-sec">
-<div class="container">
-<div id="divLoading" class="show"></div>
-	<div class="banner-wrapper">
-<?php
-if(!empty($all_banners)){
-?>
-		<ul class="banner-slider">
-			<li style="background: #000">
-				<iframe class="video_embeded" width="100%" height="100%" src="https://www.youtube.com/embed/tj-k0GQkxDI?enablejsapi=true&autoplay=0&rel=0&vq=hd1080&showinfo=0" frameborder="0" allowfullscreen id="fitvid0"></iframe>
-			</li>
-<?php
-	foreach($all_banners as $banner){
-?>
-			<li style="background: url(<?php echo Router::url('/uploads/banner/thumb/').$banner->image;?>)">
-				<div class="caption">
-					<h3><?php echo $banner->title;?></h3>
-					<p><?php echo substr($banner->sub_title,0,750);?></p>
-				<?php
-				if($banner->link2){
-				?>
-					<a href="<?php echo $banner->link;?>" class="btn btn-normal"><?php echo $banner->link_text;?></a>
-				<?php
-				}
-				if($banner->link2){
-				?>
-					&nbsp;&nbsp;<a href="<?php echo $banner->link2;?>" class="btn btn-normal"><?php echo $banner->link2_text;?></a>
-				<?php
-				}
-				if($banner->sub_title2){
-				?>
-					<p class="subtittle"><?php echo substr($banner->sub_title2,0,500);?></p>
-				<?php
-				}
-				?>
-				</div>
-			</li>
-<?php
-	}
-?>
-		</ul>
-<?php
-}
-?>
-	</div>
+    <div class="container">
+        <div id="divLoading" class="show"></div>
+        <div class="banner-wrapper">
+    <?php
+    if(!empty($all_banners)){
+    ?>
+            <ul class="banner-slider">
+                <li style="background: #000">
+                    <iframe class="video_embeded" width="100%" height="100%" src="https://www.youtube.com/embed/tj-k0GQkxDI?enablejsapi=true&autoplay=0&rel=0&vq=hd1080&showinfo=0" frameborder="0" allowfullscreen id="fitvid0"></iframe>
+                </li>
+    <?php
+        foreach($all_banners as $banner){
+    ?>
+                <li style="background: url(<?php echo Router::url('/uploads/banner/thumb/').$banner->image;?>)">
+                    <div class="caption">
+                        <div class="caption_pc">
+                            <h3><?php echo $banner->title;?></h3>
+                            <p><?php echo substr($banner->sub_title,0,750);?></p>
+                        <?php
+                        if($banner->link2){
+                        ?>
+                            <a href="<?php echo $banner->link;?>" class="btn btn-normal"><?php echo $banner->link_text;?></a>
+                        <?php
+                        }
+                        if($banner->link2){
+                        ?>
+                            &nbsp;&nbsp;<a href="<?php echo $banner->link2;?>" class="btn btn-normal"><?php echo $banner->link2_text;?></a>
+                        <?php
+                        }
+                        if($banner->sub_title2){
+                        ?>
+                            <p class="subtittle"><?php echo substr($banner->sub_title2,0,500);?></p>
+                        <?php
+                        }
+                        ?>
+                        </div>
+                        <div class="caption_mob">
+                        <?php
+                        if($banner->sub_title2){
+                        ?>
+                            <p class="subtittle"><?php echo substr($banner->sub_title2,0,85);?></p>
+                        <?php
+                        }
+                        if($banner->link2){
+                        ?>
+                            <a href="<?php echo $banner->link;?>" class="btn btn-normal"><?php echo $banner->link_text;?></a>
+                        <?php
+                        }
+                        if($banner->link2){
+                        ?>
+                            &nbsp;&nbsp;<a href="<?php echo $banner->link2;?>" class="btn btn-normal"><?php echo $banner->link2_text;?></a>
+                        <?php
+                        }
+                        ?>
+                        </div>
+                    </div>
+                </li>
+    <?php
+        }
+    ?>
+            </ul>
+    <?php
+    }
+    ?>
+        </div>
 	</div>
 </section><a id="perpage"></a>
 <div class="body-section">

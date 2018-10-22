@@ -65,6 +65,14 @@
                <?php echo $this->Form->input('sub_title2', ['type'=>'textarea', 'required' => true, 'label' => false, 'class' => 'form-control boxed', 'placeholder' => 'Sub Title 2' ]); ?>
             </div>
          </div>
+		 <div class="form-group row">
+            <label class="col-sm-2 form-control-label text-xs-right">
+              Sub Title Mobile:
+            </label>
+            <div class="col-sm-10">
+               <?php echo $this->Form->input('sub_title_mobile', ['type'=>'textarea', 'required' => true, 'label' => false, 'class' => 'form-control boxed', 'placeholder' => 'Sub Title Mobile', 'maxlength' => 85 ]); ?>
+            </div>
+         </div>
          <div class="form-group row">
             <label class="col-sm-2 form-control-label text-xs-right">
                Banner Image:

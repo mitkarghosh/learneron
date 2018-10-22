@@ -53,9 +53,9 @@
                         </div>
                         <div class="caption_mob">
                         <?php
-                        if($banner->sub_title2){
+                        if($banner->sub_title_mobile){
                         ?>
-                            <p class="subtittle"><?php echo substr($banner->sub_title2,0,85);?></p>
+                            <p class="subtittle"><?php echo substr($banner->sub_title_mobile,0,85);?></p>
                         <?php
                         }
                         if($banner->link2){

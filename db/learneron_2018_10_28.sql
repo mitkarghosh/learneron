@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 09, 2018 at 05:48 AM
+-- Generation Time: Oct 28, 2018 at 05:27 PM
 -- Server version: 10.1.21-MariaDB
 -- PHP Version: 5.6.30
 
@@ -332,7 +332,8 @@ INSERT INTO `learn_anonymous_users` (`id`, `user_id`, `usertype`, `slug`, `uniqu
 (18, 65, 'individual', 'anonymous-4', 4, '2018-04-11 21:20:23', '2018-04-11 21:18:45'),
 (19, 64, 'group', 'Anonymous Group', 5, '2018-04-11 21:43:13', '2018-04-11 21:42:40'),
 (20, 63, 'group', 'Anonymous Group', NULL, '2018-04-11 21:43:26', '2018-04-11 21:43:26'),
-(30, 59, 'group', 'Anonymous Group', 5, '2018-04-12 19:01:53', '2018-04-12 19:01:21');
+(30, 59, 'group', 'Anonymous Group', 5, '2018-04-12 19:01:53', '2018-04-12 19:01:21'),
+(31, 77, 'group', 'Anonymous Group', 5, '2018-10-05 18:38:24', '2018-10-05 18:37:30');
 
 -- --------------------------------------------------------
 
@@ -399,6 +400,7 @@ CREATE TABLE `learn_banner_sections` (
   `title` varchar(255) NOT NULL,
   `sub_title` text NOT NULL,
   `sub_title2` text NOT NULL,
+  `sub_title_mobile` text NOT NULL,
   `link` varchar(255) NOT NULL,
   `link_text` varchar(255) NOT NULL,
   `link2` varchar(255) NOT NULL,
@@ -413,10 +415,10 @@ CREATE TABLE `learn_banner_sections` (
 -- Dumping data for table `learn_banner_sections`
 --
 
-INSERT INTO `learn_banner_sections` (`id`, `title`, `sub_title`, `sub_title2`, `link`, `link_text`, `link2`, `link2_text`, `image`, `status`, `modified`, `created`) VALUES
-(1, 'Welcome to learn with us!', 'It may not be easy for a grown person to navigate what learning path can take one further in the right direction towards a better job, better pay, or firmer confidence. What goal shall I set, given what I already - or, rather, still - know? What budget shall I need to accomplish my learning mission? What time will I need to allocate? What learning options are there, with what take-aways?', 'to join the Lifelong Learners\' community to ask your questions, or share your answers!', 'http://techtimes-in.com/projects/learneron/signup', 'Sign Up', 'http://techtimes-in.com/projects/learneron/login', 'Log In', 'banner_15020913215.jpg', 'A', '2017-10-15 15:15:39', '2017-08-07 07:35:23'),
-(2, 'Are you', 'An experienced person, whose industry or job seems soon to get automated?<br />\r\nJust freshly graduated, but you feel somewhat practically unprepared for the job market?<br />\r\nNeeding just a part time job, or become a freelancer, but you are not confident having the right skills and preparation for it?', 'to join the Lifelong Learners\' community to ask your questions, or share your answers!', 'http://techtimes-in.com/projects/learneron/signup', 'Sign Up', 'http://techtimes-in.com/projects/learneron/login', 'Log In', 'banner_15020917577.jpg', 'A', '2017-10-15 15:14:31', '2017-08-07 07:42:39'),
-(3, 'Do you', 'Feel, that while you\'re successful at what you do, the world is changing so rapidly, and so interestingly, that you... perhaps for the sole sake of curiosity... ought to learn more?', 'to join the Lifelong Learners\' community to ask your questions, or share your answers!', 'http://techtimes-in.com/projects/learneron/signup', 'Sign Up', 'http://techtimes-in.com/projects/learneron/login', 'Log In', 'banner_15020917822.jpg', 'A', '2017-10-15 15:15:01', '2017-08-07 07:43:03');
+INSERT INTO `learn_banner_sections` (`id`, `title`, `sub_title`, `sub_title2`, `sub_title_mobile`, `link`, `link_text`, `link2`, `link2_text`, `image`, `status`, `modified`, `created`) VALUES
+(1, 'Welcome to learn with us!', 'It may not be easy for a grown person to navigate what learning path can take one further in the right direction towards a better job, better pay, or firmer confidence. What goal shall I set, given what I already - or, rather, still - know? What budget shall I need to accomplish my learning mission? What time will I need to allocate? What learning options are there, with what take-aways?', 'to join the Lifelong Learners\' community to ask your questions, or share your answers!', 'test', 'http://techtimes-in.com/projects/learneron/signup', 'Sign Up', 'http://techtimes-in.com/projects/learneron/login', 'Log In', 'banner_15020913215.jpg', 'A', '2018-10-22 18:09:20', '2017-08-07 07:35:23'),
+(2, 'Are you', 'An experienced person, whose industry or job seems soon to get automated?<br />\r\nJust freshly graduated, but you feel somewhat practically unprepared for the job market?<br />\r\nNeeding just a part time job, or become a freelancer, but you are not confident having the right skills and preparation for it?', 'to join the Lifelong Learners\' community to ask your questions, or share your answers!', '', 'http://techtimes-in.com/projects/learneron/signup', 'Sign Up', 'http://techtimes-in.com/projects/learneron/login', 'Log In', 'banner_15020917577.jpg', 'A', '2017-10-15 15:14:31', '2017-08-07 07:42:39'),
+(3, 'Do you', 'Feel, that while you\'re successful at what you do, the world is changing so rapidly, and so interestingly, that you... perhaps for the sole sake of curiosity... ought to learn more?', 'to join the Lifelong Learners\' community to ask your questions, or share your answers!', '', 'http://techtimes-in.com/projects/learneron/signup', 'Sign Up', 'http://techtimes-in.com/projects/learneron/login', 'Log In', 'banner_15020917822.jpg', 'A', '2017-10-15 15:15:01', '2017-08-07 07:43:03');
 
 -- --------------------------------------------------------
 
@@ -777,7 +779,15 @@ INSERT INTO `learn_questions` (`id`, `category_id`, `user_id`, `name`, `slug`, `
 (7, 20, 27, 'My tets question', NULL, 'test description', '<p>test learning goal<br></p>', '', '<p>test budget<br></p>', '<p>test input<br></p>', 'Y', 'Y', 'U', 39, 'A', '2017-08-24 20:27:10', '2018-02-09 19:59:12'),
 (9, 18, 27, 'A new question', NULL, 'my latest description1', '<p>Learning Goal<br></p>', 'New edu 1 at new school 1 from 7th May 2017 to 15th May 2017<br />', '<p>Budget &amp; other constraints<br></p>', '<p>Optional input on preferred learning mode <br></p>', 'Y', 'Y', 'U', 24, 'A', '2017-09-08 19:11:33', '2018-03-20 18:50:39'),
 (11, 21, 27, 'test', NULL, 'test1', '<p>test2&nbsp;&nbsp;&nbsp;&nbsp;<p><br></p></p>', 'MCA at WBUT from 15th August 2007 to 15th August 2010<br />BSC at CU from 2nd August 2004 to 4th August 2007<br />HS at VMPS from 1st August 2002 to 15th August 2004<br />', '', '', 'Y', 'N', 'U', 0, 'A', '2018-03-24 14:42:26', '2018-03-24 14:42:26'),
-(12, 22, 27, 'test', NULL, 'test1', 'test2', 'MCA at WBUT from 15th August 2007 to 15th August 2010<br />BSC at CU from 2nd August 2004 to 4th August 2007<br />HS at VMPS from 1st August 2002 to 15th August 2004<br />', '', '', 'Y', 'N', 'U', 1, 'A', '2018-03-24 14:58:07', '2018-04-04 17:43:47');
+(12, 22, 27, 'test', NULL, 'test1', 'test2', 'MCA at WBUT from 15th August 2007 to 15th August 2010<br />BSC at CU from 2nd August 2004 to 4th August 2007<br />HS at VMPS from 1st August 2002 to 15th August 2004<br />', '', '', 'Y', 'N', 'U', 1, 'A', '2018-03-24 14:58:07', '2018-04-04 17:43:47'),
+(13, 22, 27, 'gdfgdf', NULL, 'dfgdfg', '<p>dfgdfg<br></p>', '', 'dfgdfg<p><br></p>', 'fbvb<p><br></p>', 'N', 'N', 'U', 0, 'A', '2018-10-06 16:26:38', '2018-10-06 16:26:38'),
+(14, 22, 27, 'gdfgdf', NULL, 'dfgdfg', '<p>dfgdfg<br></p>', '', 'dfgdfg<p><br></p>', 'fbvb<p><br></p>', 'N', 'N', 'U', 0, 'A', '2018-10-06 16:26:57', '2018-10-06 16:26:57'),
+(15, 22, 27, 'gdfgdf', NULL, 'dfgdfg', '<p>dfgdfg<br></p>', '', 'dfgdfg<p><br></p>', 'fbvb<p><br></p>', 'N', 'N', 'U', 0, 'A', '2018-10-06 16:27:30', '2018-10-06 16:27:30'),
+(16, 22, 27, 'gdfgdf', NULL, 'dfgdfg', '<p>dfgdfg<br></p>', '', 'dfgdfg<p><br></p>', 'fbvb<p><br></p>', 'N', 'N', 'U', 0, 'A', '2018-10-06 16:29:04', '2018-10-06 16:29:04'),
+(17, 22, 27, 'sdfsd', NULL, 'fsdfdsf', '<p>rty<br></p>', 'MCA at WBUT from 15th August 2007 to 15th August 2010<br />BSC at CU from 2nd August 2004 to 4th August 2007<br />HS at VMPS from 1st August 2002 to 15th August 2004<br />', '<p>ty<br></p>', 'g<p><br></p>', 'N', 'N', 'U', 0, 'A', '2018-10-06 16:31:55', '2018-10-06 16:31:55'),
+(18, 22, 27, 'sdfsd', NULL, 'fsdfdsf', '<p>rty<br></p>', 'MCA at WBUT from 15th August 2007 to 15th August 2010<br />BSC at CU from 2nd August 2004 to 4th August 2007<br />HS at VMPS from 1st August 2002 to 15th August 2004<br />', '<p>ty<br></p>', 'g<p><br></p>', 'N', 'N', 'U', 0, 'A', '2018-10-06 16:36:07', '2018-10-06 16:36:07'),
+(19, 19, 27, 'rty', NULL, 'rtyrty', '<p>rtyrty<br></p>', 'MCA at WBUT from 15th August 2007 to 15th August 2010<br />BSC at CU from 2nd August 2004 to 4th August 2007<br />HS at VMPS from 1st August 2002 to 15th August 2004<br />', '<p>rty<br></p>', 'rty<p><br></p>', 'N', 'N', 'U', 0, 'A', '2018-10-06 16:37:27', '2018-10-06 16:37:27'),
+(20, 26, 27, 'helllllllllllll', NULL, 'sddasd', 'sd<p><br></p>', 'MCA at WBUT from 15th August 2007 to 15th August 2010<br />BSC at CU from 2nd August 2004 to 4th August 2007<br />HS at VMPS from 1st August 2002 to 15th August 2004<br />', '<p>ad<br></p>', 'asd<p><br></p>', 'N', 'N', 'U', 0, 'A', '2018-10-06 16:39:49', '2018-10-06 16:39:49');
 
 -- --------------------------------------------------------
 
@@ -893,7 +903,32 @@ INSERT INTO `learn_question_tags` (`id`, `question_id`, `user_id`, `tag_id`) VAL
 (68, 9, NULL, 3),
 (69, 9, NULL, 8),
 (71, 11, 27, 2),
-(72, 12, 27, 3);
+(72, 12, 27, 3),
+(73, 13, 27, 2),
+(74, 13, 27, 8),
+(75, 13, 27, 48),
+(76, 14, 27, 2),
+(77, 14, 27, 8),
+(78, 14, 27, 49),
+(79, 15, 27, 2),
+(80, 15, 27, 8),
+(81, 15, 27, 50),
+(82, 16, 27, 2),
+(83, 16, 27, 8),
+(84, 17, 27, 4),
+(85, 17, 27, 9),
+(86, 18, 27, 4),
+(87, 18, 27, 9),
+(88, 18, 27, 21),
+(89, 18, 27, 51),
+(90, 19, 27, 3),
+(91, 19, 27, 8),
+(92, 19, 27, 24),
+(93, 19, 27, 26),
+(94, 20, 27, 7),
+(95, 20, 27, 9),
+(96, 20, 27, 18),
+(97, 20, 27, 52);
 
 -- --------------------------------------------------------
 
@@ -935,7 +970,33 @@ INSERT INTO `learn_tags` (`id`, `title`, `slug`, `status`, `created`) VALUES
 (21, 'Jumbo Speaker', 'jumbo-speaker', 'A', '2017-08-13 17:52:38'),
 (22, 'Keyboard', 'keyboard', 'A', '2017-08-13 17:52:48'),
 (23, 'Lamp', 'lamp', 'A', '2017-08-13 17:52:55'),
-(24, 'Auction', 'auction', 'A', '2017-08-14 16:29:09');
+(24, 'Auction', 'auction', 'A', '2017-08-14 16:29:09'),
+(26, 'hhgg', 'hhgg', 'I', '2018-10-06 11:36:54'),
+(27, 'hhgg', 'hhgg-1', 'I', '2018-10-06 11:37:22'),
+(28, 'Auction', 'auction-1', 'I', '2018-10-06 11:38:30'),
+(29, 'hhgg', 'hhgg-2', 'I', '2018-10-06 11:40:57'),
+(30, 'hhgg', 'hhgg-3', 'I', '2018-10-06 11:41:30'),
+(31, 'hhgg', 'hhgg-4', 'I', '2018-10-06 11:42:44'),
+(32, 'Auction', 'auction-2', 'I', '2018-10-06 11:45:36'),
+(33, 'hhgg', 'hhgg-5', 'I', '2018-10-06 11:46:04'),
+(34, 'hhgg', 'hhgg-6', 'I', '2018-10-06 11:46:56'),
+(35, 'Auction', 'auction-3', 'I', '2018-10-06 11:48:06'),
+(37, 'hhgg', 'hhgg-7', 'A', '2018-10-06 11:49:20'),
+(38, 'Auction', 'auction-4', 'A', '2018-10-06 11:49:56'),
+(39, 'hhgg', 'hhgg-8', 'A', '2018-10-06 11:49:56'),
+(40, 'Auction', 'auction-5', 'A', '2018-10-06 11:52:13'),
+(41, 'hhgg', 'hhgg-9', 'A', '2018-10-06 11:52:13'),
+(42, 'my mumm', 'my-mumm', 'A', '2018-10-06 14:29:48'),
+(43, 'kitty', 'kitty', 'A', '2018-10-06 14:29:48'),
+(44, 'yes', 'yes', 'A', '2018-10-06 14:29:48'),
+(45, 'my mumm', 'my-mumm-1', 'A', '2018-10-06 14:32:44'),
+(46, 'kitty', 'kitty-1', 'A', '2018-10-06 14:32:44'),
+(47, 'yes', 'yes-1', 'A', '2018-10-06 14:32:44'),
+(48, 'Jumbo Speaker', '', 'A', '2018-10-06 16:26:38'),
+(49, 'Jumbo Speaker', '-1', 'A', '2018-10-06 16:26:57'),
+(50, 'Jumbo Speaker', '-2', 'A', '2018-10-06 16:27:30'),
+(51, 'Krk   Sssss', 'krk-sssss', 'A', '2018-10-06 16:36:07'),
+(52, 'Testinglearneron', 'testinglearneron', 'A', '2018-10-06 16:39:49');
 
 -- --------------------------------------------------------
 
@@ -1018,7 +1079,7 @@ INSERT INTO `learn_users` (`id`, `name`, `profile_pic`, `location`, `title`, `em
 (3, 'Gordon', 'profile_150277954667.jpg', 'New York, United Sates', 'My gordon', 'gordon@gmail.com', NULL, '$2y$10$LIfmgn9B21UFIEtsWTM87e35RIXgvjasNDBILnqzl2Rqbxj1jUAu6', 'Gordon Linoff', '1985-02-08', 'nothing to say', NULL, NULL, NULL, '0', 'N', '', '', '', '', '', 'http://www.twitter.com', '', '', '2017-08-15 06:45:47', '2017-08-15 06:45:47', 'Y', '1', NULL, NULL, 'Y', NULL, NULL, '0', '1', 'A', NULL, 0),
 (22, 'max', NULL, NULL, NULL, 'techtimes14@gmail.com', NULL, '$2y$10$GxcwCd3TQaAWx5WU.V7xLOi3KviIxOdgl/Pnd6V5qfU8nQ401gPuy', NULL, NULL, NULL, 'IGQ1503168384CSN', NULL, '122.163.86.28', '0', 'N', '', '', '', '', NULL, NULL, NULL, NULL, '2017-08-19 18:46:24', '2017-08-19 18:46:24', 'Y', '1', NULL, NULL, 'Y', NULL, NULL, '0', '1', 'I', NULL, 0),
 (23, 'jhjk', NULL, NULL, NULL, 'techtimes14@gmail.co', NULL, '$2y$10$7lU2XiN./qNgEQ62vW9U1e39.yep1pZvWjsOIk7NhQBnBFvfUq55K', NULL, NULL, NULL, 'VEF1503169199ZSH', NULL, '122.163.86.28', '0', 'N', '', '', '', '', NULL, NULL, NULL, NULL, '2017-08-19 18:59:59', '2017-08-19 18:59:59', 'Y', '1', NULL, NULL, 'Y', NULL, NULL, '0', '1', 'I', NULL, 0),
-(27, 'Mitkar', 'profile_15034281190.jpg', 'Kolkata', 'this is Kolkata style', '100websolution@gmail.com', '100websolution@gmail.com', '$2y$10$l7bdbg8.eC6FnhwwRK3XZOU2zacuCZFzcm80lWMGxF67EfGxa3jyu', 'Mitkar Ghosh', NULL, 'nothing to say', '', '', '47.15.5.107', '1', 'N', '', '', '', '', 'http://www.facebook.com', '', '', 'http://www.linkedin.com', '2018-05-06 18:09:00', '2017-08-19 19:22:51', 'Y', '1', '2018-05-06 18:09:00', NULL, 'N', NULL, '2018-05-06 18:09:00', '0', '0', 'A', '2018-05-14 17:41:26', 0),
+(27, 'Mitkar', 'profile_15034281190.jpg', 'Kolkata', 'this is Kolkata style', '100websolution@gmail.com', '100websolution@gmail.com', '$2y$10$l7bdbg8.eC6FnhwwRK3XZOU2zacuCZFzcm80lWMGxF67EfGxa3jyu', 'Mitkar Ghosh', NULL, 'nothing to say', 'LAK1538769711JMM', '', '47.15.5.107', '1', 'N', '', '', '', '', 'http://www.facebook.com', '', '', 'http://www.linkedin.com', '2018-05-06 18:09:00', '2017-08-19 19:22:51', 'Y', '1', '2018-05-06 18:09:00', NULL, 'N', NULL, '2018-05-06 18:09:00', '0', '0', 'A', '2018-10-08 17:51:17', 0),
 (33, 'Learner1', NULL, NULL, NULL, 'spinskillsup@gmail.com', NULL, '$2y$10$C4tFP9HeARhPtIFATNa2suOSi/K9hhq4yy9Y5rZATRxyAK1QQGdTO', NULL, NULL, NULL, 'TKC1503838438TRL', NULL, '90.179.101.195', '0', 'N', '', '', '', '', NULL, NULL, NULL, NULL, '2017-08-27 12:53:59', '2017-08-27 12:53:59', 'Y', '1', NULL, NULL, 'Y', NULL, NULL, '0', '1', 'I', NULL, 0),
 (40, 'Puja', 'profile_15075750340.jpg', NULL, NULL, 'duttapoly.info@gmail.com', NULL, NULL, 'Puja Paul', NULL, NULL, NULL, NULL, '110.225.22.131', '', 'F', '1450066711749441', '', '', '', NULL, NULL, NULL, NULL, '2017-10-09 18:50:34', '2017-09-24 17:55:37', 'Y', '1', NULL, NULL, 'Y', NULL, NULL, '0', '1', 'A', '2017-10-09 19:03:00', 0),
 (41, 'Esha', 'http://graph.facebook.com/2047345325495104/picture?width=9999', 'Kolkata', 'Web Designer', 'esha.socialsites@gmail.com', NULL, NULL, 'Esha Saha', '2017-09-04', 'I am a nice girl', NULL, NULL, '116.203.180.112', '', 'F', '2047345325495104', '', '', '', 'http://facebook.com', 'http://facebook.com', 'http://facebook.com', 'http://facebook.com', '2017-09-29 03:24:58', '2017-09-29 03:21:57', 'Y', '1', NULL, NULL, 'Y', NULL, NULL, '0', '1', 'A', NULL, 0),
@@ -1038,7 +1099,7 @@ INSERT INTO `learn_users` (`id`, `name`, `profile_pic`, `location`, `title`, `em
 (67, 'Anonymous-2', 'user_no_image.png', NULL, NULL, 'anonymous-2@learneron.net', NULL, '$2y$10$lGVt658ycXjWuoVXWdGmfu1NvPfw8CnkIoGYowLNmqGHZGbb8FDZy', 'Anonymous User', NULL, NULL, 'WMF1521301400BBW', NULL, NULL, '0', 'N', '', '', '', '', NULL, NULL, NULL, NULL, '2018-04-07 03:18:42', '2018-03-17 15:43:20', 'Y', '1', NULL, NULL, 'Y', NULL, NULL, '0', '1', 'I', '2018-04-07 03:18:42', 0),
 (68, 'Anonymous-1', 'user_no_image.png', NULL, NULL, 'anonymous-1@learneron.net', NULL, '$2y$10$UqCj9se7Fw83NQpkbWxmq.JyMHol/.Rgm5lMp9zg1lvv5gQyaLgDO', 'Anonymous User', NULL, NULL, NULL, NULL, NULL, '0', 'N', '', '', '', '', NULL, NULL, NULL, NULL, '2018-04-11 20:58:55', '2018-03-17 15:46:21', 'Y', '1', NULL, NULL, 'Y', NULL, NULL, '0', '1', 'I', '2018-04-11 20:58:55', 0),
 (76, 'ytutyu', NULL, '', '', 'yy@gmail.com', NULL, '$2y$10$6j714wpEA87xZ56gFiYL5uye1vBwi.yrQGBcrio.UNAwIh5GpiEY2', '', NULL, '', NULL, NULL, '::1', '1', 'N', '', '', '', '', '', '', '', '', '2018-05-05 21:02:15', '2018-05-05 20:42:33', 'Y', '1', '2018-05-05 20:48:55', NULL, 'N', '2018-05-05 20:42:33', '2018-05-05 20:48:55', '0', '0', 'A', '2018-05-06 18:06:15', 0),
-(77, 'new', NULL, '', '', 'new@ghot.com', NULL, '$2y$10$rDg./eCb965qTl47Dlazzu.pGZu0M2zbfkDXZFRxfuWPX.O3aMut.', '', NULL, '', 'DSJ1526319767OVA', NULL, '::1', '0', 'N', '', '', '', '', '', '', '', '', '2018-05-15 19:31:02', '2018-05-14 17:42:47', 'Y', '1', '2018-05-15 19:31:02', '2018-05-14 17:42:47', 'Y', '2018-05-15 19:31:02', NULL, '0', '0', 'A', '2018-05-15 19:31:02', 0);
+(77, 'Anonymous Group', 'user_no_image.png', '', '', 'anonymousgroup@learneron.net', NULL, '$2y$10$rDg./eCb965qTl47Dlazzu.pGZu0M2zbfkDXZFRxfuWPX.O3aMut.', 'Anonymous Group', '0000-00-00', '', '', NULL, '::1', '0', 'N', '', '', '', '', '', '', '', '', '2018-05-15 19:31:02', '2018-05-14 17:42:47', 'Y', '1', '2018-05-15 19:31:02', '2018-05-14 17:42:47', 'Y', '2018-05-15 19:31:02', NULL, '0', '0', 'A', '2018-10-05 18:38:24', 0);
 
 -- --------------------------------------------------------
 
@@ -1234,7 +1295,23 @@ INSERT INTO `learn_visitor_logs` (`id`, `visitor_id`, `page_name`, `page_url`, `
 (155, 1, 'Signup', 'http://localhost/learneron/users/signup/', 'Users', 'signup', NULL, NULL, 77, NULL, NULL, NULL, NULL, '2018-05-14 17:42:47'),
 (156, 6, 'My Account', 'http://localhost/learneron/my-account', 'Users', 'myAccount', NULL, NULL, 77, NULL, NULL, NULL, NULL, '2018-05-14 17:44:38'),
 (157, 1, 'Front Page', 'http://localhost/learneron/', 'Sites', 'homePage', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2018-05-21 04:44:10'),
-(158, 1, 'Contact Us', 'http://localhost/learneron/contact-us', 'Sites', 'contactUs', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2018-05-28 18:45:55');
+(158, 1, 'Contact Us', 'http://localhost/learneron/contact-us', 'Sites', 'contactUs', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2018-05-28 18:45:55'),
+(159, 1, 'Front Page', 'http://localhost/learneron/', 'Sites', 'homePage', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2018-06-17 17:08:23'),
+(160, 1, 'News Listing', 'http://localhost/learneron/news', 'News', 'newsListing', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2018-06-17 17:08:27'),
+(161, 1, 'Front Page', 'http://localhost/learneron/', 'Sites', 'homePage', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2018-10-04 19:17:43'),
+(162, 1, 'Front Page', 'http://localhost/learneron/', 'Sites', 'homePage', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2018-10-05 16:12:39'),
+(163, 1, 'Front Page', 'http://localhost/learneron/', 'Sites', 'homePage', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2018-10-06 07:56:33'),
+(164, 1, 'Login', 'http://localhost/learneron/users/login/', 'Users', 'login', NULL, NULL, 27, NULL, NULL, NULL, NULL, '2018-10-06 07:57:19'),
+(165, 3, 'My Account', 'http://localhost/learneron/my-account', 'Users', 'myAccount', NULL, NULL, 27, NULL, NULL, NULL, NULL, '2018-10-06 07:57:19'),
+(166, 3, 'Question Submission', 'http://localhost/learneron/questions/post-question-submission/', 'Questions', 'postQuestionSubmission', NULL, NULL, 27, 13, NULL, NULL, NULL, '2018-10-06 16:26:38'),
+(167, 3, '', 'http://localhost/learneron/view-submissions', 'Users', 'viewSubmissions', NULL, NULL, 27, NULL, NULL, NULL, NULL, '2018-10-06 16:37:46'),
+(168, 3, 'Edited Question', 'http://localhost/learneron/edit-submitted-question/MTk%3D', 'Questions', 'editSubmittedQuestion', NULL, NULL, 27, 19, NULL, NULL, NULL, '2018-10-06 16:37:54'),
+(169, 3, 'Edited Question', 'http://localhost/learneron/edit-submitted-question/MjA%3D', 'Questions', 'editSubmittedQuestion', NULL, NULL, 27, 20, NULL, NULL, NULL, '2018-10-06 16:40:16'),
+(170, 1, 'More Latest Question Listing For Home Page', 'http://localhost/learneron/sites/latestquestions_search', 'Sites', 'latestquestionsSearch', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2018-10-06 16:46:01'),
+(171, 1, 'Front Page', 'http://localhost/learneron/', 'Sites', 'homePage', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2018-10-08 17:51:17'),
+(172, 1, 'Front Page', 'http://localhost/learneron/', 'Sites', 'homePage', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2018-10-09 17:05:47'),
+(173, 1, 'Front Page', 'http://localhost/learneron/', 'Sites', 'homePage', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2018-10-22 17:52:06'),
+(174, 1, 'About Us', 'http://localhost/learneron/about-us', 'Sites', 'aboutUs', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2018-10-22 18:02:49');
 
 --
 -- Indexes for dumped tables
@@ -1449,7 +1526,7 @@ ALTER TABLE `learn_advertisements`
 -- AUTO_INCREMENT for table `learn_anonymous_users`
 --
 ALTER TABLE `learn_anonymous_users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 --
 -- AUTO_INCREMENT for table `learn_answer_comments`
 --
@@ -1524,7 +1601,7 @@ ALTER TABLE `learn_news_comments`
 -- AUTO_INCREMENT for table `learn_questions`
 --
 ALTER TABLE `learn_questions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 --
 -- AUTO_INCREMENT for table `learn_question_answers`
 --
@@ -1544,12 +1621,12 @@ ALTER TABLE `learn_question_comments`
 -- AUTO_INCREMENT for table `learn_question_tags`
 --
 ALTER TABLE `learn_question_tags`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
 --
 -- AUTO_INCREMENT for table `learn_tags`
 --
 ALTER TABLE `learn_tags`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 --
 -- AUTO_INCREMENT for table `learn_terms`
 --
@@ -1574,7 +1651,7 @@ ALTER TABLE `learn_visitors`
 -- AUTO_INCREMENT for table `learn_visitor_logs`
 --
 ALTER TABLE `learn_visitor_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=159;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=175;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

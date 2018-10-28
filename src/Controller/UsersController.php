@@ -112,6 +112,7 @@ class UsersController extends AppController{
 				$this->request->data['type'] = 'N';
 				$this->request->data['signup_ip'] = $this->getUserIP();
 				$this->request->data['signup_string'] = $this->generateRandomString(3).time().$this->generateRandomString(3);
+				/* 27.10.2018
 				if(array_key_exists('is_commercialparty',$this->request->data)){
 					$this->request->data['is_commercialparty']  			= 1;
 					$this->request->data['commercialparty_checked_time']	= date('Y-m-d H:i:s');
@@ -146,6 +147,7 @@ class UsersController extends AppController{
 					$insert_into_term['personaldata_checked_time']			= '';
 					$insert_into_term['personaldata_unchecked_time']		= date('Y-m-d H:i:s');
 				}
+				27.10.2018 */
 				$UsersTable = TableRegistry::get('Users');
 				$newUsers 	= $UsersTable->newEntity();
 				$data_to_insert = $UsersTable->patchEntity($newUsers, $this->request->data);
@@ -154,12 +156,14 @@ class UsersController extends AppController{
 					$this->visitorlogs('Users','signup','Signup',NULL,NULL,$insert_user_id);	//Log details insertion
 					$url = Router::url('/', true).'users/verify/'.$this->request->data['signup_string'].'/'.base64_encode(time());
 					
-					/*insert into terms*/
+					/* 27.10.2018
+					//insert into terms//
 					$insert_into_term['user_id']							= $insert_user_id;
 					$TermTable 		= TableRegistry::get('Term');
 					$newterm 		= $TermTable->newEntity();
 					$data_insert 	= $TermTable->patchEntity($newterm, $insert_into_term);					
-					$TermTable->save($data_insert);					
+					$TermTable->save($data_insert);
+					27.10.2018 */
 					$settings = $this->getSiteSettings();
 					if($this->Email->userRegister($this->request->data['email'], $url, $this->request->data, $settings)){
 						echo json_encode(['register'=>'success', 'userid'=>$insert_user_id]);

@@ -145,7 +145,7 @@ $('#account-settings-form').validate({
 						window.location.href = '<?php echo Router::url(array('controller'=>'Users','action'=>'account-setting'),true); ?>';
 						setTimeout(function(){
 							$('#pnq_error').html('');
-					  },10000);
+					  },3000);
 					}else{
 						var error_msg = "<div class='message error' onclick='this.classList.add('hidden')'>Nothing to update.</div>";
 						$('#pnq_error').html(error_msg);
@@ -232,6 +232,15 @@ $('#notifyemail-settings-form').validate({
 				$('#notify_msg').html('');
 			},10000);
 		});		
+	}
+});
+
+$(document).ready(function(){
+	if( $('.success').html() == 'Account settings successfully updated.' ) {
+		setTimeout(function(){
+			$('#pnq_error').html('');
+			window.location.href = '<?php echo Router::url('/',true); ?>';
+		},3000);
 	}
 });
 </script>

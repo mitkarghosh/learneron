@@ -223,7 +223,12 @@ class UsersController extends AppController{
 				$insert_into_term['user_id'] = $this->request->data['userid'];
 				$TermTable 		= TableRegistry::get('Term');
 				$newterm 		= $TermTable->newEntity();
-				$data_insert 	= $TermTable->patchEntity($newterm, $insert_into_term);					
+				$data_insert 	= $TermTable->patchEntity($newterm, $insert_into_term);
+				
+				$UsersTable1 	= TableRegistry::get('Users');
+				$user1 			= $UsersTable1->get($this->request->data['userid']);			
+				$updated_data1 	= $UsersTable1->patchEntity($user1, $this->request->data);
+				$UsersTable1->save($updated_data1);
 				
 				if( $savedData 	= $TermTable->save($data_insert) ){
 					echo json_encode(['register'=>'success']);
@@ -805,6 +810,7 @@ class UsersController extends AppController{
 		$user_data = $session->read('Auth.Users');
 		$UsersTable = TableRegistry::get('Users');
 		$user_details = $UsersTable->find('all',['conditions'=>['id'=>$user_data['id']]], ['contain'=>['']])->first()->toArray();
+		//pr($user_details); die;
 		
 		$UserAccountSettingTable = TableRegistry::get('UserAccountSetting');
 		$account_settings = $UserAccountSettingTable->newEntity();

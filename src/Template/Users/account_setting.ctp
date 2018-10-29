@@ -52,7 +52,6 @@ if(isset($existing_account_settings) && $existing_account_settings['category_id'
 				</div>
 				<div class="catagory-selection">
 					<select name="category_id" id="category_id">
-						<option value="" disabled selected>Select your categories</option>
 						<option value="">Select Catagory</option>
 				<?php
 				if(!empty($question_categories)){
@@ -76,7 +75,7 @@ if(isset($existing_account_settings) && $existing_account_settings['category_id'
 					<br />
 					<span style="font-size:14px;"><b>Checked Time:</b> <?php if($user_details['personaldata_checked_time'] != '' && $user_details['personaldata_checked_time'] != '0000-00-00 00:00:00')echo date('dS M Y H:i:s',strtotime($user_details['personaldata_checked_time']));else echo 'N/A'; ?>, <b>Unchecked Time:</b> <?php if($user_details['personaldata_unchecked_time'] != '' && $user_details['personaldata_unchecked_time'] != '0000-00-00 00:00:00')echo date('dS M Y H:i:s',strtotime($user_details['personaldata_unchecked_time']));else echo 'N/A'; ?></span>
 				</div>
-				
+				<?php //pr($user_details); die; ?>
 				<div class="check-box-set">
 					<input type="checkbox" id="is_commercialparty" <?php if($user_details['is_commercialparty']==1)echo 'checked';?> disabled>
 					<label for="is_commercialparty" title="">

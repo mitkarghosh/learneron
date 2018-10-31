@@ -246,7 +246,7 @@ $session  = $this->request->session();
 						<!--<label for="is_setting">See Settings Now</label>-->
 					</div>
 					<p id="setting_check_error"></p>
-					<div class="modal-footer">
+					<div class="text-right">
 						<button type="button" class="btn btn-alt" data-dismiss="modal">No</button>
 						<a href="<?php echo Router::url("/account-setting/",true); ?>" class="btn btn-normal">Yes</a>
 					</div>

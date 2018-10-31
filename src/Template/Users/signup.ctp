@@ -112,7 +112,9 @@ $session  = $this->request->session();
 				</button>
 			</div>
 			<div class="modal-body">
-				<?php echo $terms_and_conditions['description'];?>     
+				<div class='extra-body'>
+					<?php echo $terms_and_conditions['description'];?>     
+				</div>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-alt" data-dismiss="modal">Cancel</button>

@@ -23,7 +23,7 @@
     ?>
             <ul class="banner-slider">
                 <li style="background: #000">
-                    <iframe class="video_embeded" width="100%" height="100%" src="https://www.youtube.com/embed/tj-k0GQkxDI?enablejsapi=true&autoplay=0&rel=0&vq=hd1080&showinfo=0&wmode=transparent" frameborder="0" allowfullscreen id="fitvid0"></iframe>
+                    <iframe class="video_embeded" width="100%" height="100%" src="https://www.youtube.com/embed/0T6tnPVQQlw?enablejsapi=true&autoplay=0&rel=0&vq=hd1080&showinfo=0" frameborder="0" allowfullscreen id="fitvid0"></iframe>
                 </li>
     <?php
         foreach($all_banners as $banner){
@@ -197,7 +197,6 @@
 </div>
 <script>
 $(function(){
-	$('.ytp-title').html('');
 	$(document).on('click', 'a[rel="next"]', function() {
 		$('.next').remove();
 		$('.loader').html('<img src="<?php echo Router::url('/images/loader.gif');?>" alt="" />');

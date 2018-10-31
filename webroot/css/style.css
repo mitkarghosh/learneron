@@ -2014,3 +2014,11 @@ border-radius: 0 0 .3rem .3rem;
 	margin: 4px 4px 0 0;
 	vertical-align: top;
 }
+#redirect_login_setting_data .modal-dialog.modal-lg, #resetemail .modal-dialog{
+    bottom: auto;
+    width: 500px;
+}
+.extra-body {
+    height: 100%;
+    overflow-y: auto;
+}

@@ -147,7 +147,8 @@ class QuestionsController extends AppController{
 							$QuestionTagsTable->save($inserted_data);						
 						}
 					}
-					//if question submitter wants notification for new answer
+					/* blocked on 22.11.2018
+					//Notify users for same category subscribers
 					$all_submitter_acccount_setting = $this->getAccountSettingCategoryWise($this->request->data['category_id']);
 					if(!empty($all_submitter_acccount_setting)){
 						$url = Router::url('/', true).'questions/details/'.base64_encode($get_last_insert_id);
@@ -159,6 +160,8 @@ class QuestionsController extends AppController{
 							$this->Email->sendPostQuestionNotificationEmailToAllUsers($to_user, $url, $settings, $question_title, $loggedin_user_data, $notify_type);
 						}					
 					}
+					*/
+					
 					//if question submitter wants notification for new answer					
 					if(!empty($active_permission)){
 						if($active_permission['question_approval']==1){
@@ -505,7 +508,7 @@ class QuestionsController extends AppController{
 			
 			//for similar questions
 			$option_sq['contain'] 		= ['Users'=>['fields'=>['Users.id','Users.name','Users.profile_pic']]];			
-			$option_sq['conditions']	= ['Questions.id !='=>$id, 'Questions.category_id'=>$detail->category_id];
+			$option_sq['conditions']	= ['Questions.id !='=>$id, 'Questions.category_id'=>$detail->category_id, 'Questions.status'=>'A'];
 			$option_sq['fields']		= ['Questions.id','Questions.category_id','Questions.user_id','Questions.name','Questions.status'];
 			$option_sq['limit']			= $this->limitNewsRightPanel;
 			$similar_questions = $QuestionsTable->find('all',$option_sq)->toArray();

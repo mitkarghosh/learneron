@@ -182,7 +182,7 @@
 			<div class="item-row">
 			   <div class="item-col item-col-name">
 				  <div class="item-heading">Answer</div>
-				  <div><?php echo substr($answer->learning_path_recommendation, 0, 100); if(strlen($answer->learning_path_recommendation)>100){ echo '...'; } ?></div>
+				  <div><?php echo substr($answer->learning_path_recommendation,0,100); if(strlen($answer->learning_path_recommendation)>100){ echo '...'; } ?></div>
 			   </div>
 			   <div class="item-col item-col-parent align-center">
 				  <div class="item-heading">Question</div>

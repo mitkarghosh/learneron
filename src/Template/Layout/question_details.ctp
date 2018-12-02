@@ -40,7 +40,18 @@ $(document).ready(function(){
 			link: [],
 			air: []
 		},
-		height:250
+		height:250,
+		toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'italic', 'underline', 'clear']],
+            ['fontname', ['fontname']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['height', ['height']],
+            ['insert', ['link', 'hr']],
+            ['view', ['fullscreen', 'codeview']],
+            //['help', ['help']]
+        ]
 	});
 	$('#recomandation').summernote({				
 		 popover: {
@@ -49,6 +60,17 @@ $(document).ready(function(){
 			air: []
 		  },
 		height:250,
+		toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'italic', 'underline', 'clear']],
+            ['fontname', ['fontname']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['height', ['height']],
+            ['insert', ['link', 'hr']],
+            ['view', ['fullscreen', 'codeview']],
+            //['help', ['help']]
+        ],
 		placeholder:'What particular learning path, i.e. a succession of learning steps, courses, bootcamps, coachings or any other learning means would you recommend given the starting level, budget and other constraints and preferences?'
 	});
 	$('#learning-experience').summernote({		
@@ -58,6 +80,17 @@ $(document).ready(function(){
 			air: []
 		  },
 		height:250,
+		toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'italic', 'underline', 'clear']],
+            ['fontname', ['fontname']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['height', ['height']],
+            ['insert', ['link', 'hr']],
+            ['view', ['fullscreen', 'codeview']],
+            //['help', ['help']]
+        ],
 		placeholder:'How would you describe your experience, or review of the courses and learning steps per the recommended Learning Path'
 	});
 	$('#utility').summernote({
@@ -67,6 +100,17 @@ $(document).ready(function(){
 			air: []
 		  },
 		height:250,
+		toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'italic', 'underline', 'clear']],
+            ['fontname', ['fontname']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['height', ['height']],
+            ['insert', ['link', 'hr']],
+            ['view', ['fullscreen', 'codeview']],
+            //['help', ['help']]
+        ],
 		placeholder:'Did the learning you experienced lead you to the effect you wanted – e.g., to being successful in finding a new job, in salary progression, in enjoyment or any other utility you promised to yourself'
 	});
 	$('#answer').summernote({		
@@ -76,6 +120,17 @@ $(document).ready(function(){
 			air: []
 		  },
 		height:250,
+		toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'italic', 'underline', 'clear']],
+            ['fontname', ['fontname']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['height', ['height']],
+            ['insert', ['link', 'hr']],
+            ['view', ['fullscreen', 'codeview']],
+            //['help', ['help']]
+        ],
 		placeholder:'Type Your Answer Here'
 	});
 	$('ul.tabs li').click(function(){

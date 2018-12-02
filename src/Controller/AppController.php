@@ -48,7 +48,7 @@ class AppController extends Controller{
 	
 	public $limitTags = 5;
 	
-	public $limitUsers = 5;
+	public $limitUsers = 12;
 	
 	public $limitMostViewedQuestions = 5;
 	
@@ -106,6 +106,9 @@ class AppController extends Controller{
 			$userdata = $this->request->session()->read('Auth.Users');
 			$UsersTable = TableRegistry::get('Users');
 			$user_related_details = $UsersTable->get($userdata['id']);
+            if($user_related_details->status =='I'){
+                return $this->redirect(Router::url('/users/logout', true));
+            }
 		}		
 		$terms_and_conditions	= $this->getTermsAndConditions();
 		$personal_data 			= $this->getPersonalData();

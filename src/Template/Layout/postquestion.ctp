@@ -36,6 +36,17 @@ $(document).ready(function(){
 			air: []
 		},
 		height:250,
+		toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'italic', 'underline', 'clear']],
+            ['fontname', ['fontname']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['height', ['height']],
+            ['insert', ['link', 'hr']],
+            ['view', ['fullscreen', 'codeview']],
+            //['help', ['help']]
+        ],
 		placeholder:'What subject of learning and target level you want to achieve'
 	});
 	$('#budget_constraints').summernote({	
@@ -45,6 +56,17 @@ $(document).ready(function(){
 			air: []
 		},
 		height:250,
+		toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'italic', 'underline', 'clear']],
+            ['fontname', ['fontname']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['height', ['height']],
+            ['insert', ['link', 'hr']],
+            ['view', ['fullscreen', 'codeview']],
+            //['help', ['help']]
+        ],
 		placeholder:'Please enter any monetary limits, timing constraints (eg, "available only on evenings"), language preferences, ability or not to travel for education and similar matters or preferences'
 	});
 	$('#preferred_learning_mode').summernote({	
@@ -54,6 +76,17 @@ $(document).ready(function(){
 			air: []
 		},
 		height:250,
+		toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'italic', 'underline', 'clear']],
+            ['fontname', ['fontname']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['height', ['height']],
+            ['insert', ['link', 'hr']],
+            ['view', ['fullscreen', 'codeview']],
+            //['help', ['help']]
+        ],
 		placeholder:'Eg, learning by reading, learning by listening, learning by practicing, online interactive delivery, onsite in-person delivery in classroom set-up, one-on-one delivery or similar preference'
 	});
 	$('#recomandation').summernote({	
@@ -63,6 +96,17 @@ $(document).ready(function(){
 			air: []
 		},
 		height:250,
+		toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'italic', 'underline', 'clear']],
+            ['fontname', ['fontname']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['height', ['height']],
+            ['insert', ['link', 'hr']],
+            ['view', ['fullscreen', 'codeview']],
+            //['help', ['help']]
+        ],
 		placeholder:'What particular learning path, i.e. a succession of learning steps, courses, bootcamps, coachings or any other learning means would you recommend given the starting level, budget and other constraints and preferences?'
 	});
 	$('#learning-experience').summernote({	
@@ -72,6 +116,17 @@ $(document).ready(function(){
 			air: []
 		},
 		height:250,
+		toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'italic', 'underline', 'clear']],
+            ['fontname', ['fontname']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['height', ['height']],
+            ['insert', ['link', 'hr']],
+            ['view', ['fullscreen', 'codeview']],
+            //['help', ['help']]
+        ],
 		placeholder:'How would you describe your experience, or review of the courses and learning steps per the recommended Learning Path'
 	});
 	$('#utility').summernote({	
@@ -81,6 +136,17 @@ $(document).ready(function(){
 			air: []
 		},
 		height:250,
+		toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'italic', 'underline', 'clear']],
+            ['fontname', ['fontname']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['height', ['height']],
+            ['insert', ['link', 'hr']],
+            ['view', ['fullscreen', 'codeview']],
+            //['help', ['help']]
+        ],
 		placeholder:'Did the learning you experienced lead you to the effect you wanted – e.g., to being successful in finding a new job, in salary progression, in enjoyment or any other utility you promised to yourself'
 	});
 	

@@ -48,7 +48,7 @@ class AppController extends Controller{
 	
 	public $limitTags = 5;
 	
-	public $limitUsers = 5;
+	public $limitUsers = 12;
 	
 	public $limitMostViewedQuestions = 5;
 	
@@ -106,7 +106,11 @@ class AppController extends Controller{
 			$userdata = $this->request->session()->read('Auth.Users');
 			$UsersTable = TableRegistry::get('Users');
 			$user_related_details = $UsersTable->get($userdata['id']);
-		}		
+            if($user_related_details->status =='I'){
+                return $this->redirect(Router::url('/users/logout', true));
+            }
+		}
+		
 		$terms_and_conditions	= $this->getTermsAndConditions();
 		$personal_data 			= $this->getPersonalData();
 		$cookie_data 			= $this->getCookieConsent();
@@ -129,11 +133,11 @@ class AppController extends Controller{
 		$get_details = '';
 		$CookieConsentTable = TableRegistry::get('CookieConsent');
 		$userip = $this->getUserIP();//'192.168.1.127';
-		$get_details = $CookieConsentTable->find('all', ['conditions'=>array('CookieConsent.user_ipaddress'=>$userip,'CookieConsent.withdrawl_status'=>0)])->first();		
+		$get_details = $CookieConsentTable->find('all', ['conditions'=>array('CookieConsent.user_ipaddress'=>$userip,'CookieConsent.withdrawl_status'=>0,'CookieConsent.site_visit'=>1)])->first();
 		$this->set(compact('site_settings','user_related_details','terms_and_conditions','personal_data','get_details','cookie_data'));
     }
-
-    /**
+	
+	/**
      * Before render callback.
      *
      * @param \Cake\Event\Event $event The beforeRender event.
@@ -414,7 +418,23 @@ class AppController extends Controller{
     }
 	
 	//getCookieConsent
-	public function getCookieConsent(){
+	public function getCookieConsent(){		
+		$CookieConsentTable = TableRegistry::get('CookieConsent');
+		$userip = $this->getUserIP();
+		
+		$count = $CookieConsentTable->find('all',['conditions'=>['user_ipaddress'=>$userip]])->count();
+		if( $count == 0 ) {
+			$this->request->data['user_ipaddress'] 	= $userip;
+			$this->request->data['cookie_type'] 	= 'Implicit';
+			$this->request->data['cookie_time'] 	= date('Y-m-d H:i:s');				
+			$this->request->data['withdrawl_status']= 0;
+			$this->request->data['site_visit']		= 0;
+			$this->request->data['created'] 		= date('Y-m-d H:i:s');
+			$newEntity 		= $CookieConsentTable->newEntity();
+			$insert_data 	= $CookieConsentTable->patchEntity($newEntity, $this->request->data);
+			$CookieConsentTable->save($insert_data);
+		}
+		
         $CmsTable = TableRegistry::get('Cms');
         $data = $CmsTable->find('all',['conditions'=>['id'=>8],'fields'=>['id','short_description','description']])->first()->toArray();
 		return $data;

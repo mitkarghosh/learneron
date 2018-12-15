@@ -1503,10 +1503,17 @@ class UsersController extends AppController{
 			$this->request->data['cookie_type'] 	= $this->request->data['status'];
 			$this->request->data['cookie_time'] 	= date('Y-m-d H:i:s');				
 			$this->request->data['withdrawl_status']= 0;
+			$this->request->data['site_visit']		= 1;
 			$this->request->data['created'] 		= date('Y-m-d H:i:s');
-			$newEntity 		= $CookieConsentTable->newEntity();
-			$insert_data 	= $CookieConsentTable->patchEntity($newEntity, $this->request->data);
-			if($savedData 	= $CookieConsentTable->save($insert_data)){
+			/*$newEntity 		= $CookieConsentTable->newEntity();
+			$insert_data 	= $CookieConsentTable->patchEntity($newEntity, $this->request->data);*/
+			
+			$get_data 		= $CookieConsentTable->find('all',['conditions'=>['user_ipaddress'=>$userip],'fields'=>['id']])->first();
+			$update_data 	= $CookieConsentTable->patchEntity($get_data, $this->request->data);
+			
+			//if($savedData 	= $CookieConsentTable->save($insert_data)){
+				
+			if($savedData 	= $CookieConsentTable->save($update_data)){				
 				echo 'success';
 				exit();
 			}else{

@@ -148,6 +148,7 @@ class NewsController extends AppController{
 				
 				if($NewsCommentTable->save($data_to_insert)){
 					//notification for all news subscriber
+					/*blocked on 14.12.2018
 					$all_submitter_acccount_setting = $this->getAccountSettingNews();
 					if(!empty($all_submitter_acccount_setting)){
 						$url = Router::url('/', true).'news/details/'.$news_detail['slug'];
@@ -158,6 +159,8 @@ class NewsController extends AppController{
 							$this->Email->sendPostNewsCommentNotificationEmailToAllUsers($to_user, $url, $settings, $news_title, $loggedin_user_data);
 						}					
 					}
+					blocked on 14.12.2018 */
+					
 					//notification for all news subscriber
 					if(!empty($active_permission)){
 						if($active_permission['news_comment_approval']==1){

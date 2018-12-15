@@ -73,9 +73,10 @@ class CookieConsentsController extends AppController{
 		if($id != ''){
 			$CookieConsentsTable = TableRegistry::get('Admin.CookieConsents');
 			$query = $CookieConsentsTable->query();
+			
 			if($this->request->data['status'] == 1){	//request for making this user as inactive
 				if($query->update()
-				->set(['withdrawl_status' => $this->request->data['status']])
+				->set(['withdrawl_status' => $this->request->data['status'], 'site_visit' => 0])
 				->where(['id' => $id])
 				->execute()){
 					echo json_encode(array('type' => 'success', 'message' => 'Details successfully inactivated'));
@@ -84,7 +85,7 @@ class CookieConsentsController extends AppController{
 				}
 			}else if($this->request->data['status'] == 0){
 				if($query->update()
-				->set(['withdrawl_status' => $this->request->data['status']])
+				->set(['withdrawl_status' => $this->request->data['status'], 'site_visit' => 1])
 				->where(['id' => $id])
 				->execute()){
 					echo json_encode(array('type' => 'success', 'message' => 'Details successfully activated'));

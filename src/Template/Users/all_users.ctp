@@ -112,7 +112,6 @@
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			</div>
 			<div class="modal-body public_data" style="margin-top:0; padding:0;"></div>
-			<div class="modal-footer"></div>
 		</div>
 	</div>
 </div>

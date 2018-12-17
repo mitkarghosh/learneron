@@ -162,7 +162,16 @@ $session  = $this->request->session();
 											<td><?php echo substr($answer->comment, 0, 100); if(strlen($answer->comment)>100){ echo '...'; } ?></td>
 											<td><?php if($answer->news->name != '') echo substr($answer->news->name, 0, 100); else echo 'N/A'; if(strlen($answer->news->name)>100){ echo '...'; } ?></td>
 											<td><?php if($answer->created != ''): echo date('jS F Y', strtotime($answer->created)); else: echo "N/A"; endif; ?></td>
-											<td><?php if($answer->status == 'I'): echo "<b>Inctive</b>"; else: echo "Active"; endif; ?></td>
+											<td>
+											<?php
+											if($answer->status == 1)
+												echo "Active";
+											else if($answer->status == 0)
+												echo "<b>Inactive</b>";
+											else if($answer->status == 2)
+												echo "<b>Draft</b>";
+											?>
+											</td>
 											<td><a class="edit" href="<?php echo Router::url(array('controller'=>'/','action'=>'edit-submitted-news-comment',base64_encode($answer->id))); ?>" title="Edit"><i class="fa fa-pencil"></i></a></td>
 										</tr>
 										<?php

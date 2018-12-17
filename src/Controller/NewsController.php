@@ -115,7 +115,7 @@ class NewsController extends AppController{
 	public function newsCommentSubmission(){
 		$this->viewBuilder()->layout = false;
         $this->render(false);
-		if($this->request->is(['post','put'])){
+		if($this->request->is(['post','put'])){			
 			if(array_key_exists('news_id',$this->request->data) && $this->request->data['news_id'] != ''){
 				$this->request->data['news_id'] = isset($this->request->data['news_id'])?base64_decode($this->request->data['news_id']):0;
 				$this->request->data['user_ip'] = $this->getUserIP();
@@ -137,16 +137,25 @@ class NewsController extends AppController{
 				}else{
 					$this->request->data['status'] 	= 0;
 				}
+				
 				$NewsCommentTable = TableRegistry::get('NewsComment');
-				$news_comment = $NewsCommentTable->newEntity();
+				$session = $this->request->session();
+				if( $session->read('newscommentid') != '' ) {
+					$news_comment = $NewsCommentTable->find('all', ['conditions'=>array('id'=>$session->read('newscommentid'),'news_id'=>$this->request->data['news_id'])])->first();
+				}else{					
+					$news_comment = $NewsCommentTable->newEntity();
+				}
 				$data_to_insert = $NewsCommentTable->patchEntity($news_comment, $this->request->data);
 				
+				/*blocked on 14.12.2018
 				$NewsTable				= TableRegistry::get('News');
 				$option_1['fields']		= ['News.id','News.name','News.slug'];
 				$options_1['conditions']= ['News.id'=>$this->request->data['news_id']];
 				$news_detail = $NewsTable->find('all',$options_1)->first();
+				blocked on 14.12.2018 */
 				
 				if($NewsCommentTable->save($data_to_insert)){
+					
 					//notification for all news subscriber
 					/*blocked on 14.12.2018
 					$all_submitter_acccount_setting = $this->getAccountSettingNews();
@@ -182,6 +191,66 @@ class NewsController extends AppController{
 			}			
 		}else{
 			echo json_encode(['comment'=>'failed']);
+			exit();
+		}
+	}
+	
+	//News Comment as DRAFT
+	public function newsCommentSubmissionAsDraft(){
+		$this->viewBuilder()->layout = false;
+        $this->render(false);
+		if($this->request->is(['post'])){
+			if(array_key_exists('news_id',$this->request->data) && $this->request->data['news_id'] != ''){
+				$this->request->data['news_id'] = isset($this->request->data['news_id'])?base64_decode($this->request->data['news_id']):0;
+				$this->request->data['comment'] = isset($this->request->data['news_comment'])?$this->request->data['news_comment']:'';
+				
+				$this->request->data['user_ip'] = $this->getUserIP();
+				
+				if(!empty($this->Auth->user())){
+					$this->request->data['user_id'] = $this->Auth->user('id');
+				}else{
+					$this->request->data['user_id'] = 0;
+				}
+				
+				$NewsCommentTable = TableRegistry::get('NewsComment');
+				$session = $this->request->session();
+				if( $session->read('newsid') == $this->request->data['news_id'] ) {
+					
+					$count = $NewsCommentTable->find('all', ['conditions'=>array('id'=>$session->read('newscommentid'),'news_id'=>$this->request->data['news_id'])])->count();
+					if( $count > 0 ) {
+						$news_comment = $NewsCommentTable->find('all', ['conditions'=>array('id'=>$session->read('newscommentid'),'news_id'=>$this->request->data['news_id'])])->first();
+						$data_to_update = $NewsCommentTable->patchEntity($news_comment, $this->request->data);					
+						$NewsCommentTable->save($data_to_update);
+					}
+					else{
+						$news_comment 	= $NewsCommentTable->newEntity();
+						$data_to_insert = $NewsCommentTable->patchEntity($news_comment, $this->request->data);
+						$NewsCommentTable->save($data_to_insert);
+					}
+					echo 1;
+					exit();
+				}
+				else{
+					$session->write('newsid', $this->request->data['news_id']);
+					$this->request->data['status'] = 2;
+					$news_comment 	= $NewsCommentTable->newEntity();
+					$data_to_insert = $NewsCommentTable->patchEntity($news_comment, $this->request->data);
+					
+					if($comment_insert = $NewsCommentTable->save($data_to_insert)){
+						$session->write('newscommentid', $comment_insert->id);
+						echo 1;
+						exit();
+					}else{
+						echo 0;
+						exit();
+					}
+				}
+			}else{
+				echo 0;
+				exit();
+			}			
+		}else{
+			echo 0;
 			exit();
 		}
 	}
@@ -295,6 +364,9 @@ class NewsController extends AppController{
         $existing_data = $NewsCommentTable->get($id,['contain'=>['News'=>['fields'=>['id','name']]]]);
 		if ($this->request->is(['post', 'put'])) {
 			$this->request->data['modified'] = date('Y-m-d H:i:s');
+			if( $existing_data->status == 2 ) {
+				$this->request->data['status'] = 0;
+			}
 			$updated_data = $NewsCommentTable->patchEntity($existing_data, $this->request->data);
 			if ($savedData = $NewsCommentTable->save($updated_data)) {
                 $this->Flash->success(__('News comment has been successfully updated.'));
@@ -305,6 +377,27 @@ class NewsController extends AppController{
         }
         $this->set(compact('existing_data','title'));
         $this->set('_serialize', ['existing_data']);
+    }
+	
+	//Edit News Comment DRAFT AJAX
+	public function editSubmittedNewsCommentDraft($id = NULL){
+		$this->viewBuilder()->layout = false;
+        $this->render(false);
+		if($this->request->is(['post'])){
+			$NewsCommentTable = TableRegistry::get('NewsComment');
+			$existing_data 	  = $NewsCommentTable->find('all', ['conditions'=>array('id'=>$this->request->data['news_comment_id'])])->first();
+			$updated_data 	  = $NewsCommentTable->patchEntity($existing_data, $this->request->data);
+			if ($savedData 	  = $NewsCommentTable->save($updated_data)) {
+                echo 1;
+				exit();
+            }
+			else{
+                echo 0;
+				exit();
+            }
+        }
+        echo 0;
+		exit();
     }
 	
     

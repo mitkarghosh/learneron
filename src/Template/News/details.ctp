@@ -160,6 +160,9 @@
 														<div class="col-md-9">
 															<div class="form-group">
 																<?php echo $this->Form->input('comment',['type'=>'textarea', 'label'=>false, 'placeholder'=>'Comment', 'class'=>'form-control', 'required'=>true]);?>
+																<small style="float: right; color:#999;">
+																	<span id="saving_draft"></span>
+																</small>
 															</div>
 															<div class="btn-set"><input type="submit" value="Submit" class="btn-normal"></div>
 															<div id="postcomment_loader" style="text-align:center;"></div>
@@ -243,4 +246,49 @@ jQuery(function(){
 		return false;
 	});
 });
+
+<?php
+if(!empty($Auth)){
+?>
+	//setup before functions
+	var typingTimer;                //timer identifier
+	var doneTypingInterval = 3000;  //time in ms, 3 second for example
+	var $input = $('#comment');	
+	
+	//on keyup, start the countdown
+	$input.on('keyup', function () {
+		clearTimeout(typingTimer);
+		typingTimer = setTimeout(doneTyping, doneTypingInterval);
+	});
+
+	//on keydown, clear the countdown 
+	$input.on('keydown', function () {
+		clearTimeout(typingTimer);
+	});
+
+	//user is "finished typing," do something
+	function doneTyping () {
+		if($input.val() !== ''){
+			var news_comment = $.trim($input.val());		
+			var newsid = $('#news-id').val();			
+			var website_url = '<?php echo Router::url("/news/news-comment-submission-as-draft/",true); ?>';
+			$('#saving_draft').html('Saving...');
+			$.ajax({
+				type : 'POST',
+				url  : website_url,
+				data : { news_comment : news_comment, news_id : newsid },
+				success : function(response){
+					if(response==1)
+						$('#saving_draft').html('Saved as draft');
+					else
+						$('#saving_draft').html('Some error occured');
+				},
+				error : function(){
+				}
+			});
+		}
+	}
+<?php
+}
+?>
 </script>

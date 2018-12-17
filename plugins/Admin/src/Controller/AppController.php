@@ -255,4 +255,11 @@ class AppController extends Controller
 		return $account_data;
     }
 	
+	//getAccountSettingNews function is for getting Account Details of all user who wants news notification
+    public function getAccountSettingNews(){
+		$UserAccountSettingTable = TableRegistry::get('UserAccountSetting');
+		$account_data = $UserAccountSettingTable->find('all', ['contain'=>['Users'=>['fields'=>['Users.id','Users.name','Users.title','Users.email','Users.notification_email']]],'conditions'=>['news_notification'=>1],'fields'=>['user_id','response_to_my_question_notification','news_notification','follow_twitter','posting_new_question_notification','category_id']])->toArray();
+		return $account_data;
+    }
+	
 }

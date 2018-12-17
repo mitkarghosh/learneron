@@ -90,7 +90,22 @@ class NewsCommentsController extends AppController{
         $existing_data = $NewsCommentsTable->get($id,['contain'=>['Users'=>['fields'=>['id','name']]]]);
 		if ($this->request->is(['post', 'put'])) {
 			$updated_data = $NewsCommentsTable->patchEntity($existing_data, $this->request->data);
-            if ($savedData = $NewsCommentsTable->save($updated_data)) {
+            if ($savedData = $NewsCommentsTable->save($updated_data)) {				
+				
+				//notification for all news subscriber
+				$NewsTable = TableRegistry::get('Admin.News');        
+				$existing_news_data = $NewsTable->get($existing_data->news_id);			
+				$all_submitter_acccount_setting = $this->getAccountSettingNews();
+				if(!empty($all_submitter_acccount_setting)){
+					$url = Router::url('/', true).'news/details/'.$existing_news_data['slug'];
+					$news_title = $existing_news_data['name'];
+					$settings = $this->getSiteSettings();
+					foreach($all_submitter_acccount_setting as $to_user){
+						$this->AdminEmail->sendPostNewsCommentNotificationEmailToAllUsers($to_user, $url, $settings, $news_title);
+					}
+				}
+				//notification for all news subscriber
+				
                 $this->Flash->success(__('Comment has been successfully updated.'));
                 return $this->redirect(['plugin' => 'admin','controller' => 'news-comments','action' => 'list-data']);
             } else {
@@ -222,18 +237,36 @@ class NewsCommentsController extends AppController{
 				}else{
 					echo json_encode(array('type' => 'error', 'message' => 'There is an unexpected error. Try contacting the developers'));
 				}				
-			}else if($this->request->data['status'] == 1){
+			}
+			else if($this->request->data['status'] == 1){
 				$NewsCommentsTable = TableRegistry::get('Admin.NewsComments');
 				$query = $NewsCommentsTable->query();
 				if($query->update()
 				->set(['status' => $this->request->data['status']])
 				->where(['id' => $id])
-				->execute()){
+				->execute()){					
+					//notification for all news subscriber
+					$NewsTable = TableRegistry::get('Admin.News');
+					$dat = $NewsCommentsTable->get($id);
+					$existing_news_data = $NewsTable->get($dat['news_id']);
+					
+					$all_submitter_acccount_setting = $this->getAccountSettingNews();
+					if(!empty($all_submitter_acccount_setting)){
+						$url = Router::url('/', true).'news/details/'.$existing_news_data['slug'];
+						$news_title = $existing_news_data['name'];
+						$settings = $this->getSiteSettings();
+						foreach($all_submitter_acccount_setting as $to_user){
+							$this->AdminEmail->sendPostNewsCommentNotificationEmailToAllUsers($to_user, $url, $settings, $news_title);
+						}
+					}
+					//notification for all news subscriber
+					
 					echo json_encode(array('type' => 'success', 'message' => 'Comment successfully activated'));
 				}else{
 					echo json_encode(array('type' => 'error', 'message' => 'There is an unexpected error. Try contacting the developers'));
 				}
-			}else{
+			}
+			else{
 				echo json_encode(array('type' => 'error', 'message' => 'There is an unexpected error. Try contacting the developers'));
 			}			
 		}else{

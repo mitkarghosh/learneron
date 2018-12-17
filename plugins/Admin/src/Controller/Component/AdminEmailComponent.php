@@ -163,4 +163,24 @@ class AdminEmailComponent extends Component
                 ->viewVars(array('url' => $url, 'to_user' => $to_user, 'news_title' => $news_title, 'settings' => $settings))
                 ->send();
     }
+	
+	//this function is for notify to all users who wants news comment update
+    public static function sendPostNewsCommentNotificationEmailToAllUsers($to_user, $url, $settings, $news_title) {
+		$from_email = self::getAdminEmail(['mail_email']);
+        $Email = new Email();
+		
+		if($to_user['user']['notification_email'] != ''){
+			$user_email = $to_user['user']['notification_email'];
+		}else{
+			$user_email = $to_user['user']['email'];
+		}        
+		return $Email->from([$from_email->mail_email => WEBSITE_NAME])
+				->to($user_email)
+				->subject('LearnerOn News Comment Notification')
+				->template('Admin.post_newscomment_notification_email', null)
+				->emailFormat('html')
+				->viewVars(array('url' => $url, 'to_user' => $to_user, 'news_title' => $news_title, 'settings' => $settings))
+				->send();
+    }
+	
 }

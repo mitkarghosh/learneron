@@ -160,7 +160,7 @@ $this->assign('hasDatepicker', true);
                        </div>
                        <div class="item-col item-col-status">
                           <div class="item-heading">Status</div>
-                          <div data-id="status<?php echo $detail->id; ?>"> <?php if($detail['status'] == 0)echo "<b>Inactive</b>"; else echo "Active"; ?> </div>
+                          <div data-id="status<?php echo $detail->id; ?>"> <?php if($detail['status'] == 0)echo "<b>Inactive</b>"; else if($detail['status'] == 1) echo "Active"; else if($detail['status'] == 2) echo "<b>Draft</b>"; ?> </div>
                        </div>
                        <div class="item-col item-col-created">
                           <div class="item-heading">Created</div>

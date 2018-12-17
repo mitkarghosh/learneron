@@ -70,7 +70,6 @@ class QuestionsController extends AppController{
 		if($this->request->is('post')){
 			if(!empty($this->Auth->user())){
 				$QuestionTable = TableRegistry::get('Questions');
-				$new_question = $QuestionTable->newEntity();
 				//pr($this->request->data);
 				$new_generated_tag_ids = array();
 				if( isset($this->request->data['new_tags']) && array_key_exists('new_tags', $this->request->data) ) {
@@ -132,59 +131,245 @@ class QuestionsController extends AppController{
 				}else{
 					$this->request->data['status'] 		= 'I';
 				}
-				$inserted_data = $QuestionTable->patchEntity($new_question, $this->request->data);				
-				if($savedData = $QuestionTable->save($inserted_data)){
-					$get_last_insert_id = $savedData->id;
-					$this->visitorlogs('Questions','postQuestionSubmission','Question Submission',NULL,NULL,$this->Auth->user('id'),$get_last_insert_id);	//Log details insertion
-					if(!empty($this->request->data['tags'])){
-						$QuestionTagsTable = TableRegistry::get('QuestionTags');
-						foreach( $this->request->data['tags'] as $key_tag_data => $val_tag_data ){
-							$tag_data['QuestionTags']['question_id'] = $get_last_insert_id;
-							$tag_data['QuestionTags']['user_id'] = $this->Auth->user('id');
-							$tag_data['QuestionTags']['tag_id'] = $val_tag_data;
-							$TagNewEntity = $QuestionTagsTable->newEntity();
-							$inserted_data = $QuestionTagsTable->patchEntity($TagNewEntity, $tag_data);
-							$QuestionTagsTable->save($inserted_data);						
+				
+				$session = $this->request->session();
+				//If session question id exist then update data
+				if( $session->read('questionid') != '' ) {
+					$qstn_data 		= $QuestionTable->find('all', ['conditions'=>array('id'=>$session->read('questionid'),'user_id'=>$this->Auth->user('id'))])->first();
+					$inserted_data 	= $QuestionTable->patchEntity($qstn_data, $this->request->data);
+					if($savedData 	= $QuestionTable->save($inserted_data)){
+						$get_last_insert_id = $savedData->id;
+						$this->visitorlogs('Questions','postQuestionSubmission','Question Submission',NULL,NULL,$this->Auth->user('id'),$get_last_insert_id);	//Log details insertion
+						if(!empty($this->request->data['tags'])){
+							$QuestionTagsTable = TableRegistry::get('QuestionTags');
+							foreach( $this->request->data['tags'] as $key_tag_data => $val_tag_data ){
+								$tag_data['QuestionTags']['question_id'] = $get_last_insert_id;
+								$tag_data['QuestionTags']['user_id'] = $this->Auth->user('id');
+								$tag_data['QuestionTags']['tag_id'] = $val_tag_data;
+								$TagNewEntity = $QuestionTagsTable->newEntity();
+								$inserted_data = $QuestionTagsTable->patchEntity($TagNewEntity, $tag_data);
+								$QuestionTagsTable->save($inserted_data);						
+							}
 						}
-					}
-					/* blocked on 22.11.2018
-					//Notify users for same category subscribers
-					$all_submitter_acccount_setting = $this->getAccountSettingCategoryWise($this->request->data['category_id']);
-					if(!empty($all_submitter_acccount_setting)){
-						$url = Router::url('/', true).'questions/details/'.base64_encode($get_last_insert_id);
-						$question_title = $this->request->data['name'];
-						$settings = $this->getSiteSettings();
-						$loggedin_user_data = $this->Auth->user();
-						$notify_type = 'Post Question';
-						foreach($all_submitter_acccount_setting as $to_user){
-							$this->Email->sendPostQuestionNotificationEmailToAllUsers($to_user, $url, $settings, $question_title, $loggedin_user_data, $notify_type);
-						}					
-					}
-					*/
-					
-					//if question submitter wants notification for new answer					
-					if(!empty($active_permission)){
-						if($active_permission['question_approval']==1){
-							echo json_encode(['question'=>'success']);
-							exit();
+						/* blocked on 22.11.2018
+						//Notify users for same category subscribers
+						$all_submitter_acccount_setting = $this->getAccountSettingCategoryWise($this->request->data['category_id']);
+						if(!empty($all_submitter_acccount_setting)){
+							$url = Router::url('/', true).'questions/details/'.base64_encode($get_last_insert_id);
+							$question_title = $this->request->data['name'];
+							$settings = $this->getSiteSettings();
+							$loggedin_user_data = $this->Auth->user();
+							$notify_type = 'Post Question';
+							foreach($all_submitter_acccount_setting as $to_user){
+								$this->Email->sendPostQuestionNotificationEmailToAllUsers($to_user, $url, $settings, $question_title, $loggedin_user_data, $notify_type);
+							}					
+						}
+						*/
+						
+						$session->delete('questionid');
+						
+						//if question submitter wants notification for new answer					
+						if(!empty($active_permission)){
+							if($active_permission['question_approval']==1){
+								echo json_encode(['question'=>'success']);
+								exit();
+							}else{
+								echo json_encode(['question'=>'success_approval']);
+								exit();
+							}
 						}else{
 							echo json_encode(['question'=>'success_approval']);
 							exit();
-						}
-					}else{
-						echo json_encode(['question'=>'success_approval']);
+						}					
+					} else {
+						echo json_encode(['question'=>'failed']);
 						exit();
-					}					
-				} else {
-					echo json_encode(['question'=>'failed']);
-					exit();
+					}
 				}
+				//Session questionid empty so insert a new one
+				else{
+					$new_question 	= $QuestionTable->newEntity();
+					$inserted_data 	= $QuestionTable->patchEntity($new_question, $this->request->data);
+					if($savedData 	= $QuestionTable->save($inserted_data)){
+						$get_last_insert_id = $savedData->id;
+						$this->visitorlogs('Questions','postQuestionSubmission','Question Submission',NULL,NULL,$this->Auth->user('id'),$get_last_insert_id);	//Log details insertion
+						if(!empty($this->request->data['tags'])){
+							$QuestionTagsTable = TableRegistry::get('QuestionTags');
+							foreach( $this->request->data['tags'] as $key_tag_data => $val_tag_data ){
+								$tag_data['QuestionTags']['question_id'] = $get_last_insert_id;
+								$tag_data['QuestionTags']['user_id'] = $this->Auth->user('id');
+								$tag_data['QuestionTags']['tag_id'] = $val_tag_data;
+								$TagNewEntity = $QuestionTagsTable->newEntity();
+								$inserted_data = $QuestionTagsTable->patchEntity($TagNewEntity, $tag_data);
+								$QuestionTagsTable->save($inserted_data);						
+							}
+						}
+						/* blocked on 22.11.2018
+						//Notify users for same category subscribers
+						$all_submitter_acccount_setting = $this->getAccountSettingCategoryWise($this->request->data['category_id']);
+						if(!empty($all_submitter_acccount_setting)){
+							$url = Router::url('/', true).'questions/details/'.base64_encode($get_last_insert_id);
+							$question_title = $this->request->data['name'];
+							$settings = $this->getSiteSettings();
+							$loggedin_user_data = $this->Auth->user();
+							$notify_type = 'Post Question';
+							foreach($all_submitter_acccount_setting as $to_user){
+								$this->Email->sendPostQuestionNotificationEmailToAllUsers($to_user, $url, $settings, $question_title, $loggedin_user_data, $notify_type);
+							}					
+						}
+						*/
+						
+						$session->delete('questionid');
+						
+						//if question submitter wants notification for new answer					
+						if(!empty($active_permission)){
+							if($active_permission['question_approval']==1){
+								echo json_encode(['question'=>'success']);
+								exit();
+							}else{
+								echo json_encode(['question'=>'success_approval']);
+								exit();
+							}
+						}else{
+							echo json_encode(['question'=>'success_approval']);
+							exit();
+						}					
+					} else {
+						echo json_encode(['question'=>'failed']);
+						exit();
+					}
+				}				
 			}else{
 				echo json_encode(['question'=>'failed']);
 				exit();
 			}
         }
 	}
+	
+	public function postQuestionSubmissionAsDraft(){
+		$this->viewBuilder()->layout = false;
+        $this->render(false);
+		if($this->request->is('post')){
+			if(!empty($this->Auth->user())){
+				$QuestionTable = TableRegistry::get('Questions');
+				
+				$new_generated_tag_ids = array();
+				if( isset($this->request->data['new_tags']) && !empty($this->request->data['new_tags']) ) {
+					$TagsTable = TableRegistry::get('Tags');					
+					if( strpos($this->request->data['new_tags'], ',') !== false ) {
+						$exploded_tags = explode(',',$this->request->data['new_tags']);
+						//echo '<pre>'; print_r($exploded_tags); die;
+						foreach( $exploded_tags as $key_tag => $val_tag ) {							
+							$chk = $TagsTable->find('all',['conditions'=>['title'=>trim($val_tag)]])->first();
+							if( count($chk) > 0 ) {
+								$new_generated_tag_ids[] = $chk->id;
+							}else{
+								$slug = $this->createTagsSlug($val_tag);
+								$newtag['title'] 	= trim(ucwords($val_tag));
+								$newtag['slug'] 	= $slug;
+								$newtag['status'] 	= 'A';
+								
+								$new_tag 		= $TagsTable->newEntity();
+								$insertdata 	= $TagsTable->patchEntity($new_tag, $newtag);
+								$save 			= $TagsTable->save($insertdata);
+								$tag_insert_id 	= $save->id;
+								$new_generated_tag_ids[] = $tag_insert_id;
+								$tag_insert_id = '';
+							}
+						}
+					}else{
+						$chk = $TagsTable->find('all',['conditions'=>['title'=>trim($this->request->data['title'])]])->first();
+						if( count($chk) > 0 ) {
+							$new_generated_tag_ids[] = $chk->id;
+						}else{							
+							$slug = $this->createTagsSlug($this->request->data['title']);						
+							$newtag['title']	= trim(ucwords($this->request->data['new_tags']));
+							$newtag['slug'] 	= $slug;
+							$newtag['status'] 	= 'A';
+							
+							$new_tag 		= $TagsTable->newEntity();
+							$inserted_data = $TagsTable->patchEntity($new_tag, $newtag);
+							$save = $TagsTable->save($inserted_data);
+							$tag_insert_id = $save->id;
+							$new_generated_tag_ids[] = $tag_insert_id;
+						}
+					}
+				}
+				if( !empty($new_generated_tag_ids) ) {
+					$main_tags = $this->request->data['tags'];
+					$merge_array = array_merge( $main_tags,$new_generated_tag_ids );
+					$this->request->data['tags'] = $merge_array;
+				}
+				
+				$this->request->data['user_id'] 	= $this->Auth->user('id');
+				$this->request->data['user_type'] 	= 'U';
+				$this->request->data['status'] 		= 'D';
+				
+				$session = $this->request->session();
+				
+				$count_qstn = $QuestionTable->find('all', ['conditions'=>array('id'=>$session->read('questionid'),'user_id'=>$this->Auth->user('id'))])->count();				
+				if( $count_qstn > 0 ){	//Update section
+					$qstn_data 		= $QuestionTable->find('all', ['conditions'=>array('id'=>$session->read('questionid'),'user_id'=>$this->Auth->user('id'))])->first();
+					$data_to_update = $QuestionTable->patchEntity($qstn_data, $this->request->data);					
+					
+					if($savedData = $QuestionTable->save($data_to_update)){
+						$get_last_insert_id = $savedData->id;
+						if(!empty($this->request->data['tags'])){
+							$QuestionTagsTable = TableRegistry::get('QuestionTags');							
+							$QuestionTagsTable->deleteAll([
+													'QuestionTags.question_id' => $get_last_insert_id,
+													'user_id'				   => $this->Auth->user('id')
+												]);
+							foreach( $this->request->data['tags'] as $key_tag_data => $val_tag_data ){
+								$tag_data['QuestionTags']['question_id'] = $get_last_insert_id;
+								$tag_data['QuestionTags']['user_id'] = $this->Auth->user('id');
+								$tag_data['QuestionTags']['tag_id'] = $val_tag_data;
+								$TagNewEntity = $QuestionTagsTable->newEntity();
+								$inserted_data = $QuestionTagsTable->patchEntity($TagNewEntity, $tag_data);
+								$QuestionTagsTable->save($inserted_data);						
+							}
+						}
+						echo 1;
+						exit();
+					}
+					else {
+						echo 0;
+						exit();
+					}				
+				}
+				else{	//Session question id empty so Insert new one
+					$new_question = $QuestionTable->newEntity();
+					$data_to_insert = $QuestionTable->patchEntity($new_question, $this->request->data);
+					
+					if($savedData = $QuestionTable->save($data_to_insert)){
+						$get_last_insert_id = $savedData->id;
+						$session->write('questionid',$get_last_insert_id);
+						if(!empty($this->request->data['tags'])){
+							$QuestionTagsTable = TableRegistry::get('QuestionTags');							
+							foreach( $this->request->data['tags'] as $key_tag_data => $val_tag_data ){
+								$tag_data['QuestionTags']['question_id'] = $get_last_insert_id;
+								$tag_data['QuestionTags']['user_id'] = $this->Auth->user('id');
+								$tag_data['QuestionTags']['tag_id'] = $val_tag_data;
+								$TagNewEntity = $QuestionTagsTable->newEntity();
+								$inserted_data = $QuestionTagsTable->patchEntity($TagNewEntity, $tag_data);
+								$QuestionTagsTable->save($inserted_data);						
+							}
+						}
+						echo 1;
+						exit();
+					}
+					else {
+						echo 0;
+						exit();
+					}
+				}				
+			}else{
+				echo 0;
+				exit();
+			}
+        }
+	}
+	
 	public function getEducationDetails(){
 		$this->viewBuilder()->layout = false;
         $this->render(false);

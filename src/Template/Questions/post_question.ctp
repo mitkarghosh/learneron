@@ -16,7 +16,10 @@ $session  = $this->request->session();
 							<?php echo $this->Form->create(false,['url' => 'javascript:void(0);', 'id' => 'postquestion_settings_form', 'novalidate' => 'novalidate']); ?>
 								<div class="form-group">
 									<label for="">Question Title</label>
-									<?php echo $this->Form->input('name',['type'=>'text', 'placeholder'=>'Question Title', 'label'=>false, 'class'=>'form-control', 'required'=>"required"]); ?>
+									<?php echo $this->Form->input('name',['type'=>'text', 'id'=>'qstn_title', 'placeholder'=>'Question Title', 'label'=>false, 'class'=>'form-control', 'required'=>"required"]); ?>
+									<small style="float: right; color:#999;">
+										<span id="saving_draft"></span>
+									</small>
 								</div>
 								<div class="form-group">
 									<?php echo $this->Form->input('short_description',['type'=>'textarea', 'placeholder'=>'What learning path / curriculum did take you / could take me from the starting level to goal line, if possible respecting my budget or other constraints and limitations?  What courses or other means or learning, and with what succession?', 'label'=>false, 'class'=>'form-control']); ?>
@@ -752,3 +755,48 @@ function testAPI() {
 /*Login with Facebook end here*/
 </script>
 <?php echo $this->element('social_login');?>
+
+<?php
+if(!empty($Auth)){
+?>
+	<script>
+	//setup before functions
+	var typingTimer;                //timer identifier
+	var doneTypingInterval = 2000;  //time in ms, 2 second for example
+	var $input = $('#qstn_title');	
+	
+	//on keyup, start the countdown
+	$input.on('keyup', function () {
+		clearTimeout(typingTimer);
+		typingTimer = setTimeout(doneTyping, doneTypingInterval);
+	});
+
+	//on keydown, clear the countdown 
+	$input.on('keydown', function () {
+		clearTimeout(typingTimer);
+	});
+
+	//user is "finished typing," do something
+	function doneTyping () {
+		if($input.val() !== ''){
+			var website_url = '<?php echo Router::url("/questions/post-question-submission-as-draft/",true); ?>';
+			$('#saving_draft').html('Saving...');
+			$.ajax({
+				type : 'POST',
+				url  : website_url,
+				data : $('#postquestion_settings_form').serialize(),
+				success : function(response){
+					if(response==1)
+						$('#saving_draft').html('Saved as draft');
+					else
+						$('#saving_draft').html('Some error occured');
+				},
+				error : function(){
+				}
+			});
+		}
+	}
+	</script>
+<?php
+}
+?>

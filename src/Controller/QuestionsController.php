@@ -96,11 +96,11 @@ class QuestionsController extends AppController{
 							}
 						}
 					}else{
-						$chk = $TagsTable->find('all',['conditions'=>['title'=>trim($this->request->data['title'])]])->first();
+						$chk = $TagsTable->find('all',['conditions'=>['title'=>trim($this->request->data['new_tags'])]])->first();
 						if( count($chk) > 0 ) {
 							$new_generated_tag_ids[] = $chk->id;
 						}else{							
-							$slug = $this->createTagsSlug($this->request->data['title']);						
+							$slug = $this->createTagsSlug($this->request->data['new_tags']);						
 							$newtag['title']	= trim(ucwords($this->request->data['new_tags']));
 							$newtag['slug'] 	= $slug;
 							$newtag['status'] 	= 'A';
@@ -278,11 +278,11 @@ class QuestionsController extends AppController{
 							}
 						}
 					}else{
-						$chk = $TagsTable->find('all',['conditions'=>['title'=>trim($this->request->data['title'])]])->first();
+						$chk = $TagsTable->find('all',['conditions'=>['title'=>trim($this->request->data['new_tags'])]])->first();
 						if( count($chk) > 0 ) {
 							$new_generated_tag_ids[] = $chk->id;
 						}else{							
-							$slug = $this->createTagsSlug($this->request->data['title']);						
+							$slug = $this->createTagsSlug($this->request->data['new_tags']);						
 							$newtag['title']	= trim(ucwords($this->request->data['new_tags']));
 							$newtag['slug'] 	= $slug;
 							$newtag['status'] 	= 'A';
@@ -1125,12 +1125,16 @@ class QuestionsController extends AppController{
 		$TagsTable = TableRegistry::get('Tags');
 		$all_tags = $TagsTable->find('list', ['conditions'=>['Tags.status'=>'A'], 'keyField'=>'id','valueField'=>'title'])->toArray();
 		$existing_data =  $QuestionsTable->get($id,['contain'=>['Users'=>['fields'=>['id','name']], 'QuestionCategories'=>['fields'=>['id','name']], 'QuestionTags'=>['fields'=>['id','question_id','tag_id']]]]);
+		
 		if($this->request->is(['post', 'put'])){
 			if(array_key_exists('is_featured',$this->request->data)){
 				if($this->request->data['is_featured'] != 0){$this->request->data['is_featured'] = 'Y';}else{$this->request->data['is_featured'] = 'N';}
 			}
 			$new_question = $QuestionsTable->newEntity();
-			$this->request->data['modified'] = date('Y-m-d H:i:s');
+			$this->request->data['modified'] = date('Y-m-d H:i:s');			
+			if( $existing_data->status == 'D' ) {
+				$this->request->data['status'] = 'A';
+			}			
 			$inserted_data = $QuestionsTable->patchEntity($existing_data, $this->request->data);
 			//$send_data = $QuestionsTable->patchEntity($existing_data, $this->request->data);
 			if ($savedData = $QuestionsTable->save($inserted_data)) {
@@ -1173,6 +1177,28 @@ class QuestionsController extends AppController{
         }
 		$this->set(compact('existing_data','questions','question_categories','all_tags','title','all_faqs'));
         $this->set('_serialize', ['existing_data']);
+    }
+	
+	//Edit Question DRAFT AJAX
+	public function editSubmittedQuestionDraft(){
+		$this->viewBuilder()->layout = false;
+        $this->render(false);
+		if($this->request->is(['POST','PUT'])){
+			$QuestionsTable   = TableRegistry::get('Questions');
+			$existing_data 	  = $QuestionsTable->find('all', ['conditions'=>['id'=>$this->request->data['questionid'],'user_id'=>$this->Auth->user('id')]])->first();
+			$updated_data 	  = $QuestionsTable->patchEntity($existing_data, $this->request->data);
+			if ($savedData 	  = $QuestionsTable->save($updated_data)) {
+                echo 1;
+				exit();
+            }
+			else{
+                echo 0;
+				exit();
+            }
+        }else{
+			echo 0;
+			exit();
+		}
     }
 	
 	//Edit Question Comment

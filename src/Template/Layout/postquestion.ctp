@@ -29,7 +29,7 @@
 <?php echo $this->Html->script('summernote.min'); ?>
 <script>
 $(document).ready(function(){
-   $('#learning-goal').summernote({	
+   /*$('#learning-goal').summernote({	
 		popover: {
 			image: [],
 			link: [],
@@ -88,7 +88,7 @@ $(document).ready(function(){
             //['help', ['help']]
         ],
 		placeholder:'Eg, learning by reading, learning by listening, learning by practicing, online interactive delivery, onsite in-person delivery in classroom set-up, one-on-one delivery or similar preference'
-	});
+	});*/
 	$('#recomandation').summernote({	
 		popover: {
 			image: [],

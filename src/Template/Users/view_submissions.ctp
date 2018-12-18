@@ -34,7 +34,7 @@ $session  = $this->request->session();
 											<td><?php echo substr($question->name, 0, 100); if(strlen($question->name)>100){ echo '...'; } ?></td>
 											<td><?php if($question->question_category->name != '') echo $question->question_category->name; else echo 'N/A'; ?></td>
 											<td><?php echo date('jS F Y', strtotime($question->created));?></td>
-											<td><?php if($question->status == 'I'): echo "<b>Inactive</b>"; else: echo "Active"; endif; ?></td>
+											<td><?php if($question->status == 'D')echo "<b>Draft</b>";else if($question->status == 'I')echo "<b>Inactive</b>"; else echo "Active"; ?></td>
 											<td><a class="edit" href="<?php echo Router::url(array('controller'=>'/','action'=>'edit-submitted-question',base64_encode($question->id))); ?>" title="Edit"><i class="fa fa-pencil"></i></a></td>
 										</tr>
 										<?php

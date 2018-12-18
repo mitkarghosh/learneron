@@ -395,9 +395,10 @@ class NewsController extends AppController{
                 echo 0;
 				exit();
             }
-        }
-        echo 0;
-		exit();
+        }else{
+			echo 0;
+			exit();
+		}
     }
 	
     

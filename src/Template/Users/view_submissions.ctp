@@ -66,7 +66,7 @@ $session  = $this->request->session();
 											<td><?php echo substr($comment->comment, 0, 100); if(strlen($comment->comment)>100){ echo '...'; } ?></td>
 											<td><?php if($comment->question->name != '') echo substr($comment->question->name, 0, 100); else echo 'N/A'; if(strlen($comment->question->name)>100){ echo '...'; } ?></td>
 											<td><?php if($comment->created != ''): echo date('jS F Y', strtotime($comment->created)); else: echo "N/A"; endif; ?></td>
-											<td><?php if($comment->status == 0): echo "<b>Inctive</b>"; else: echo "Active"; endif; ?></td>
+											<td><?php if($comment->status == 2)echo "<b>Draft</b>"; else if($comment->status == 0)echo "<b>Inctive</b>"; else echo "Active";?></td>
 											<td><a class="edit" href="<?php echo Router::url(array('controller'=>'/','action'=>'edit-submitted-question-comment',base64_encode($comment->id))); ?>" title="Edit"><i class="fa fa-pencil"></i></a></td>
 										</tr>
 										<?php
@@ -98,7 +98,7 @@ $session  = $this->request->session();
 											<td><?php echo substr($answer->learning_path_recommendation, 0, 100); if(strlen($answer->learning_path_recommendation)>100){ echo '...'; } ?></td>
 											<td><?php if($answer->question->name != '') echo substr($answer->question->name, 0, 100); else echo 'N/A'; if(strlen($answer->question->name)>100){ echo '...'; } ?></td>
 											<td><?php if($answer->created != ''): echo date('jS F Y', strtotime($answer->created)); else: echo "N/A"; endif; ?></td>
-											<td><?php if($answer->status == 'I'): echo "<b>Inctive</b>"; else: echo "Active"; endif; ?></td>
+											<td><?php if($answer->status == 'D')echo "<b>Draft</b>"; else if($answer->status == 'I')echo "<b>Inctive</b>"; else echo "Active"; ?></td>
 											<td><a class="edit" href="<?php echo Router::url(array('controller'=>'/','action'=>'edit-submitted-question-answer',base64_encode($answer->id))); ?>" title="Edit"><i class="fa fa-pencil"></i></a></td>
 										</tr>
 										<?php

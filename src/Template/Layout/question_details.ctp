@@ -53,6 +53,7 @@ $(document).ready(function(){
             //['help', ['help']]
         ]
 	});
+	/*
 	$('#recomandation').summernote({				
 		 popover: {
 			image: [],
@@ -112,7 +113,8 @@ $(document).ready(function(){
             //['help', ['help']]
         ],
 		placeholder:'Did the learning you experienced lead you to the effect you wanted – e.g., to being successful in finding a new job, in salary progression, in enjoyment or any other utility you promised to yourself'
-	});
+	});*/
+	
 	$('#answer').summernote({		
 		popover: {
 			image: [],

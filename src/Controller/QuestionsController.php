@@ -748,36 +748,82 @@ class QuestionsController extends AppController{
 					if($det['user_id'] != $this->Auth->user('id')){
 						$this->request->data['user_id'] 	= $this->Auth->user('id');
 						$questionAnswersTable = TableRegistry::get('QuestionAnswer');
-						$new = $questionAnswersTable->newEntity();
-						$data_to_insert = $questionAnswersTable->patchEntity($new, $this->request->data);						
-						if($questionAnswersTable->save($data_to_insert)){
-							$this->visitorlogs('Questions','postQuestionAnswer','Question Answer Submission',NULL,NULL,NULL,$this->request->data['question_id'],NULL);	//Log details insertion
-							//if question submitter wants notification for new answer
-							$question_submitter_acccount_setting = $this->getAccountSetting($det->user_id);
-							if((!empty($question_submitter_acccount_setting)) && ($question_submitter_acccount_setting['response_to_my_question_notification']==1)){
-								$url = Router::url('/', true).'questions/details/'.base64_encode($this->request->data['question_id']);
-								$settings = $this->getSiteSettings();
-								$UsersTable		= TableRegistry::get('Users');
-								$question_submitter_details = $UsersTable->find('all',['conditions'=>['Users.id'=>$det->user_id],'fields'=>['id','name','email','notification_email']])->first();
-								$question_title = $det['name'];
-								$loggedin_user_data = $this->Auth->user();
-								$notify_type = 'Answer';
-								$this->Email->sendQuestionNotificationEmail($url, $settings, $question_title, $loggedin_user_data, $question_submitter_details, $notify_type);
-							}
-							//if question submitter wants notification for new answer
-							if(!empty($active_permission)){
-								if($active_permission['question_approval']==1){
-									echo json_encode(['submission'=>'success']);
+						
+						$session = $this->request->session();
+						//If session question id exist then update data
+						if( $session->read('questionanswerid') != '' ) {
+							$qstn_ansr_data = $questionAnswersTable->find('all', ['conditions'=>array('id'=>$session->read('questionanswerid'),'question_id'=>$this->request->data['question_id'],'user_id'=>$this->Auth->user('id'))])->first();
+							$data_to_update = $questionAnswersTable->patchEntity($qstn_ansr_data, $this->request->data);					
+							if($savedData = $questionAnswersTable->save($data_to_update)){
+								$this->visitorlogs('Questions','postQuestionAnswer','Question Answer Submission',NULL,NULL,NULL,$this->request->data['question_id'],NULL);	//Log details insertion
+								//if question submitter wants notification for new answer
+								$question_submitter_acccount_setting = $this->getAccountSetting($det->user_id);
+								if((!empty($question_submitter_acccount_setting)) && ($question_submitter_acccount_setting['response_to_my_question_notification']==1)){
+									$url = Router::url('/', true).'questions/details/'.base64_encode($this->request->data['question_id']);
+									$settings = $this->getSiteSettings();
+									$UsersTable		= TableRegistry::get('Users');
+									$question_submitter_details = $UsersTable->find('all',['conditions'=>['Users.id'=>$det->user_id],'fields'=>['id','name','email','notification_email']])->first();
+									$question_title = $det['name'];
+									$loggedin_user_data = $this->Auth->user();
+									$notify_type = 'Answer';
+									$this->Email->sendQuestionNotificationEmail($url, $settings, $question_title, $loggedin_user_data, $question_submitter_details, $notify_type);
+								}
+								
+								$session->delete('questionanswerid');
+								
+								//if question submitter wants notification for new answer
+								if(!empty($active_permission)){
+									if($active_permission['question_approval']==1){
+										echo json_encode(['submission'=>'success']);
+									}else{
+										echo json_encode(['submission'=>'success_approval']);
+									}
 								}else{
 									echo json_encode(['submission'=>'success_approval']);
 								}
-							}else{
-								echo json_encode(['submission'=>'success_approval']);
+								exit();
 							}
-							exit();
-						}else{
-							echo json_encode(['submission'=>'failed']);
-							exit();
+							else {
+								echo json_encode(['submission'=>'failed']);
+								exit();
+							}
+						}
+						//Session question answer id empty so insert a new one
+						else{
+							$new = $questionAnswersTable->newEntity();
+							$data_to_insert = $questionAnswersTable->patchEntity($new, $this->request->data);						
+							if($questionAnswersTable->save($data_to_insert)){
+								$this->visitorlogs('Questions','postQuestionAnswer','Question Answer Submission',NULL,NULL,NULL,$this->request->data['question_id'],NULL);	//Log details insertion
+								//if question submitter wants notification for new answer
+								$question_submitter_acccount_setting = $this->getAccountSetting($det->user_id);
+								if((!empty($question_submitter_acccount_setting)) && ($question_submitter_acccount_setting['response_to_my_question_notification']==1)){
+									$url = Router::url('/', true).'questions/details/'.base64_encode($this->request->data['question_id']);
+									$settings = $this->getSiteSettings();
+									$UsersTable		= TableRegistry::get('Users');
+									$question_submitter_details = $UsersTable->find('all',['conditions'=>['Users.id'=>$det->user_id],'fields'=>['id','name','email','notification_email']])->first();
+									$question_title = $det['name'];
+									$loggedin_user_data = $this->Auth->user();
+									$notify_type = 'Answer';
+									$this->Email->sendQuestionNotificationEmail($url, $settings, $question_title, $loggedin_user_data, $question_submitter_details, $notify_type);
+								}
+								
+								$session->delete('questionanswerid');
+								
+								//if question submitter wants notification for new answer
+								if(!empty($active_permission)){
+									if($active_permission['question_approval']==1){
+										echo json_encode(['submission'=>'success']);
+									}else{
+										echo json_encode(['submission'=>'success_approval']);
+									}
+								}else{
+									echo json_encode(['submission'=>'success_approval']);
+								}
+								exit();
+							}else{
+								echo json_encode(['submission'=>'failed']);
+								exit();
+							}
 						}
 					}else{
 						echo json_encode(['submission'=>'same_user']);
@@ -800,72 +846,49 @@ class QuestionsController extends AppController{
 		$this->viewBuilder()->layout = false;
         $this->render(false);
 		if($this->request->is(['post','put'])){	//form submit
-			if( (array_key_exists('learning_path_recommendation',$this->request->data) && $this->request->data['learning_path_recommendation'] != '') && (array_key_exists('learning_experience',$this->request->data) && $this->request->data['learning_experience'] != '') && (array_key_exists('learning_utility',$this->request->data) && $this->request->data['learning_utility'] != '') && (array_key_exists('question_id',$this->request->data) && $this->request->data['question_id'] != '') ){
-				$this->request->data['user_ip'] = $this->getUserIP();
-				$active_permission = $this->getSiteSettings();	//getting approval permission mentioned in AppController
-				if(!empty($active_permission)){
-					if($active_permission['question_approval']==1){
-						$this->request->data['status'] 		= 'A';
-					}else{
-						$this->request->data['status'] 		= 'I';
-					}
-				}else{
-					$this->request->data['status'] 		= 'I';
-				}
-				$this->request->data['question_id'] = isset($this->request->data['question_id'])?base64_decode($this->request->data['question_id']):0;
-
-				$QuestionsTable			= TableRegistry::get('Questions');
-				$option_1['fields']		= ['Questions.id','Questions.user_id','Questions.name','Questions.short_description'];
-				$options_1['conditions']= ['Questions.id'=>$this->request->data['question_id']];
-				$det = $QuestionsTable->find('all',$options_1)->first();
-				if(!empty($det)){
-					if($det['user_id'] != $this->Auth->user('id')){
-						$this->request->data['user_id'] 	= $this->Auth->user('id');
-						$questionAnswersTable = TableRegistry::get('QuestionAnswer');
-						$new = $questionAnswersTable->newEntity();
-						$data_to_insert = $questionAnswersTable->patchEntity($new, $this->request->data);						
-						if($questionAnswersTable->save($data_to_insert)){
-							$this->visitorlogs('Questions','postQuestionAnswer','Question Answer Submission',NULL,NULL,NULL,$this->request->data['question_id'],NULL);	//Log details insertion
-							//if question submitter wants notification for new answer
-							$question_submitter_acccount_setting = $this->getAccountSetting($det->user_id);
-							if((!empty($question_submitter_acccount_setting)) && ($question_submitter_acccount_setting['response_to_my_question_notification']==1)){
-								$url = Router::url('/', true).'questions/details/'.base64_encode($this->request->data['question_id']);
-								$settings = $this->getSiteSettings();
-								$UsersTable		= TableRegistry::get('Users');
-								$question_submitter_details = $UsersTable->find('all',['conditions'=>['Users.id'=>$det->user_id],'fields'=>['id','name','email','notification_email']])->first();
-								$question_title = $det['name'];
-								$loggedin_user_data = $this->Auth->user();
-								$notify_type = 'Answer';
-								$this->Email->sendQuestionNotificationEmail($url, $settings, $question_title, $loggedin_user_data, $question_submitter_details, $notify_type);
-							}
-							//if question submitter wants notification for new answer
-							if(!empty($active_permission)){
-								if($active_permission['question_approval']==1){
-									echo json_encode(['submission'=>'success']);
-								}else{
-									echo json_encode(['submission'=>'success_approval']);
-								}
-							}else{
-								echo json_encode(['submission'=>'success_approval']);
-							}
+			$this->request->data['user_ip'] = $this->getUserIP();
+			$this->request->data['status'] 	= 'D';			
+			$this->request->data['question_id'] = isset($this->request->data['question_id'])?base64_decode($this->request->data['question_id']):0;
+			$QuestionsTable			= TableRegistry::get('Questions');
+			$option_1['fields']		= ['Questions.id','Questions.user_id','Questions.name','Questions.short_description'];
+			$options_1['conditions']= ['Questions.id'=>$this->request->data['question_id']];
+			$det = $QuestionsTable->find('all',$options_1)->first();
+			if(!empty($det)){
+				if($det['user_id'] != $this->Auth->user('id')){
+					$this->request->data['user_id'] = $this->Auth->user('id');
+					$questionAnswersTable = TableRegistry::get('QuestionAnswer');
+					
+					$session = $this->request->session();						
+					$count_qstn_ansr = $questionAnswersTable->find('all', ['conditions'=>array('id'=>$session->read('questionanswerid'),'question_id'=>$this->request->data['question_id'],'user_id'=>$this->Auth->user('id'))])->count();
+					if( $count_qstn_ansr > 0 ){ //Update section							
+						$qstn_ansr_data = $questionAnswersTable->find('all', ['conditions'=>array('id'=>$session->read('questionanswerid'),'question_id'=>$this->request->data['question_id'],'user_id'=>$this->Auth->user('id'))])->first();
+						$data_to_update = $questionAnswersTable->patchEntity($qstn_ansr_data, $this->request->data);					
+						if($savedData = $questionAnswersTable->save($data_to_update)){
+							echo 1;
 							exit();
 						}else{
-							echo json_encode(['submission'=>'failed']);
+							echo 0;
 							exit();
 						}
-					}else{
-						echo json_encode(['submission'=>'same_user']);
-						exit();
 					}
-				}else{
-					echo json_encode(['submission'=>'failed']);
-					exit();
-				}				
+					else{	//Session question answer id empty so Insert new one
+						$new = $questionAnswersTable->newEntity();
+						$data_to_insert = $questionAnswersTable->patchEntity($new, $this->request->data);						
+						if($savedData = $questionAnswersTable->save($data_to_insert)){
+							$get_last_insert_id = $savedData->id;
+							$session->write('questionanswerid',$get_last_insert_id);
+							echo 1;
+							exit();
+						}else{
+							echo 0;
+							exit();
+						}
+					}
+				}
 			}else{
-				$this->Flash->error(__('All fields are mandatory.'));
-				echo json_encode(['submission'=>'fields_missing']);
+				echo 0;
 				exit();
-			}
+			}			
 		}
 	}
 	
@@ -899,44 +922,94 @@ class QuestionsController extends AppController{
 					if(!empty($det)){
 						if($det['user_id'] != $this->Auth->user('id')){
 							$QuestionCommentTable	= TableRegistry::get('QuestionComment');
-							$options_1['conditions']= ['QuestionComment.question_id'=>$this->request->data['question_id'],'QuestionComment.user_id'=>$this->Auth->user('id')];
-							$count = $QuestionCommentTable->find('all',$options_1)->count();
-							if($count == 0){
-								$this->request->data['user_id'] = $this->Auth->user('id');
-								$new = $QuestionCommentTable->newEntity();
-								$data_to_insert = $QuestionCommentTable->patchEntity($new, $this->request->data);
-								if($QuestionCommentTable->save($data_to_insert)){
-									$this->visitorlogs('Questions','postQuestionComment','Question Comment Submission',NULL,NULL,NULL,$this->request->data['question_id'],NULL);	//Log details insertion
-									//if question submitter wants notification for new share a comment (question)
-									$question_submitter_acccount_setting = $this->getAccountSetting($det->user_id);
-									if((!empty($question_submitter_acccount_setting)) && ($question_submitter_acccount_setting['response_to_my_question_notification']==1)){
-										$url = Router::url('/', true).'questions/details/'.base64_encode($this->request->data['question_id']);
-										$settings = $this->getSiteSettings();
-										$UsersTable		= TableRegistry::get('Users');
-										$question_submitter_details = $UsersTable->find('all',['conditions'=>['Users.id'=>$det->user_id],'fields'=>['id','name','email','notification_email']])->first();
-										$question_title = $det['name'];
-										$loggedin_user_data = $this->Auth->user();
-										$notify_type = 'Comment';
-										$this->Email->sendQuestionNotificationEmail($url, $settings, $question_title, $loggedin_user_data, $question_submitter_details, $notify_type);
-									}
-									//if question submitter wants notification for new share a comment (question)
-									if(!empty($active_permission)){
-										if($active_permission['question_comment_approval']==1){
-											echo json_encode(['submission'=>'success']);
+							
+							$session = $this->request->session();
+							//If session question comment id exist then update data
+							if( $session->read('questioncommentid') != '' ){
+								
+								$options_1['conditions']= ['QuestionComment.id !='=>$session->read('questioncommentid'),'QuestionComment.question_id'=>$this->request->data['question_id'],'QuestionComment.user_id'=>$this->Auth->user('id')];
+								$count = $QuestionCommentTable->find('all',$options_1)->count();
+								if($count == 0){
+									$qstn_comment_data = $QuestionCommentTable->find('all', ['conditions'=>array('id'=>$session->read('questioncommentid'),'question_id'=>$this->request->data['question_id'],'user_id'=>$this->Auth->user('id'))])->first();
+									$data_to_update = $QuestionCommentTable->patchEntity($qstn_comment_data, $this->request->data);
+									if($QuestionCommentTable->save($data_to_update)){
+										$this->visitorlogs('Questions','postQuestionComment','Question Comment Submission',NULL,NULL,NULL,$this->request->data['question_id'],NULL);	//Log details insertion
+										//if question submitter wants notification for new share a comment (question)
+										$question_submitter_acccount_setting = $this->getAccountSetting($det->user_id);
+										if((!empty($question_submitter_acccount_setting)) && ($question_submitter_acccount_setting['response_to_my_question_notification']==1)){
+											$url = Router::url('/', true).'questions/details/'.base64_encode($this->request->data['question_id']);
+											$settings = $this->getSiteSettings();
+											$UsersTable		= TableRegistry::get('Users');
+											$question_submitter_details = $UsersTable->find('all',['conditions'=>['Users.id'=>$det->user_id],'fields'=>['id','name','email','notification_email']])->first();
+											$question_title = $det['name'];
+											$loggedin_user_data = $this->Auth->user();
+											$notify_type = 'Comment';
+											$this->Email->sendQuestionNotificationEmail($url, $settings, $question_title, $loggedin_user_data, $question_submitter_details, $notify_type);
+										}
+										
+										$session->delete('questioncommentid');
+										
+										//if question submitter wants notification for new share a comment (question)
+										if(!empty($active_permission)){
+											if($active_permission['question_comment_approval']==1){
+												echo json_encode(['submission'=>'success']);
+											}else{
+												echo json_encode(['submission'=>'success_approval']);
+											}
 										}else{
 											echo json_encode(['submission'=>'success_approval']);
 										}
+										exit();
 									}else{
-										echo json_encode(['submission'=>'success_approval']);
+										echo json_encode(['submission'=>'failed']);
+										exit();
 									}
-									exit();
 								}else{
-									echo json_encode(['submission'=>'failed']);
+									echo json_encode(['submission'=>'already_posted']);
+									exit();
+								}							
+							}
+							//Session question comment id empty so insert a new one
+							else{
+								$options_1['conditions']= ['QuestionComment.question_id'=>$this->request->data['question_id'],'QuestionComment.user_id'=>$this->Auth->user('id')];
+								$count = $QuestionCommentTable->find('all',$options_1)->count();
+								if($count == 0){
+									$this->request->data['user_id'] = $this->Auth->user('id');
+									$new = $QuestionCommentTable->newEntity();
+									$data_to_insert = $QuestionCommentTable->patchEntity($new, $this->request->data);
+									if($QuestionCommentTable->save($data_to_insert)){
+										$this->visitorlogs('Questions','postQuestionComment','Question Comment Submission',NULL,NULL,NULL,$this->request->data['question_id'],NULL);	//Log details insertion
+										//if question submitter wants notification for new share a comment (question)
+										$question_submitter_acccount_setting = $this->getAccountSetting($det->user_id);
+										if((!empty($question_submitter_acccount_setting)) && ($question_submitter_acccount_setting['response_to_my_question_notification']==1)){
+											$url = Router::url('/', true).'questions/details/'.base64_encode($this->request->data['question_id']);
+											$settings = $this->getSiteSettings();
+											$UsersTable		= TableRegistry::get('Users');
+											$question_submitter_details = $UsersTable->find('all',['conditions'=>['Users.id'=>$det->user_id],'fields'=>['id','name','email','notification_email']])->first();
+											$question_title = $det['name'];
+											$loggedin_user_data = $this->Auth->user();
+											$notify_type = 'Comment';
+											$this->Email->sendQuestionNotificationEmail($url, $settings, $question_title, $loggedin_user_data, $question_submitter_details, $notify_type);
+										}
+										//if question submitter wants notification for new share a comment (question)
+										if(!empty($active_permission)){
+											if($active_permission['question_comment_approval']==1){
+												echo json_encode(['submission'=>'success']);
+											}else{
+												echo json_encode(['submission'=>'success_approval']);
+											}
+										}else{
+											echo json_encode(['submission'=>'success_approval']);
+										}
+										exit();
+									}else{
+										echo json_encode(['submission'=>'failed']);
+										exit();
+									}
+								}else{
+									echo json_encode(['submission'=>'already_posted']);
 									exit();
 								}
-							}else{
-								echo json_encode(['submission'=>'already_posted']);
-								exit();
 							}
 						}else{
 							echo json_encode(['submission'=>'same_user']);
@@ -955,6 +1028,69 @@ class QuestionsController extends AppController{
 			}
 		}
 	}
+	
+	//question Comment submission as DRAFT
+	public function postQuestionCommentAsDraft(){
+		$this->viewBuilder()->layout = false;
+        $this->render(false);
+		if($this->request->is(['POST','PUT'])){		//form submit
+			$this->request->data['user_ip'] 	= $this->getUserIP();
+			$this->request->data['status'] 		= '2';
+			$this->request->data['question_id'] = isset($this->request->data['question_id'])?base64_decode($this->request->data['question_id']):0;
+			$this->request->data['comment'] 	= isset($this->request->data['question_comment'])?$this->request->data['question_comment']:'';					
+			$QuestionsTable			= TableRegistry::get('Questions');
+			$option['fields']		= ['Questions.id','Questions.user_id','Questions.name','Questions.short_description'];
+			$option['conditions']	= ['Questions.id'=>$this->request->data['question_id']];
+			$det = $QuestionsTable->find('all',$option)->first();
+			if(!empty($det)){
+				if($det['user_id'] != $this->Auth->user('id')){
+					$QuestionCommentTable	= TableRegistry::get('QuestionComment');
+					
+					$session = $this->request->session();
+					
+					$options_1['conditions']= [
+												'QuestionComment.question_id'=> $this->request->data['question_id'],
+												'QuestionComment.user_id'	=> $this->Auth->user('id')
+											   ];
+					$count = $QuestionCommentTable->find('all',$options_1)->count();
+					if($count == 0){
+						$count_qstn_cmnt = $QuestionCommentTable->find('all',['conditions'=>['QuestionComment.id' => $session->read('questioncommentid')]])->count();
+						if( $count_qstn_cmnt > 0 ){ //Update section							
+							$qstn_cmnt_data = $QuestionCommentTable->find('all', ['conditions'=>array('QuestionComment.id'=>$session->read('questioncommentid'))])->first();
+							$data_to_update = $QuestionCommentTable->patchEntity($qstn_cmnt_data, $this->request->data);
+							if($savedData 	= $QuestionCommentTable->save($data_to_update)){
+								echo 1;
+								exit();
+							}else{
+								echo 0;
+								exit();
+							}
+						}
+						else{	//Session question comment id empty so Insert new one
+							$this->request->data['user_id'] = $this->Auth->user('id');
+							$new = $QuestionCommentTable->newEntity();
+							$data_to_insert = $QuestionCommentTable->patchEntity($new, $this->request->data);
+							if($savedData 	= $QuestionCommentTable->save($data_to_insert)){
+								$get_last_insert_id = $savedData->id;
+								$session->write('questioncommentid',$get_last_insert_id);
+							
+								echo 1;
+								exit();
+							}else{
+								echo 0;
+								exit();
+							}
+						}
+					}
+					else{
+						echo 2;
+						exit();
+					}
+				}
+			}
+		}
+	}
+	
 	
 	//answer comment submission
 	public function postAnswerComment(){
@@ -1310,7 +1446,10 @@ class QuestionsController extends AppController{
         $id = base64_decode($id);
         $existing_data = $QuestionAnswerTable->get($id,['contain'=>['Questions'=>['fields'=>['id','name']]]]);
 		$this->visitorlogs('Questions','editSubmittedQuestionAnswer','Edited Question Answer',NULL,NULL,NULL,$existing_data['question_id'],NULL,NULL,NULL);	//Log details insertion
-		if ($this->request->is(['post', 'put'])) {
+		if ($this->request->is(['post', 'put'])) {			
+			if( $existing_data->status == 'D' ) {
+				$this->request->data['status'] = 'A';
+			}			
 			$this->request->data['modified'] = date('Y-m-d H:i:s');
 			$updated_data = $QuestionAnswerTable->patchEntity($existing_data, $this->request->data);
 			if ($savedData = $QuestionAnswerTable->save($updated_data)) {
@@ -1322,6 +1461,28 @@ class QuestionsController extends AppController{
         }
         $this->set(compact('existing_data','title'));
         $this->set('_serialize', ['existing_data']);
+    }
+	
+	//Edit Question Answer DRAFT AJAX
+	public function editSubmittedQuestionAnswerDraft(){
+		$this->viewBuilder()->layout = false;
+        $this->render(false);
+		if($this->request->is(['POST','PUT'])){
+			$QuestionAnswerTable= TableRegistry::get('QuestionAnswer');
+			$existing_data 	  	= $QuestionAnswerTable->find('all', ['conditions'=>['id'=>$this->request->data['questionanswerid'],'user_id'=>$this->Auth->user('id')]])->first();
+			$updated_data 	  = $QuestionAnswerTable->patchEntity($existing_data, $this->request->data);
+			if ($savedData 	  = $QuestionAnswerTable->save($updated_data)) {
+                echo 1;
+				exit();
+            }
+			else{
+                echo 0;
+				exit();
+            }
+        }else{
+			echo 0;
+			exit();
+		}
     }
 	
 	//Edit Question Answer Comment

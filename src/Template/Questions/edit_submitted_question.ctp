@@ -223,7 +223,7 @@ if(!empty($Auth)){
 	});
 	function doneTyping1 () {
 		if($short_description.val() !== ''){
-			var website_url = '<?php echo Router::url("/questions/post-question-submission-as-draft/",true); ?>';
+			var website_url = '<?php echo Router::url("/questions/edit-submitted-question-draft/",true); ?>';
 			$('#saving_draft_short_description').html('Saving...');
 			$.ajax({
 				type : 'POST',
@@ -255,7 +255,7 @@ if(!empty($Auth)){
 	});
 	function doneTyping2 () {
 		if($education_history.val() !== ''){
-			var website_url = '<?php echo Router::url("/questions/post-question-submission-as-draft/",true); ?>';
+			var website_url = '<?php echo Router::url("/questions/edit-submitted-question-draft/",true); ?>';
 			$('#saving_draft_education_history').html('Saving...');
 			$.ajax({
 				type : 'POST',
@@ -309,7 +309,7 @@ if(!empty($Auth)){
 		});
 	});
 	function doneTypingLearningGoal () {
-		var website_url = '<?php echo Router::url("/questions/post-question-submission-as-draft/",true); ?>';
+		var website_url = '<?php echo Router::url("/questions/edit-submitted-question-draft/",true); ?>';
 		$('#saving_draft_learning_goal').html('Saving...');
 		$.ajax({
 			type : 'POST',
@@ -359,7 +359,7 @@ if(!empty($Auth)){
 		});
 	});
 	function doneTypingBudgetConstraints () {
-		var website_url = '<?php echo Router::url("/questions/post-question-submission-as-draft/",true); ?>';
+		var website_url = '<?php echo Router::url("/questions/edit-submitted-question-draft/",true); ?>';
 		$('#saving_draft_budget_constraints').html('Saving...');
 		$.ajax({
 			type : 'POST',
@@ -412,7 +412,7 @@ if(!empty($Auth)){
 		});
 	});	
 	function doneTypingPreferredLearningMode () {
-		var website_url = '<?php echo Router::url("/questions/post-question-submission-as-draft/",true); ?>';
+		var website_url = '<?php echo Router::url("/questions/edit-submitted-question-draft/",true); ?>';
 		$('#saving_draft_preferred_learning_mode').html('Saving...');
 		$.ajax({
 			type : 'POST',
@@ -439,7 +439,7 @@ if(!empty($Auth)){
 	});
 	function doneTyping5 () {
 		if($input_tags.val() !== ''){
-			var website_url = '<?php echo Router::url("/questions/post-question-submission-as-draft/",true); ?>';
+			var website_url = '<?php echo Router::url("/questions/edit-submitted-question-draft/",true); ?>';
 			$('#saving_draft_tags').html('Saving...');
 			$.ajax({
 				type : 'POST',
@@ -467,7 +467,7 @@ if(!empty($Auth)){
 	});
 	function doneTyping3 () {
 		if($input_category_id.val() !== ''){
-			var website_url = '<?php echo Router::url("/questions/post-question-submission-as-draft/",true); ?>';
+			var website_url = '<?php echo Router::url("/questions/edit-submitted-question-draft/",true); ?>';
 			$('#saving_draft_category_id').html('Saving...');
 			$.ajax({
 				type : 'POST',
@@ -498,7 +498,7 @@ if(!empty($Auth)){
 	});
 	function doneTyping4 () {
 		if($input_new_tags.val() !== ''){
-			var website_url = '<?php echo Router::url("/questions/post-question-submission-as-draft/",true); ?>';
+			var website_url = '<?php echo Router::url("/questions/edit-submitted-question-draft/",true); ?>';
 			$('#saving_draft_new_tags').html('Saving...');
 			$.ajax({
 				type : 'POST',
@@ -520,7 +520,7 @@ if(!empty($Auth)){
 	}
 	
 	$('#response_email').click(function(){
-		var website_url = '<?php echo Router::url("/questions/post-question-submission-as-draft/",true); ?>';
+		var website_url = '<?php echo Router::url("/questions/edit-submitted-question-draft/",true); ?>';
 		if($('#response_email').is(":checked")){			
 			$.ajax({
 				type : 'POST',

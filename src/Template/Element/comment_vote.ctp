@@ -176,6 +176,9 @@ use Cake\Routing\Router;
 			<div class="modal-body">				
 				<div class="form-group">
 					<?php echo $this->Form->input('question_comment',['type'=>'textarea', 'placeholder'=>'Post your comment', 'label'=>false, 'class'=>'form-control', 'required'=>true]);?>
+					<small style="float: right; color:#999;">
+						<span id="saving_draft_question_comment" class="draft_msg"></span>
+					</small>
 				</div>
 				<div id="question_comment_msg"></div>
 			</div>

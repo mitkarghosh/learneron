@@ -300,15 +300,24 @@ $answer_upvote=0;
 								<div class="form-group">                			
 									<h5>Type your answer here</h5>                			
 									<label>Learning Path recommendation</label>                			
-									<div id="lpr"><?php echo $this->Form->input('learning_path_recommendation',['type'=>'textarea', 'id'=>'recomandation', 'label'=>false, 'class'=>'texarea', 'required'=>true]); ?></div>
+									<div id="lpr"><?php echo $this->Form->input('learning_path_recommendation',['type'=>'textarea', 'id'=>'recomandation', 'label'=>false, 'class'=>'texarea']); ?></div>
+									<small style="float: right; color:#999;">
+										<span id="saving_draft_learning_path_recommendation" class="draft_msg"></span>
+									</small>
 								</div>
 								<div class="form-group">
 									<label for="">What was your learning experience</label>
 									<div id="le"><?php echo $this->Form->input('learning_experience',['type'=>'textarea', 'id'=>'learning-experience', 'label'=>false, 'class'=>'texarea', 'required'=>true]); ?></div>
+									<small style="float: right; color:#999;">
+										<span id="saving_draft_learning_experience" class="draft_msg"></span>
+									</small>
 								</div>
 								<div class="form-group">
 									<label for="">What was your learning utility</label>
 									<div id="lu"><?php echo $this->Form->input('learning_utility',['type'=>'textarea', 'id'=>'utility', 'label'=>false, 'class'=>'texarea', 'required'=>true]); ?></div>
+									<small style="float: right; color:#999;">
+										<span id="saving_draft_learning_utility" class="draft_msg"></span>
+									</small>
 								</div>
 								
 								<div id="answer_msg"><?php echo $this->Flash->render();?></div>
@@ -401,3 +410,50 @@ function all_question_comments(question_id){
 <style>
 .side-bar-block-box ul li{min-height:40px !important;}
 </style>
+
+<?php
+if( !empty($Auth) ) {
+?>
+<script>
+//setup before functions
+var typingTimer1;                //timer identifier
+var doneTypingInterval1 = 2000;  //time in ms, 2 second for example
+var $question_comment = $('#question-comment');
+$(document).ready(function(){
+	$question_comment.on('keyup', function () {
+		clearTimeout(typingTimer1);
+		typingTimer1 = setTimeout(doneTypingQuestionComment, doneTypingInterval1);
+	});
+	
+	$question_comment.on('keydown', function () {
+		clearTimeout(typingTimer1);
+	});
+});
+function doneTypingQuestionComment () {
+	if($question_comment.val() !== ''){
+		var website_url = '<?php echo Router::url("/questions/post-question-comment-as-draft/",true); ?>';
+		$('#saving_draft_question_comment').html('Saving...');
+		$.ajax({
+			type : 'POST',
+			url  : website_url,
+			data : $('#question_comment_form').serialize(),
+			success : function(response){
+				if(response==1)
+					$('#saving_draft_question_comment').html('Saved as draft');
+				else if(response==0)
+					$('#saving_draft_question_comment').html('Some error occured');
+				else if(response==2)
+					$('#saving_draft_question_comment').html('');
+			},
+			error : function(){
+			}
+		});			
+		setTimeout(function(){
+			$('.draft_msg').html('');
+		},3000);
+	}
+}
+</script>
+<?php
+}
+?>

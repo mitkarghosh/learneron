@@ -108,7 +108,7 @@ $(document).ready(function(){
             //['help', ['help']]
         ],
 		placeholder:'What particular learning path, i.e. a succession of learning steps, courses, bootcamps, coachings or any other learning means would you recommend given the starting level, budget and other constraints and preferences?'
-	});*/
+	});
 	$('#learning-experience').summernote({	
 		popover: {
 			image: [],
@@ -148,7 +148,7 @@ $(document).ready(function(){
             //['help', ['help']]
         ],
 		placeholder:'Did the learning you experienced lead you to the effect you wanted – e.g., to being successful in finding a new job, in salary progression, in enjoyment or any other utility you promised to yourself'
-	});
+	});*/
 	
 	$('ul.tabs li').click(function(){
 		var tab_id = $(this).attr('data-tab');

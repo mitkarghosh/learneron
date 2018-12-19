@@ -756,7 +756,7 @@ var typingTimer;                //timer identifier
 var doneTypingInterval = 2000;  //time in ms, 2 second for example
 //Learning Path Recommendation
 $(document).ready(function(){
-	$('#recomandation').summernote({	
+	$('#recomandation').summernote({
 		popover: {
 			image: [],
 			link: [],
@@ -784,29 +784,32 @@ $(document).ready(function(){
 				clearTimeout(typingTimer);
 			}
 		}
-	});	
-	
-	function doneTypingLearningPathRecomandation () {
-		var website_url = '<?php echo Router::url("/questions/post-question-submission-as-draft/",true); ?>';
-		$('#saving_draft_learning_goal').html('Saving...');
-		$.ajax({
-			type : 'POST',
-			url  : website_url,
-			data : $('#postquestion_settings_form').serialize(),
-			success : function(response){
-				if(response==1)
-					$('#saving_draft_learning_goal').html('Saved as draft');
-				else
-					$('#saving_draft_learning_goal').html('Some error occured');
-			},
-			error : function(){
-			}
-		});
-	}
+	});
+});
+function doneTypingLearningPathRecomandation () {
+	var website_url = '<?php echo Router::url("/questions/post-question-answer-as-draft/",true); ?>';
+	$('#saving_draft_learning_path_recommendation').html('Saving...');
+	$.ajax({
+		type : 'POST',
+		url  : website_url,
+		data : $('#post_answer_form').serialize(),
+		success : function(response){
+			if(response==1)
+				$('#saving_draft_learning_path_recommendation').html('Saved as draft');
+			else if(response==0)
+				$('#saving_draft_learning_path_recommendation').html('Some error occured');
+		},
+		error : function(){
+		}
+	});
+	setTimeout(function(){
+		$('.draft_msg').html('');
+	},3000);
+}
 
-//Budget & Constraints
+//What Was Your Learning Experience
 $(document).ready(function(){
-	$('#budget_constraints').summernote({	
+	$('#learning-experience').summernote({	
 		popover: {
 			image: [],
 			link: [],
@@ -824,11 +827,11 @@ $(document).ready(function(){
 			['view', ['fullscreen', 'codeview']],
 			//['help', ['help']]
 		],
-		placeholder:'Please enter any monetary limits, timing constraints (eg, "available only on evenings"), language preferences, ability or not to travel for education and similar matters or preferences',
+		placeholder:'How would you describe your experience, or review of the courses and learning steps per the recommended Learning Path',
 		callbacks: {
 			onKeyup: function(e) {
 				clearTimeout(typingTimer);
-				typingTimer = setTimeout(doneTypingBudgetConstraints, doneTypingInterval);			
+				typingTimer = setTimeout(doneTypingLearningExperience, doneTypingInterval);			
 			},
 			onKeydown: function(e) {
 				clearTimeout(typingTimer);
@@ -836,18 +839,18 @@ $(document).ready(function(){
 		}
 	});
 });
-function doneTypingBudgetConstraints () {
-	var website_url = '<?php echo Router::url("/questions/post-question-submission-as-draft/",true); ?>';
-	$('#saving_draft_budget_constraints').html('Saving...');
+function doneTypingLearningExperience () {
+	var website_url = '<?php echo Router::url("/questions/post-question-answer-as-draft/",true); ?>';
+	$('#saving_draft_learning_experience').html('Saving...');
 	$.ajax({
 		type : 'POST',
 		url  : website_url,
-		data : $('#postquestion_settings_form').serialize(),
+		data : $('#post_answer_form').serialize(),
 		success : function(response){
 			if(response==1)
-				$('#saving_draft_budget_constraints').html('Saved as draft');
+				$('#saving_draft_learning_experience').html('Saved as draft');
 			else
-				$('#saving_draft_budget_constraints').html('Some error occured');
+				$('#saving_draft_learning_experience').html('Some error occured');
 		},
 		error : function(){
 		}
@@ -857,9 +860,9 @@ function doneTypingBudgetConstraints () {
 	},3000);
 }
 
-//Preferred Learning Mode
+//What Was Your Learning Utility
 $(document).ready(function(){
-	$('#preferred_learning_mode').summernote({	
+	$('#utility').summernote({	
 		popover: {
 			image: [],
 			link: [],
@@ -877,30 +880,30 @@ $(document).ready(function(){
 			['view', ['fullscreen', 'codeview']],
 			//['help', ['help']]
 		],
-		placeholder:'Eg, learning by reading, learning by listening, learning by practicing, online interactive delivery, onsite in-person delivery in classroom set-up, one-on-one delivery or similar preference',
+		placeholder:'Did the learning you experienced lead you to the effect you wanted – e.g., to being successful in finding a new job, in salary progression, in enjoyment or any other utility you promised to yourself',
 		callbacks: {
 			onKeyup: function(e) {
 				clearTimeout(typingTimer);
-				typingTimer = setTimeout(doneTypingPreferredLearningMode, doneTypingInterval);			
+				typingTimer = setTimeout(doneTypingLearningUtility, doneTypingInterval);			
 			},
 			onKeydown: function(e) {
 				clearTimeout(typingTimer);
 			}
 		}
 	});
-});	
-function doneTypingPreferredLearningMode () {
-	var website_url = '<?php echo Router::url("/questions/post-question-submission-as-draft/",true); ?>';
-	$('#saving_draft_preferred_learning_mode').html('Saving...');
+});
+function doneTypingLearningUtility () {
+	var website_url = '<?php echo Router::url("/questions/post-question-answer-as-draft/",true); ?>';
+	$('#saving_draft_learning_utility').html('Saving...');
 	$.ajax({
 		type : 'POST',
 		url  : website_url,
-		data : $('#postquestion_settings_form').serialize(),
+		data : $('#post_answer_form').serialize(),
 		success : function(response){
 			if(response==1)
-				$('#saving_draft_preferred_learning_mode').html('Saved as draft');
+				$('#saving_draft_learning_utility').html('Saved as draft');
 			else
-				$('#saving_draft_preferred_learning_mode').html('Some error occured');
+				$('#saving_draft_learning_utility').html('Some error occured');
 		},
 		error : function(){
 		}
@@ -909,118 +912,6 @@ function doneTypingPreferredLearningMode () {
 		$('.draft_msg').html('');
 	},3000);
 }
-
-var $input_tags = $('#tags');	
-$input_tags.on('change', function () {
-	clearTimeout(typingTimer);
-	typingTimer = setTimeout(doneTyping3, doneTypingInterval);
-});
-function doneTyping5 () {
-	if($input_tags.val() !== ''){
-		var website_url = '<?php echo Router::url("/questions/post-question-submission-as-draft/",true); ?>';
-		$('#saving_draft_tags').html('Saving...');
-		$.ajax({
-			type : 'POST',
-			url  : website_url,
-			data : $('#postquestion_settings_form').serialize(),
-			success : function(response){
-				if(response==1)
-					$('#saving_draft_tags').html('Saved as draft');
-				else
-					$('#saving_draft_tags').html('Some error occured');
-			},
-			error : function(){
-			}
-		});
-		setTimeout(function(){
-			$('.draft_msg').html('');
-		},3000);
-	}
-}
-
-var $input_category_id = $('#category_id');	
-$input_category_id.on('change', function () {
-	clearTimeout(typingTimer);
-	typingTimer = setTimeout(doneTyping3, doneTypingInterval);
-});
-function doneTyping3 () {
-	if($input_category_id.val() !== ''){
-		var website_url = '<?php echo Router::url("/questions/post-question-submission-as-draft/",true); ?>';
-		$('#saving_draft_category_id').html('Saving...');
-		$.ajax({
-			type : 'POST',
-			url  : website_url,
-			data : $('#postquestion_settings_form').serialize(),
-			success : function(response){
-				if(response==1)
-					$('#saving_draft_category_id').html('Saved as draft');
-				else
-					$('#saving_draft_category_id').html('Some error occured');
-			},
-			error : function(){
-			}
-		});
-		setTimeout(function(){
-			$('.draft_msg').html('');
-		},3000);
-	}
-}
-
-var $input_new_tags = $('#new-tags');	
-$input_new_tags.on('keyup', function () {
-	clearTimeout(typingTimer);
-	typingTimer = setTimeout(doneTyping4, doneTypingInterval);
-});
-$input_new_tags.on('keydown', function () {
-	clearTimeout(typingTimer);
-});
-function doneTyping4 () {
-	if($input_new_tags.val() !== ''){
-		var website_url = '<?php echo Router::url("/questions/post-question-submission-as-draft/",true); ?>';
-		$('#saving_draft_new_tags').html('Saving...');
-		$.ajax({
-			type : 'POST',
-			url  : website_url,
-			data : $('#postquestion_settings_form').serialize(),
-			success : function(response){
-				if(response==1)
-					$('#saving_draft_new_tags').html('Saved as draft');
-				else
-					$('#saving_draft_new_tags').html('Some error occured');
-			},
-			error : function(){
-			}
-		});
-		setTimeout(function(){
-			$('.draft_msg').html('');
-		},3000);
-	}
-}
-
-$('#response_email').click(function(){
-	var website_url = '<?php echo Router::url("/questions/post-question-submission-as-draft/",true); ?>';
-	if($('#response_email').is(":checked")){			
-		$.ajax({
-			type : 'POST',
-			url  : website_url,
-			data : {response_email : 'Y'},
-			success : function(response){					
-			},
-			error : function(){
-			}
-		});
-	}else{
-		$.ajax({
-			type : 'POST',
-			url  : website_url,
-			data : {response_email : 'N'},
-			success : function(response){					
-			},
-			error : function(){
-			}
-		});
-	}
-});
 </script>
 <?php
 }

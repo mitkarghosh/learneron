@@ -88,7 +88,7 @@ $(document).ready(function(){
             //['help', ['help']]
         ],
 		placeholder:'Eg, learning by reading, learning by listening, learning by practicing, online interactive delivery, onsite in-person delivery in classroom set-up, one-on-one delivery or similar preference'
-	});*/
+	});
 	$('#recomandation').summernote({	
 		popover: {
 			image: [],
@@ -108,7 +108,7 @@ $(document).ready(function(){
             //['help', ['help']]
         ],
 		placeholder:'What particular learning path, i.e. a succession of learning steps, courses, bootcamps, coachings or any other learning means would you recommend given the starting level, budget and other constraints and preferences?'
-	});
+	});*/
 	$('#learning-experience').summernote({	
 		popover: {
 			image: [],

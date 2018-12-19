@@ -746,3 +746,282 @@ function testAPI() {
 }
 /*Login with Facebook end here*/
 </script>
+
+<?php
+if(!empty($Auth)){
+?>
+<script>
+//setup before functions
+var typingTimer;                //timer identifier
+var doneTypingInterval = 2000;  //time in ms, 2 second for example
+//Learning Path Recommendation
+$(document).ready(function(){
+	$('#recomandation').summernote({	
+		popover: {
+			image: [],
+			link: [],
+			air: []
+		},
+		height:250,
+		toolbar: [
+			['style', ['style']],
+			['font', ['bold', 'italic', 'underline', 'clear']],
+			['fontname', ['fontname']],
+			['color', ['color']],
+			['para', ['ul', 'ol', 'paragraph']],
+			['height', ['height']],
+			['insert', ['link', 'hr']],
+			['view', ['fullscreen', 'codeview']],
+			//['help', ['help']]
+		],
+		placeholder:'What particular learning path, i.e. a succession of learning steps, courses, bootcamps, coachings or any other learning means would you recommend given the starting level, budget and other constraints and preferences?',
+		callbacks: {
+			onKeyup: function(e) {
+				clearTimeout(typingTimer);
+				typingTimer = setTimeout(doneTypingLearningPathRecomandation, doneTypingInterval);			
+			},
+			onKeydown: function(e) {
+				clearTimeout(typingTimer);
+			}
+		}
+	});	
+	
+	function doneTypingLearningPathRecomandation () {
+		var website_url = '<?php echo Router::url("/questions/post-question-submission-as-draft/",true); ?>';
+		$('#saving_draft_learning_goal').html('Saving...');
+		$.ajax({
+			type : 'POST',
+			url  : website_url,
+			data : $('#postquestion_settings_form').serialize(),
+			success : function(response){
+				if(response==1)
+					$('#saving_draft_learning_goal').html('Saved as draft');
+				else
+					$('#saving_draft_learning_goal').html('Some error occured');
+			},
+			error : function(){
+			}
+		});
+	}
+
+//Budget & Constraints
+$(document).ready(function(){
+	$('#budget_constraints').summernote({	
+		popover: {
+			image: [],
+			link: [],
+			air: []
+		},
+		height:250,
+		toolbar: [
+			['style', ['style']],
+			['font', ['bold', 'italic', 'underline', 'clear']],
+			['fontname', ['fontname']],
+			['color', ['color']],
+			['para', ['ul', 'ol', 'paragraph']],
+			['height', ['height']],
+			['insert', ['link', 'hr']],
+			['view', ['fullscreen', 'codeview']],
+			//['help', ['help']]
+		],
+		placeholder:'Please enter any monetary limits, timing constraints (eg, "available only on evenings"), language preferences, ability or not to travel for education and similar matters or preferences',
+		callbacks: {
+			onKeyup: function(e) {
+				clearTimeout(typingTimer);
+				typingTimer = setTimeout(doneTypingBudgetConstraints, doneTypingInterval);			
+			},
+			onKeydown: function(e) {
+				clearTimeout(typingTimer);
+			}
+		}
+	});
+});
+function doneTypingBudgetConstraints () {
+	var website_url = '<?php echo Router::url("/questions/post-question-submission-as-draft/",true); ?>';
+	$('#saving_draft_budget_constraints').html('Saving...');
+	$.ajax({
+		type : 'POST',
+		url  : website_url,
+		data : $('#postquestion_settings_form').serialize(),
+		success : function(response){
+			if(response==1)
+				$('#saving_draft_budget_constraints').html('Saved as draft');
+			else
+				$('#saving_draft_budget_constraints').html('Some error occured');
+		},
+		error : function(){
+		}
+	});
+	setTimeout(function(){
+		$('.draft_msg').html('');
+	},3000);
+}
+
+//Preferred Learning Mode
+$(document).ready(function(){
+	$('#preferred_learning_mode').summernote({	
+		popover: {
+			image: [],
+			link: [],
+			air: []
+		},
+		height:250,
+		toolbar: [
+			['style', ['style']],
+			['font', ['bold', 'italic', 'underline', 'clear']],
+			['fontname', ['fontname']],
+			['color', ['color']],
+			['para', ['ul', 'ol', 'paragraph']],
+			['height', ['height']],
+			['insert', ['link', 'hr']],
+			['view', ['fullscreen', 'codeview']],
+			//['help', ['help']]
+		],
+		placeholder:'Eg, learning by reading, learning by listening, learning by practicing, online interactive delivery, onsite in-person delivery in classroom set-up, one-on-one delivery or similar preference',
+		callbacks: {
+			onKeyup: function(e) {
+				clearTimeout(typingTimer);
+				typingTimer = setTimeout(doneTypingPreferredLearningMode, doneTypingInterval);			
+			},
+			onKeydown: function(e) {
+				clearTimeout(typingTimer);
+			}
+		}
+	});
+});	
+function doneTypingPreferredLearningMode () {
+	var website_url = '<?php echo Router::url("/questions/post-question-submission-as-draft/",true); ?>';
+	$('#saving_draft_preferred_learning_mode').html('Saving...');
+	$.ajax({
+		type : 'POST',
+		url  : website_url,
+		data : $('#postquestion_settings_form').serialize(),
+		success : function(response){
+			if(response==1)
+				$('#saving_draft_preferred_learning_mode').html('Saved as draft');
+			else
+				$('#saving_draft_preferred_learning_mode').html('Some error occured');
+		},
+		error : function(){
+		}
+	});
+	setTimeout(function(){
+		$('.draft_msg').html('');
+	},3000);
+}
+
+var $input_tags = $('#tags');	
+$input_tags.on('change', function () {
+	clearTimeout(typingTimer);
+	typingTimer = setTimeout(doneTyping3, doneTypingInterval);
+});
+function doneTyping5 () {
+	if($input_tags.val() !== ''){
+		var website_url = '<?php echo Router::url("/questions/post-question-submission-as-draft/",true); ?>';
+		$('#saving_draft_tags').html('Saving...');
+		$.ajax({
+			type : 'POST',
+			url  : website_url,
+			data : $('#postquestion_settings_form').serialize(),
+			success : function(response){
+				if(response==1)
+					$('#saving_draft_tags').html('Saved as draft');
+				else
+					$('#saving_draft_tags').html('Some error occured');
+			},
+			error : function(){
+			}
+		});
+		setTimeout(function(){
+			$('.draft_msg').html('');
+		},3000);
+	}
+}
+
+var $input_category_id = $('#category_id');	
+$input_category_id.on('change', function () {
+	clearTimeout(typingTimer);
+	typingTimer = setTimeout(doneTyping3, doneTypingInterval);
+});
+function doneTyping3 () {
+	if($input_category_id.val() !== ''){
+		var website_url = '<?php echo Router::url("/questions/post-question-submission-as-draft/",true); ?>';
+		$('#saving_draft_category_id').html('Saving...');
+		$.ajax({
+			type : 'POST',
+			url  : website_url,
+			data : $('#postquestion_settings_form').serialize(),
+			success : function(response){
+				if(response==1)
+					$('#saving_draft_category_id').html('Saved as draft');
+				else
+					$('#saving_draft_category_id').html('Some error occured');
+			},
+			error : function(){
+			}
+		});
+		setTimeout(function(){
+			$('.draft_msg').html('');
+		},3000);
+	}
+}
+
+var $input_new_tags = $('#new-tags');	
+$input_new_tags.on('keyup', function () {
+	clearTimeout(typingTimer);
+	typingTimer = setTimeout(doneTyping4, doneTypingInterval);
+});
+$input_new_tags.on('keydown', function () {
+	clearTimeout(typingTimer);
+});
+function doneTyping4 () {
+	if($input_new_tags.val() !== ''){
+		var website_url = '<?php echo Router::url("/questions/post-question-submission-as-draft/",true); ?>';
+		$('#saving_draft_new_tags').html('Saving...');
+		$.ajax({
+			type : 'POST',
+			url  : website_url,
+			data : $('#postquestion_settings_form').serialize(),
+			success : function(response){
+				if(response==1)
+					$('#saving_draft_new_tags').html('Saved as draft');
+				else
+					$('#saving_draft_new_tags').html('Some error occured');
+			},
+			error : function(){
+			}
+		});
+		setTimeout(function(){
+			$('.draft_msg').html('');
+		},3000);
+	}
+}
+
+$('#response_email').click(function(){
+	var website_url = '<?php echo Router::url("/questions/post-question-submission-as-draft/",true); ?>';
+	if($('#response_email').is(":checked")){			
+		$.ajax({
+			type : 'POST',
+			url  : website_url,
+			data : {response_email : 'Y'},
+			success : function(response){					
+			},
+			error : function(){
+			}
+		});
+	}else{
+		$.ajax({
+			type : 'POST',
+			url  : website_url,
+			data : {response_email : 'N'},
+			success : function(response){					
+			},
+			error : function(){
+			}
+		});
+	}
+});
+</script>
+<?php
+}
+?>

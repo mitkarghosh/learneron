@@ -795,6 +795,80 @@ class QuestionsController extends AppController{
 		}
 	}
 	
+	//question answer submission as DRAFT
+	public function postQuestionAnswerASDraft(){
+		$this->viewBuilder()->layout = false;
+        $this->render(false);
+		if($this->request->is(['post','put'])){	//form submit
+			if( (array_key_exists('learning_path_recommendation',$this->request->data) && $this->request->data['learning_path_recommendation'] != '') && (array_key_exists('learning_experience',$this->request->data) && $this->request->data['learning_experience'] != '') && (array_key_exists('learning_utility',$this->request->data) && $this->request->data['learning_utility'] != '') && (array_key_exists('question_id',$this->request->data) && $this->request->data['question_id'] != '') ){
+				$this->request->data['user_ip'] = $this->getUserIP();
+				$active_permission = $this->getSiteSettings();	//getting approval permission mentioned in AppController
+				if(!empty($active_permission)){
+					if($active_permission['question_approval']==1){
+						$this->request->data['status'] 		= 'A';
+					}else{
+						$this->request->data['status'] 		= 'I';
+					}
+				}else{
+					$this->request->data['status'] 		= 'I';
+				}
+				$this->request->data['question_id'] = isset($this->request->data['question_id'])?base64_decode($this->request->data['question_id']):0;
+
+				$QuestionsTable			= TableRegistry::get('Questions');
+				$option_1['fields']		= ['Questions.id','Questions.user_id','Questions.name','Questions.short_description'];
+				$options_1['conditions']= ['Questions.id'=>$this->request->data['question_id']];
+				$det = $QuestionsTable->find('all',$options_1)->first();
+				if(!empty($det)){
+					if($det['user_id'] != $this->Auth->user('id')){
+						$this->request->data['user_id'] 	= $this->Auth->user('id');
+						$questionAnswersTable = TableRegistry::get('QuestionAnswer');
+						$new = $questionAnswersTable->newEntity();
+						$data_to_insert = $questionAnswersTable->patchEntity($new, $this->request->data);						
+						if($questionAnswersTable->save($data_to_insert)){
+							$this->visitorlogs('Questions','postQuestionAnswer','Question Answer Submission',NULL,NULL,NULL,$this->request->data['question_id'],NULL);	//Log details insertion
+							//if question submitter wants notification for new answer
+							$question_submitter_acccount_setting = $this->getAccountSetting($det->user_id);
+							if((!empty($question_submitter_acccount_setting)) && ($question_submitter_acccount_setting['response_to_my_question_notification']==1)){
+								$url = Router::url('/', true).'questions/details/'.base64_encode($this->request->data['question_id']);
+								$settings = $this->getSiteSettings();
+								$UsersTable		= TableRegistry::get('Users');
+								$question_submitter_details = $UsersTable->find('all',['conditions'=>['Users.id'=>$det->user_id],'fields'=>['id','name','email','notification_email']])->first();
+								$question_title = $det['name'];
+								$loggedin_user_data = $this->Auth->user();
+								$notify_type = 'Answer';
+								$this->Email->sendQuestionNotificationEmail($url, $settings, $question_title, $loggedin_user_data, $question_submitter_details, $notify_type);
+							}
+							//if question submitter wants notification for new answer
+							if(!empty($active_permission)){
+								if($active_permission['question_approval']==1){
+									echo json_encode(['submission'=>'success']);
+								}else{
+									echo json_encode(['submission'=>'success_approval']);
+								}
+							}else{
+								echo json_encode(['submission'=>'success_approval']);
+							}
+							exit();
+						}else{
+							echo json_encode(['submission'=>'failed']);
+							exit();
+						}
+					}else{
+						echo json_encode(['submission'=>'same_user']);
+						exit();
+					}
+				}else{
+					echo json_encode(['submission'=>'failed']);
+					exit();
+				}				
+			}else{
+				$this->Flash->error(__('All fields are mandatory.'));
+				echo json_encode(['submission'=>'fields_missing']);
+				exit();
+			}
+		}
+	}
+	
 	//question comment submission
 	public function postQuestionComment(){
 		$this->viewBuilder()->layout = false;

@@ -1,6 +1,6 @@
 <?php use Cake\Routing\Router; $session = $this->request->session();
 $this->assign('needEditor', true);
-$this->assign('editor_id', '#description'); 
+$this->assign('editor_id', '#description1'); 
 ?>
 <style>.btn-default{width:auto !important;}</style>
 <article class="content item-editor-page">
@@ -12,6 +12,7 @@ $this->assign('editor_id', '#description');
    </div>
    <?php echo $this->Flash->render() ?>
    <?php echo $this->Form->create($existing_data, ['id' => 'login-form', 'novalidate' => 'novalidate', 'enctype'=>'multipart/form-data']); ?>
+		<input type="hidden" name="news_id" id="news_id" value="<?php echo $existing_data->id;?>" />
       <div class="card card-block">
          <div class="form-group row">
             <label class="col-sm-2 form-control-label text-xs-right">
@@ -19,6 +20,9 @@ $this->assign('editor_id', '#description');
             </label>
             <div class="col-sm-10">
                <?php echo $this->Form->input('name', ['required' => true, 'label' => false, 'class' => 'form-control boxed', 'placeholder' => 'Title' ]); ?>
+				<small style="float: right; color:#999;">
+					<span id="saving_draft_name" class="draft_msg"></span>
+				</small>
             </div>
          </div>
          <div class="form-group row">
@@ -26,7 +30,10 @@ $this->assign('editor_id', '#description');
                Category:
             </label>
             <div class="col-sm-3">
-               <?php echo $this->Form->input('category_id', ['type'=>'select', 'required' => true, 'label' => false, 'class' => 'form-control boxed', 'empty' => 'Select a Category', 'options'=>$all_category ]); ?>
+				<?php echo $this->Form->input('category_id', ['type'=>'select', 'required' => true, 'label' => false, 'class' => 'form-control boxed', 'empty' => 'Select a Category', 'options'=>$all_category ]); ?>
+				<small style="float: right; color:#999;">
+					<span id="saving_draft_category" class="draft_msg"></span>
+				</small>
             </div>
          </div>
          <div class="form-group row">
@@ -55,7 +62,10 @@ $this->assign('editor_id', '#description');
                Descriptions:
             </label>
             <div class="col-sm-10">
-               <?php echo $this->Form->input('description', ['type'=>'textarea', 'required' => true, 'label' => false, 'class' => 'form-control boxed', 'placeholder' => 'Message' ]); ?>
+				<?php echo $this->Form->input('description', ['type'=>'textarea', 'id' => 'description1', 'required' => true, 'label' => false, 'class' => 'form-control boxed', 'placeholder' => 'Message' ]); ?>
+				<small style="float: right; color:#999;">
+					<span id="saving_draft_description" class="draft_msg"></span>
+				</small>
             </div>
          </div>
          <div class="form-group row">
@@ -63,7 +73,10 @@ $this->assign('editor_id', '#description');
                Meta Keywords:
             </label>
             <div class="col-sm-10">
-               <?php echo $this->Form->input('meta_keywords', ['label' => false, 'class' => 'form-control boxed', 'placeholder' => 'Add keywords with comma separated values' ]); ?>
+				<?php echo $this->Form->input('meta_keywords', ['label' => false, 'class' => 'form-control boxed', 'placeholder' => 'Add keywords with comma separated values' ]); ?>
+				<small style="float: right; color:#999;">
+					<span id="saving_draft_meta_keywords" class="draft_msg"></span>
+				</small>
             </div>
          </div>
          <div class="form-group row">
@@ -71,7 +84,10 @@ $this->assign('editor_id', '#description');
                Meta Description:
             </label>
             <div class="col-sm-10">
-               <?php echo $this->Form->input('meta_description', ['type'=>'textarea', 'label' => false, 'class' => 'form-control boxed', 'placeholder' => 'Add meta description' ]); ?>
+				<?php echo $this->Form->input('meta_description', ['type'=>'textarea', 'label' => false, 'class' => 'form-control boxed', 'placeholder' => 'Add meta description' ]); ?>
+				<small style="float: right; color:#999;">
+					<span id="saving_draft_meta_description" class="draft_msg"></span>
+				</small>
             </div>
          </div>
 		<?php
@@ -82,7 +98,12 @@ $this->assign('editor_id', '#description');
                Status:
             </label>
             <div class="col-sm-2">
-               <?php echo $this->Form->input('status', ['required' => true, 'label' => false, 'class' => 'form-control boxed', 'placeholder' => 'Status', 'options' => ['A' => 'Active', 'I' => 'Inactive']]); ?>
+				<select name="status" id="status" class="form-control boxed" required>
+					<option value="D" <?php if($existing_data->status=='D')echo 'selected';?>>Draft</option>
+					<option value="A" <?php if($existing_data->status=='A')echo 'selected';?>>Active</option>
+					<option value="I" <?php if($existing_data->status=='I')echo 'selected';?>>Inactive</option>
+				</select>			
+               <?php //echo $this->Form->input('status', ['required' => true, 'label' => false, 'class' => 'form-control boxed', 'placeholder' => 'Status', 'options' => ['A' => 'Active', 'I' => 'Inactive']]); ?>
             </div>
          </div>
 		<?php
@@ -145,5 +166,191 @@ function image_preview(evt){
 function remove_image(){
 	$('output#image_view span').remove();
 	$('#image').val('');
+}
+
+//setup before functions
+var typingTimer1;                //timer identifier
+var doneTypingInterval1 = 2000;  //time in ms, 2 second for example
+var $name = $('#name');
+$(document).ready(function(){
+	$name.on('keyup', function () {
+		clearTimeout(typingTimer1);
+		typingTimer1 = setTimeout(doneTyping, doneTypingInterval1);
+	});
+	
+	$name.on('keydown', function () {
+		clearTimeout(typingTimer1);
+	});
+});
+function doneTyping () {
+	var website_url = '<?php echo Router::url("/admin/news/edit-news-as-draft/",true); ?>';
+	$('#saving_draft_name').html('Saving...');
+	$.ajax({
+		type : 'POST',
+		url  : website_url,
+		data : $('#login-form').serialize(),
+		success : function(response){
+			if(response==1)
+				$('#saving_draft_name').html('Saved');
+			else if(response==0)
+				$('#saving_draft_name').html('Title already exist');
+			else if(response==2)
+				$('#saving_draft_name').html('');
+		},
+		error : function(){
+		}
+	});			
+	setTimeout(function(){
+		$('.draft_msg').html('');
+	},3000);
+}
+
+$(document).ready(function(){
+	$('#description1').summernote({	
+		popover: {
+			image: [],
+			link: [],
+			air: []
+		},
+		height:250,
+		toolbar: [
+			['style', ['style']],
+			['font', ['bold', 'italic', 'underline', 'clear']],
+			['fontname', ['fontname']],
+			['color', ['color']],
+			['para', ['ul', 'ol', 'paragraph']],
+			['height', ['height']],
+			['insert', ['link', 'hr']],
+			['view', ['fullscreen', 'codeview']],
+			//['help', ['help']]
+		],
+		placeholder:'',
+		callbacks: {
+			onKeyup: function(e) {
+				clearTimeout(typingTimer1);
+				typingTimer1 = setTimeout(doneTypingdescription, doneTypingInterval1);
+			},
+			onKeydown: function(e) {
+				clearTimeout(typingTimer1);
+			}
+		}
+	});
+});
+function doneTypingdescription () {
+	var website_url = '<?php echo Router::url("/admin/news/edit-news-as-draft/",true); ?>';
+	$('#saving_draft_description').html('Saving...');
+	$.ajax({
+		type : 'POST',
+		url  : website_url,
+		data : $('#login-form').serialize(),
+		success : function(response){
+			if(response==1)
+				$('#saving_draft_description').html('Saved');
+			else if(response==0)
+				$('#saving_draft_description').html('Some error occured');
+			else if(response==2)
+				$('#saving_draft_description').html('');
+		},
+		error : function(){
+		}
+	});			
+	setTimeout(function(){
+		$('.draft_msg').html('');
+	},3000);
+}
+
+$('#category-id').on('change', function(){
+	clearTimeout(typingTimer1);
+	typingTimer1 = setTimeout(doneTypingcategory, doneTypingInterval1);
+});
+function doneTypingcategory () {
+	var website_url = '<?php echo Router::url("/admin/news/edit-news-as-draft/",true); ?>';
+	$('#saving_draft_category').html('Saving...');
+	$.ajax({
+		type : 'POST',
+		url  : website_url,
+		data : $('#login-form').serialize(),
+		success : function(response){
+			if(response==1)
+				$('#saving_draft_category').html('Saved');
+			else if(response==0)
+				$('#saving_draft_category').html('Some error occured');
+			else if(response==2)
+				$('#saving_draft_category').html('');
+		},
+		error : function(){
+		}
+	});			
+	setTimeout(function(){
+		$('.draft_msg').html('');
+	},3000);
+}
+
+var $metakeywords = $('#meta-keywords');
+$(document).ready(function(){
+	$metakeywords.on('keyup', function () {
+		clearTimeout(typingTimer1);
+		typingTimer1 = setTimeout(doneTypingMetaKeyword, doneTypingInterval1);
+	});
+	
+	$metakeywords.on('keydown', function () {
+		clearTimeout(typingTimer1);
+	});
+});
+function doneTypingMetaKeyword () {
+	var website_url = '<?php echo Router::url("/admin/news/edit-news-as-draft/",true); ?>';
+	$('#saving_draft_meta_keywords').html('Saving...');
+	$.ajax({
+		type : 'POST',
+		url  : website_url,
+		data : $('#login-form').serialize(),
+		success : function(response){
+			if(response==1)
+				$('#saving_draft_meta_keywords').html('Saved');
+			else if(response==0)
+				$('#saving_draft_meta_keywords').html('Some error occured');
+			else if(response==2)
+				$('#saving_draft_meta_keywords').html('');
+		},
+		error : function(){
+		}
+	});			
+	setTimeout(function(){
+		$('.draft_msg').html('');
+	},3000);
+}
+
+var $metadescription = $('#meta-description');
+$(document).ready(function(){
+	$metadescription.on('keyup', function () {
+		clearTimeout(typingTimer1);
+		typingTimer1 = setTimeout(doneTypingMetaDescription, doneTypingInterval1);
+	});
+	
+	$metadescription.on('keydown', function () {
+		clearTimeout(typingTimer1);
+	});
+});
+function doneTypingMetaDescription () {
+	var website_url = '<?php echo Router::url("/admin/news/edit-news-as-draft/",true); ?>';
+	$('#saving_draft_meta_description').html('Saving...');
+	$.ajax({
+		type : 'POST',
+		url  : website_url,
+		data : $('#login-form').serialize(),
+		success : function(response){
+			if(response==1)
+				$('#saving_draft_meta_description').html('Saved');
+			else if(response==0)
+				$('#saving_draft_meta_description').html('Some error occured');
+			else if(response==2)
+				$('#saving_draft_meta_description').html('');
+		},
+		error : function(){
+		}
+	});			
+	setTimeout(function(){
+		$('.draft_msg').html('');
+	},3000);
 }
 </script>

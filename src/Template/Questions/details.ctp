@@ -453,6 +453,42 @@ function doneTypingQuestionComment () {
 		},3000);
 	}
 }
+
+var $answer_comment = $('#answer-comment');
+$(document).ready(function(){
+	$answer_comment.on('keyup', function () {
+		clearTimeout(typingTimer1);
+		typingTimer1 = setTimeout(doneTypingQuestionAnswerComment, doneTypingInterval1);
+	});
+	
+	$answer_comment.on('keydown', function () {
+		clearTimeout(typingTimer1);
+	});
+});
+function doneTypingQuestionAnswerComment () {
+	if($answer_comment.val() !== ''){
+		var website_url = '<?php echo Router::url("/questions/post-answer-comment-as-draft/",true); ?>';
+		$('#saving_draft_answer_comment').html('Saving...');
+		$.ajax({
+			type : 'POST',
+			url  : website_url,
+			data : $('#answer_comment_form').serialize(),
+			success : function(response){
+				if(response==1)
+					$('#saving_draft_answer_comment').html('Saved as draft');
+				else if(response==0)
+					$('#saving_draft_answer_comment').html('Some error occured');
+				else if(response==2)
+					$('#saving_draft_answer_comment').html('');
+			},
+			error : function(){
+			}
+		});			
+		setTimeout(function(){
+			$('.draft_msg').html('');
+		},3000);
+	}
+}
 </script>
 <?php
 }

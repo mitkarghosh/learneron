@@ -173,14 +173,21 @@ class AdminEmailComponent extends Component
 			$user_email = $to_user['user']['notification_email'];
 		}else{
 			$user_email = $to_user['user']['email'];
-		}        
-		return $Email->from([$from_email->mail_email => WEBSITE_NAME])
-				->to($user_email)
-				->subject('LearnerOn News Comment Notification')
-				->template('Admin.post_newscomment_notification_email', null)
-				->emailFormat('html')
-				->viewVars(array('url' => $url, 'to_user' => $to_user, 'news_title' => $news_title, 'settings' => $settings))
-				->send();
+		}
+		
+		$from_email = self::getAdminEmail(['mail_email']);
+		$email = new Email('default');
+        $email->to(array($user_email));
+        $email->subject('LearnerOn News Comment Notification');
+        $email->from(array($from_email->mail_email => WEBSITE_NAME));
+        $email->emailFormat('html');
+        $email->template('Admin.post_newscomment_notification_email',NULL);
+        $email->viewVars(array('url' => $url, 'to_user' => $to_user, 'news_title' => $news_title, 'settings' => $settings));
+        if($email->send()){
+            return true;
+        }else{
+			return false;
+        }
     }
 	
 }

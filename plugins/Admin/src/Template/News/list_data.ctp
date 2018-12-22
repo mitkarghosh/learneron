@@ -156,7 +156,7 @@
                        </div>
                        <div class="item-col item-col-status">
                           <div class="item-heading">Status</div>
-                          <div data-id="status<?php echo $new_detail->id; ?>">  <?php if($new_detail->status == 'I'): echo "<b>Inactive</b>"; else: echo "Active"; endif; ?> </div>
+                          <div data-id="status<?php echo $new_detail->id; ?>">  <?php if($new_detail->status == 'D')echo "<b>Draft</b>"; else if($new_detail->status == 'I')echo "<b>Inactive</b>"; else echo "Active"; ?> </div>
                        </div>
                        <div class="item-col item-col-created">
                           <div class="item-heading">Created</div>

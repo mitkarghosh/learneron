@@ -1049,6 +1049,7 @@ class QuestionsController extends AppController{
 					$session = $this->request->session();
 					
 					$options_1['conditions']= [
+												'QuestionComment.id !=' => $session->read('questioncommentid'),
 												'QuestionComment.question_id'=> $this->request->data['question_id'],
 												'QuestionComment.user_id'	=> $this->Auth->user('id')
 											   ];
@@ -1091,7 +1092,6 @@ class QuestionsController extends AppController{
 		}
 	}
 	
-	
 	//answer comment submission
 	public function postAnswerComment(){
 		$this->viewBuilder()->layout = false;
@@ -1132,45 +1132,98 @@ class QuestionsController extends AppController{
 					if(!empty($det)){
 						if($det['user_id'] != $this->Auth->user('id')){
 							$AnswerCommentTable	= TableRegistry::get('AnswerComment');
-							$options_1['conditions']= ['AnswerComment.question_id'=>$this->request->data['question_id'],'AnswerComment.answer_id'=>$this->request->data['answer_id'],'AnswerComment.user_id'=>$this->Auth->user('id')];
-							$count = $AnswerCommentTable->find('all',$options_1)->count();
-							if($count == 0){
-								$this->request->data['user_id'] = $this->Auth->user('id');
-								$new = $AnswerCommentTable->newEntity();
-								$data_to_insert = $AnswerCommentTable->patchEntity($new, $this->request->data);
-								if($AnswerCommentTable->save($data_to_insert)){
-									//if answer submitter wants notification for new share a comment (answer)
-									$question_submitter_acccount_setting = $this->getAccountSetting($this->request->data['answer_user_id']);
-									if((!empty($question_submitter_acccount_setting)) && ($question_submitter_acccount_setting['response_to_my_question_notification']==1)){
-										$url = Router::url('/', true).'questions/details/'.base64_encode($this->request->data['question_id']);
-										$settings = $this->getSiteSettings();
-										$UsersTable		= TableRegistry::get('Users');
-										$answer_submitter_details = $UsersTable->find('all',['conditions'=>['Users.id'=>$this->request->data['answer_user_id']],'fields'=>['id','name','email','notification_email']])->first();
-										$question_title = $ques_det['name'];
-										$loggedin_user_data = $this->Auth->user();
-										$notify_type = 'Answer Comment';
-										$this->Email->sendQuestionNotificationEmail($url, $settings, $question_title, $loggedin_user_data, $answer_submitter_details, $notify_type);
-									}
-									//if answer submitter wants notification for new share a comment (answer)
-									$active_permission = $this->getSiteSettings();	//getting approval permission mentioned in AppController
-									if(!empty($active_permission)){
-										if($active_permission['answer_comment_approval']==1){
-											echo json_encode(['submission'=>'success']);
+							
+							$session = $this->request->session();
+							//If session question comment id exist then update data
+							if( $session->read('questioncommentid') != '' ){
+							
+								$options_1['conditions']= ['AnswerComment.id !='=>$session->read('questionanswercommentid'),'AnswerComment.question_id'=>$this->request->data['question_id'],'AnswerComment.answer_id'=>$this->request->data['answer_id'],'AnswerComment.user_id'=>$this->Auth->user('id')];
+								$count = $AnswerCommentTable->find('all',$options_1)->count();
+								if($count == 0){
+							
+									$qstn_ansr_comment_data = $AnswerCommentTable->find('all', ['conditions'=>array('id'=>$session->read('questionanswercommentid'),'question_id'=>$this->request->data['question_id'],'user_id'=>$this->Auth->user('id'))])->first();
+									$data_to_update = $AnswerCommentTable->patchEntity($qstn_ansr_comment_data, $this->request->data);
+									if($AnswerCommentTable->save($data_to_update)){
+										//if answer submitter wants notification for new share a comment (answer)
+										$question_submitter_acccount_setting = $this->getAccountSetting($this->request->data['answer_user_id']);
+										if((!empty($question_submitter_acccount_setting)) && ($question_submitter_acccount_setting['response_to_my_question_notification']==1)){
+											$url = Router::url('/', true).'questions/details/'.base64_encode($this->request->data['question_id']);
+											$settings = $this->getSiteSettings();
+											$UsersTable		= TableRegistry::get('Users');
+											$answer_submitter_details = $UsersTable->find('all',['conditions'=>['Users.id'=>$this->request->data['answer_user_id']],'fields'=>['id','name','email','notification_email']])->first();
+											$question_title = $ques_det['name'];
+											$loggedin_user_data = $this->Auth->user();
+											$notify_type = 'Answer Comment';
+											$this->Email->sendQuestionNotificationEmail($url, $settings, $question_title, $loggedin_user_data, $answer_submitter_details, $notify_type);
+										}
+										
+										$session->delete('questioncommentid');
+										
+										//if answer submitter wants notification for new share a comment (answer)
+										$active_permission = $this->getSiteSettings();	//getting approval permission mentioned in AppController
+										if(!empty($active_permission)){
+											if($active_permission['answer_comment_approval']==1){
+												echo json_encode(['submission'=>'success']);
+											}else{
+												echo json_encode(['submission'=>'success_approval']);
+											}
 										}else{
 											echo json_encode(['submission'=>'success_approval']);
 										}
-									}else{
-										echo json_encode(['submission'=>'success_approval']);
+										exit();
 									}
+									else{
+										echo json_encode(['submission'=>'failed']);
+										exit();
+									}
+								}
+								else{
+									echo json_encode(['submission'=>'already_posted']);
 									exit();
-								}else{
-									echo json_encode(['submission'=>'failed']);
-									exit();
-								}								
-							}else{
-								echo json_encode(['submission'=>'already_posted']);
-								exit();
+								}
 							}
+							//Session question answer comment id empty so insert a new one
+							else{
+								$options_1['conditions']= ['AnswerComment.question_id'=>$this->request->data['question_id'],'AnswerComment.answer_id'=>$this->request->data['answer_id'],'AnswerComment.user_id'=>$this->Auth->user('id')];
+								$count = $AnswerCommentTable->find('all',$options_1)->count();
+								if($count == 0){
+									$this->request->data['user_id'] = $this->Auth->user('id');
+									$new = $AnswerCommentTable->newEntity();
+									$data_to_insert = $AnswerCommentTable->patchEntity($new, $this->request->data);
+									if($AnswerCommentTable->save($data_to_insert)){
+										//if answer submitter wants notification for new share a comment (answer)
+										$question_submitter_acccount_setting = $this->getAccountSetting($this->request->data['answer_user_id']);
+										if((!empty($question_submitter_acccount_setting)) && ($question_submitter_acccount_setting['response_to_my_question_notification']==1)){
+											$url = Router::url('/', true).'questions/details/'.base64_encode($this->request->data['question_id']);
+											$settings = $this->getSiteSettings();
+											$UsersTable		= TableRegistry::get('Users');
+											$answer_submitter_details = $UsersTable->find('all',['conditions'=>['Users.id'=>$this->request->data['answer_user_id']],'fields'=>['id','name','email','notification_email']])->first();
+											$question_title = $ques_det['name'];
+											$loggedin_user_data = $this->Auth->user();
+											$notify_type = 'Answer Comment';
+											$this->Email->sendQuestionNotificationEmail($url, $settings, $question_title, $loggedin_user_data, $answer_submitter_details, $notify_type);
+										}
+										//if answer submitter wants notification for new share a comment (answer)
+										$active_permission = $this->getSiteSettings();	//getting approval permission mentioned in AppController
+										if(!empty($active_permission)){
+											if($active_permission['answer_comment_approval']==1){
+												echo json_encode(['submission'=>'success']);
+											}else{
+												echo json_encode(['submission'=>'success_approval']);
+											}
+										}else{
+											echo json_encode(['submission'=>'success_approval']);
+										}
+										exit();
+									}else{
+										echo json_encode(['submission'=>'failed']);
+										exit();
+									}								
+								}else{
+									echo json_encode(['submission'=>'already_posted']);
+									exit();
+								}
+							}							
 						}else{
 							echo json_encode(['submission'=>'same_user']);
 							exit();
@@ -1186,6 +1239,74 @@ class QuestionsController extends AppController{
 				echo json_encode(['submission'=>'fields_missing']);
 				exit();
 			}
+		}
+	}
+	
+	//Answer Comment submission as DRAFT
+	public function postAnswerCommentAsDraft(){
+		$this->viewBuilder()->layout = false;
+        $this->render(false);
+		if($this->request->is(['POST','PUT'])){		//form submit
+			$this->request->data['user_ip'] 	= $this->getUserIP();
+			$this->request->data['status'] 		= '2';			
+			$this->request->data['question_id'] = isset($this->request->data['question_id'])?base64_decode($this->request->data['question_id']):0;
+			$this->request->data['answer_id'] 	= isset($this->request->data['answer_id'])?base64_decode($this->request->data['answer_id']):0;
+			$this->request->data['answer_user_id'] 	= isset($this->request->data['answer_user_id'])?base64_decode($this->request->data['answer_user_id']):0;
+			$this->request->data['comment'] 	= isset($this->request->data['answer_comment'])?$this->request->data['answer_comment']:'';
+			
+			$QuestionAnswerTable	= TableRegistry::get('QuestionAnswer');
+			$option['fields']		= ['QuestionAnswer.id','QuestionAnswer.question_id','QuestionAnswer.user_id'];
+			$option['conditions']	= ['QuestionAnswer.question_id'=>$this->request->data['question_id'],'QuestionAnswer.user_id'=>$this->request->data['answer_user_id']];
+			$det = $QuestionAnswerTable->find('all',$option)->first();
+			if(!empty($det)){
+				if($det['user_id'] != $this->Auth->user('id')){
+					$AnswerCommentTable	= TableRegistry::get('AnswerComment');
+					
+					$session = $this->request->session();
+					
+					$options_1['conditions']= ['AnswerComment.id !=' => $session->read('questionanswercommentid'),'AnswerComment.question_id'=>$this->request->data['question_id'],'AnswerComment.answer_id'=>$this->request->data['answer_id'],'AnswerComment.user_id'=>$this->Auth->user('id')];
+					$count = $AnswerCommentTable->find('all',$options_1)->count();					
+					if($count == 0){						
+						$count_qstn_ansr_cmnt = $AnswerCommentTable->find('all',['conditions'=>['id' => $session->read('questionanswercommentid')]])->count();
+						if( $count_qstn_ansr_cmnt > 0 ){ //Update section							
+							$qstn_ansr_cmnt_data = $AnswerCommentTable->find('all', ['conditions'=>array('id'=>$session->read('questionanswercommentid'))])->first();
+							$data_to_update = $AnswerCommentTable->patchEntity($qstn_ansr_cmnt_data, $this->request->data);
+							if($savedData 	= $AnswerCommentTable->save($data_to_update)){
+								echo 1;
+								exit();
+							}else{
+								echo 0;
+								exit();
+							}
+						}
+						else{	//Session question answer comment id empty so Insert new one
+							$this->request->data['user_id'] = $this->Auth->user('id');
+							$new = $AnswerCommentTable->newEntity();
+							$data_to_insert = $AnswerCommentTable->patchEntity($new, $this->request->data);
+							if($savedData 	= $AnswerCommentTable->save($data_to_insert)){
+								$get_last_insert_id = $savedData->id;
+								$session->write('questionanswercommentid',$get_last_insert_id);
+							
+								echo 1;
+								exit();
+							}else{
+								echo 0;
+								exit();
+							}
+						}						
+					}else{
+						echo 2;
+						exit();
+					}
+				}else{
+					echo 2;
+					exit();
+				}
+			}
+			else{
+				echo 2;
+				exit();
+			}			
 		}
 	}
 	
@@ -1421,7 +1542,17 @@ class QuestionsController extends AppController{
         $id = base64_decode($id);
 		$existing_data = $QuestionCommentTable->get($id,['contain'=>['Questions'=>['fields'=>['id','name']]]]);
 		$this->visitorlogs('Questions','editSubmittedQuestionComment','Edited Question Comment',NULL,NULL,NULL,$existing_data['question_id'],NULL,NULL,NULL);	//Log details insertion
-		if ($this->request->is(['post', 'put'])) {
+		if ($this->request->is(['post', 'put'])) {			
+			$active_permission = $this->getSiteSettings();	//getting approval permission mentioned in AppController
+			if(!empty($active_permission)){
+				if($active_permission['question_comment_approval']==1){
+					$this->request->data['status'] 		= 1;
+				}else{
+					$this->request->data['status'] 		= 0;
+				}
+			}else{
+				$this->request->data['status'] 		= 0;
+			}			
 			$this->request->data['modified'] = date('Y-m-d H:i:s');
 			$updated_data = $QuestionCommentTable->patchEntity($existing_data, $this->request->data);
 			if ($savedData = $QuestionCommentTable->save($updated_data)) {
@@ -1434,6 +1565,29 @@ class QuestionsController extends AppController{
         $this->set(compact('existing_data','title'));
         $this->set('_serialize', ['existing_data']);
     }
+	
+	//Edit Question Comment DRAFT AJAX
+	public function editSubmittedQuestionCommentDraft(){
+		$this->viewBuilder()->layout = false;
+        $this->render(false);
+		if($this->request->is(['POST','PUT'])){
+			$QuestionCommentTable = TableRegistry::get('QuestionComment');
+			$existing_data 	  	  = $QuestionCommentTable->find('all', ['conditions'=>['id'=>$this->request->data['questioncommentid'],'user_id'=>$this->Auth->user('id')]])->first();			
+			$updated_data 	  = $QuestionCommentTable->patchEntity($existing_data, $this->request->data);
+			if ($savedData 	  = $QuestionCommentTable->save($updated_data)) {
+                echo 1;
+				exit();
+            }
+			else{
+                echo 0;
+				exit();
+            }
+        }else{
+			echo 0;
+			exit();
+		}
+    }
+	
 	
 	//Edit Question Answer
 	public function editSubmittedQuestionAnswer($id = NULL){
@@ -1449,7 +1603,7 @@ class QuestionsController extends AppController{
 		if ($this->request->is(['post', 'put'])) {			
 			if( $existing_data->status == 'D' ) {
 				$this->request->data['status'] = 'A';
-			}			
+			}
 			$this->request->data['modified'] = date('Y-m-d H:i:s');
 			$updated_data = $QuestionAnswerTable->patchEntity($existing_data, $this->request->data);
 			if ($savedData = $QuestionAnswerTable->save($updated_data)) {
@@ -1496,6 +1650,9 @@ class QuestionsController extends AppController{
         $existing_data = $AnswerCommentTable->get($id,['contain'=>['Questions'=>['fields'=>['id','name']],'QuestionAnswer'=>['fields'=>['id','learning_path_recommendation','learning_experience','learning_utility']]]]);
 		$this->visitorlogs('Questions','editSubmittedQuestionAnswerComment','Edited Question Answer Comment',NULL,NULL,NULL,$existing_data['question_id'],NULL,NULL,NULL);	//Log details insertion
 		if ($this->request->is(['post', 'put'])) {
+			if( $existing_data->status == 2 ) {
+				$this->request->data['status'] = 1;
+			}
 			$this->request->data['modified'] = date('Y-m-d H:i:s');
 			$updated_data = $AnswerCommentTable->patchEntity($existing_data, $this->request->data);
 			if ($savedData = $AnswerCommentTable->save($updated_data)) {
@@ -1509,5 +1666,26 @@ class QuestionsController extends AppController{
         $this->set('_serialize', ['existing_data']);
     }
 	
+	//Edit Question Answer Comment DRAFT AJAX
+	public function editSubmittedQuestionAnswerCommentDraft(){
+		$this->viewBuilder()->layout = false;
+        $this->render(false);
+		if($this->request->is(['POST','PUT'])){
+			$AnswerCommentTable= TableRegistry::get('AnswerComment');
+			$existing_data 	  	= $AnswerCommentTable->find('all', ['conditions'=>['id'=>$this->request->data['questionanswercommentid'],'user_id'=>$this->Auth->user('id')]])->first();
+			$updated_data 	  = $AnswerCommentTable->patchEntity($existing_data, $this->request->data);
+			if ($savedData 	  = $AnswerCommentTable->save($updated_data)) {
+                echo 1;
+				exit();
+            }
+			else{
+                echo 0;
+				exit();
+            }
+        }else{
+			echo 0;
+			exit();
+		}
+    }
     
 }

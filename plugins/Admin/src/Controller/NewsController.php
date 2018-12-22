@@ -79,36 +79,108 @@ class NewsController extends AppController{
                     $handle->clean();
                 }
             }
-            $slug = $NewsTable->createSlug($this->request->data['name']);
-			$this->request->data['slug'] = $slug;
-            $inserted_data = $NewsTable->patchEntity($new_news, $this->request->data);
-            if ($savedData = $NewsTable->save($inserted_data)) {				
-				if(array_key_exists('status', $this->request->data) && $this->request->data['status']=='A'){
-					$UserTable = TableRegistry::get('Admin.Users');
-					$user_data = $UserTable->find('all', ['contain'=>['UserAccountSetting'=>['conditions'=>['UserAccountSetting.news_notification'=>1]]],'conditions'=>['is_verified'=>1,'status'=>'A'],'fields'=>['id','name','email','full_name','notification_email']])->toArray();
-					if( !empty($user_data) ){						
-						$url = Router::url('/', true).'news/details/'.$slug;
-						$settings = $this->getSiteSettings();
-						foreach($user_data as $key_ud => $val_ud){
-							$user_email = '';
-							if( !empty($val_ud['user_account_setting']) ){
-								$news_title = $this->request->data['name'];
-								$to_user	= $val_ud['full_name'];								
-								if($val_ud['notification_email'] != ''){
-									$user_email = $val_ud['notification_email'];
-								}else{
-									$user_email = $val_ud['email'];
+			
+			$session = $this->request->session();
+			if( $session->read('newsid') != '' ) {
+				$news_data = $NewsTable->find('all', ['conditions'=>array('id'=>$session->read('newsid'))])->first();
+				if( $news_data != null ){
+					$slug = $NewsTable->createSlug($this->request->data['name']);
+					$this->request->data['slug'] = $slug;
+					$updated_data = $NewsTable->patchEntity($news_data, $this->request->data);
+					if ($savedData = $NewsTable->save($updated_data)) {
+						if(array_key_exists('status', $this->request->data) && $this->request->data['status']=='A'){
+							$UserTable = TableRegistry::get('Admin.Users');
+							$user_data = $UserTable->find('all', ['contain'=>['UserAccountSetting'=>['conditions'=>['UserAccountSetting.news_notification'=>1]]],'conditions'=>['is_verified'=>1,'status'=>'A'],'fields'=>['id','name','email','full_name','notification_email']])->toArray();
+							if( !empty($user_data) ){						
+								$url = Router::url('/', true).'news/details/'.$slug;
+								$settings = $this->getSiteSettings();
+								foreach($user_data as $key_ud => $val_ud){
+									$user_email = '';
+									if( !empty($val_ud['user_account_setting']) ){
+										$news_title = $this->request->data['name'];
+										$to_user	= $val_ud['full_name'];								
+										if($val_ud['notification_email'] != ''){
+											$user_email = $val_ud['notification_email'];
+										}else{
+											$user_email = $val_ud['email'];
+										}
+										$this->AdminEmail->sendPostNewsNotificationEmailToAllUsers($to_user, $url, $settings, $news_title, $user_email);
+									}
 								}
-								$this->AdminEmail->sendPostNewsNotificationEmailToAllUsers($to_user, $url, $settings, $news_title, $user_email);
+							}
+						}
+						$session->delete('newsid');
+						$this->Flash->success(__('New News has been successfully created'));
+						return $this->redirect(['plugin' => 'admin','controller' => 'news','action' => 'list-data']);
+					} else {
+						$this->Flash->error(__('News is not created.'));
+					}
+				}else{
+					$slug = $NewsTable->createSlug($this->request->data['name']);
+					$this->request->data['slug'] = $slug;
+					$inserted_data = $NewsTable->patchEntity($new_news, $this->request->data);
+					if ($savedData = $NewsTable->save($inserted_data)) {
+						if(array_key_exists('status', $this->request->data) && $this->request->data['status']=='A'){
+							$UserTable = TableRegistry::get('Admin.Users');
+							$user_data = $UserTable->find('all', ['contain'=>['UserAccountSetting'=>['conditions'=>['UserAccountSetting.news_notification'=>1]]],'conditions'=>['is_verified'=>1,'status'=>'A'],'fields'=>['id','name','email','full_name','notification_email']])->toArray();
+							if( !empty($user_data) ){						
+								$url = Router::url('/', true).'news/details/'.$slug;
+								$settings = $this->getSiteSettings();
+								foreach($user_data as $key_ud => $val_ud){
+									$user_email = '';
+									if( !empty($val_ud['user_account_setting']) ){
+										$news_title = $this->request->data['name'];
+										$to_user	= $val_ud['full_name'];								
+										if($val_ud['notification_email'] != ''){
+											$user_email = $val_ud['notification_email'];
+										}else{
+											$user_email = $val_ud['email'];
+										}
+										$this->AdminEmail->sendPostNewsNotificationEmailToAllUsers($to_user, $url, $settings, $news_title, $user_email);
+									}
+								}
+							}
+						}
+						$session->delete('newsid');
+						$this->Flash->success(__('New News has been successfully created'));
+						return $this->redirect(['plugin' => 'admin','controller' => 'news','action' => 'list-data']);
+					} else {
+						$this->Flash->error(__('News is not created.'));
+					}
+				}
+			}
+			else{				
+				$slug = $NewsTable->createSlug($this->request->data['name']);
+				$this->request->data['slug'] = $slug;
+				$inserted_data = $NewsTable->patchEntity($new_news, $this->request->data);
+				if ($savedData = $NewsTable->save($inserted_data)) {
+					if(array_key_exists('status', $this->request->data) && $this->request->data['status']=='A'){
+						$UserTable = TableRegistry::get('Admin.Users');
+						$user_data = $UserTable->find('all', ['contain'=>['UserAccountSetting'=>['conditions'=>['UserAccountSetting.news_notification'=>1]]],'conditions'=>['is_verified'=>1,'status'=>'A'],'fields'=>['id','name','email','full_name','notification_email']])->toArray();
+						if( !empty($user_data) ){						
+							$url = Router::url('/', true).'news/details/'.$slug;
+							$settings = $this->getSiteSettings();
+							foreach($user_data as $key_ud => $val_ud){
+								$user_email = '';
+								if( !empty($val_ud['user_account_setting']) ){
+									$news_title = $this->request->data['name'];
+									$to_user	= $val_ud['full_name'];								
+									if($val_ud['notification_email'] != ''){
+										$user_email = $val_ud['notification_email'];
+									}else{
+										$user_email = $val_ud['email'];
+									}
+									$this->AdminEmail->sendPostNewsNotificationEmailToAllUsers($to_user, $url, $settings, $news_title, $user_email);
+								}
 							}
 						}
 					}
+					$this->Flash->success(__('New News has been successfully created'));
+					return $this->redirect(['plugin' => 'admin','controller' => 'news','action' => 'list-data']);
+				} else {
+					$this->Flash->error(__('News is not created.'));
 				}
-                $this->Flash->success(__('New News has been successfully created'));
-                return $this->redirect(['plugin' => 'admin','controller' => 'news','action' => 'list-data']);
-            } else {
-                $this->Flash->error(__('News is not created.'));
-            }
+			}
         }
         $this->set(compact('new_news','all_category'));
         $this->set('_serialize', ['new_news','all_category']);
@@ -186,7 +258,7 @@ class NewsController extends AppController{
 		exit();
     }
 
-   public function deleteMultiple($id = NULL){
+	public function deleteMultiple($id = NULL){
 		$session = $this->request->session();
 		if( (empty($session->read('permissions.'.strtolower('News'))) || (!array_key_exists('delete-news',$session->read('permissions.'.strtolower('News')))) || $session->read('permissions.'.strtolower('News').'.'.strtolower('delete-news'))!=1) ){
 			$this->Flash->error(__("You don't have permission to access this page"));
@@ -303,6 +375,83 @@ class NewsController extends AppController{
 			echo json_encode(array('type' => 'error', 'message' => 'There is an unexpected error. Try contacting the developer'));
 		}
         exit();
-    }	
+    }
 	
+	
+	public function addNewsAsDraft(){
+		$this->viewBuilder()->layout(false);
+		$this->render(false);
+        if ($this->request->is(['post', 'ajax', 'put'])) {
+			$NewsTable = TableRegistry::get('Admin.News');
+			
+			$session = $this->request->session();
+			if( $session->read('newsid') != '' ) {
+				$news_data = $NewsTable->find('all', ['conditions'=>array('id'=>$session->read('newsid'))])->first();
+				if( $news_data != null ) {
+					$slug = $NewsTable->createSlug($this->request->data['name']);
+					$this->request->data['slug']  = $slug;
+					$this->request->data['status']= 'D';
+					$updated_data = $NewsTable->patchEntity($news_data, $this->request->data);
+					if ($savedData = $NewsTable->save($updated_data)) {
+						echo 1;
+					}
+					else{
+						echo 0;
+					}
+					exit();
+				}else{
+					$new_news = $NewsTable->newEntity();
+					$slug = $NewsTable->createSlug($this->request->data['name']);
+					$this->request->data['slug']  = $slug;
+					$this->request->data['status']= 'D';
+					$inserted_data = $NewsTable->patchEntity($new_news, $this->request->data);
+					$savedData = $NewsTable->save($inserted_data);
+					$get_last_insert_id = $savedData->id;
+					$session->write('newsid',$get_last_insert_id);
+					
+					echo 1;
+					exit();
+				}
+			}
+			else{
+				$new_news = $NewsTable->newEntity();
+				$slug = $NewsTable->createSlug($this->request->data['name']);
+				$this->request->data['slug']  = $slug;
+				$this->request->data['status']= 'D';
+				$inserted_data = $NewsTable->patchEntity($new_news, $this->request->data);
+				if ($savedData = $NewsTable->save($inserted_data)) {
+					$get_last_insert_id = $savedData->id;
+					$session->write('newsid',$get_last_insert_id);
+					echo 1;
+				}
+				else{
+					echo 0;
+				}
+				exit();
+			}
+		}		
+        exit();
+    }
+	
+	public function editNewsAsDraft(){
+		$this->viewBuilder()->layout(false);
+		$this->render(false);
+        if ($this->request->is(['post', 'ajax', 'put'])) {
+			$NewsTable = TableRegistry::get('Admin.News');
+			$news_data = $NewsTable->find('all', ['conditions'=>array('id'=>$this->request->data['news_id'])])->first();
+			if( $news_data != null ) {
+				$slug = $NewsTable->createSlug($this->request->data['name'],$this->request->data['news_id']);
+				$this->request->data['slug'] = $slug;
+				$updated_data = $NewsTable->patchEntity($news_data, $this->request->data);
+				if ($savedData = $NewsTable->save($updated_data)) {
+					echo 1;
+				}
+				else{
+					echo 0;
+				}
+				exit();
+			}
+		}		
+        exit();
+    }
 }

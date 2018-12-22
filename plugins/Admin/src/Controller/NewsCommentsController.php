@@ -244,12 +244,11 @@ class NewsCommentsController extends AppController{
 				if($query->update()
 				->set(['status' => $this->request->data['status']])
 				->where(['id' => $id])
-				->execute()){					
+				->execute()){
 					//notification for all news subscriber
 					$NewsTable = TableRegistry::get('Admin.News');
-					$dat = $NewsCommentsTable->get($id);
-					$existing_news_data = $NewsTable->get($dat['news_id']);
-					
+					$dat = $NewsCommentsTable->find('all',['conditions'=>['id'=>$id]])->first();					
+					$existing_news_data = $NewsTable->get($dat['news_id']);					
 					$all_submitter_acccount_setting = $this->getAccountSettingNews();
 					if(!empty($all_submitter_acccount_setting)){
 						$url = Router::url('/', true).'news/details/'.$existing_news_data['slug'];

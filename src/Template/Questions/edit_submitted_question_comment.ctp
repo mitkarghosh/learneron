@@ -14,6 +14,7 @@ $session  = $this->request->session();
 						<div id="edit_profile_msg"><?php echo $this->Flash->render();?></div>
 						<div class="edit-details-from-wrapper">
 							<?php echo $this->Form->create($existing_data,['role'=>'Form', 'novalidate'=>'novalidate', 'id'=>'edit_question_comment_form', 'class'=>'edit_profile_form', 'novalidate' => 'novalidate']); ?>
+								<input type="hidden" name="questioncommentid" id="questioncommentid" value="<?php echo $existing_data->id;?>" />
 								<div class="row from-row">
 									<div class="col-md-12 col-sm-12">
 										<div class="form-group">
@@ -25,11 +26,14 @@ $session  = $this->request->session();
 								<div class="form-row">
 									<div class="form-group">
 										<label for="">Comment</label>
-										<?php echo $this->Form->input('comment',['type'=>'textarea', 'id'=>'comment', 'placeholder'=>'Comment', 'label'=>false, 'class'=>'form-control', 'value'=>$existing_data['comment']]); ?>										
+										<?php echo $this->Form->input('comment',['type'=>'textarea', 'id'=>'comment', 'placeholder'=>'Comment', 'label'=>false, 'class'=>'form-control', 'value'=>$existing_data['comment']]); ?>
+										<small style="float: right; color:#999;">
+											<span id="saving_draft_question_comment" class="draft_msg"></span>
+										</small>
 									</div>
 								</div>
 								<div class="button-set">								
-									<input type="submit" value="Update" class="btn-normal">&nbsp;
+									<input type="submit" value="<?php if($existing_data->status=='2')echo 'Update & Publish';else echo 'Update';?>" class="btn-normal">&nbsp;
 									<a href="<?php echo Router::url(array('controller'=>'/','action'=>'view-submissions'));?>" class="btn-cancel">Cancel</a>
 								</div>							  
 							<?php echo $this->Form->end();?>
@@ -54,3 +58,50 @@ $('#edit_question_comment_form').validate({
 	}
 });
 </script>
+
+<?php
+if( !empty($Auth) ) {
+?>
+<script>
+//setup before functions
+var typingTimer1;                //timer identifier
+var doneTypingInterval1 = 2000;  //time in ms, 2 second for example
+var $comment = $('#comment');
+$(document).ready(function(){
+	$comment.on('keyup', function () {
+		clearTimeout(typingTimer1);
+		typingTimer1 = setTimeout(doneTypingQComment, doneTypingInterval1);
+	});
+	
+	$comment.on('keydown', function () {
+		clearTimeout(typingTimer1);
+	});
+});
+function doneTypingQComment () {
+	if($comment.val() !== ''){
+		var website_url = '<?php echo Router::url("/questions/edit-submitted-question-comment-draft/",true); ?>';
+		$('#saving_draft_question_comment').html('Saving...');
+		$.ajax({
+			type : 'POST',
+			url  : website_url,
+			data : $('#edit_question_comment_form').serialize(),
+			success : function(response){
+				if(response==1)
+					$('#saving_draft_question_comment').html('Saved as draft');
+				else if(response==0)
+					$('#saving_draft_question_comment').html('Some error occured');
+				else if(response==2)
+					$('#saving_draft_question_comment').html('');
+			},
+			error : function(){
+			}
+		});			
+		setTimeout(function(){
+			$('.draft_msg').html('');
+		},3000);
+	}
+}
+</script>
+<?php
+}
+?>

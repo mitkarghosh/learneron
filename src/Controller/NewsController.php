@@ -84,7 +84,7 @@ class NewsController extends AppController{
 			$NewsCommentTable = TableRegistry::get('NewsComment');
 			if(!empty($news_detail)){
 				$com_options['contain'] 	= ['Users'=>['fields'=>['Users.id','Users.name','Users.profile_pic']]];
-				$com_options['conditions'] 	= ['NewsComment.status'=>1];
+				$com_options['conditions'] 	= ['NewsComment.news_id'=>$news_detail['id'],'NewsComment.status'=>1];
 				$com_options['fields'] 		= ['NewsComment.id','NewsComment.user_id','NewsComment.news_id','NewsComment.name','NewsComment.email','NewsComment.comment','NewsComment.status','NewsComment.created'];
 				$com_options['order'] 		= ['NewsComment.created'=>'DESC'];
 				$com_options['limit'] 		= $this->limitNewsComments;

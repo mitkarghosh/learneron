@@ -245,7 +245,7 @@ class AppController extends Controller{
      */
     public function getNewsCategories(){
 		$NewsCategoriesTable = TableRegistry::get('NewsCategories');
-        $news_cat_data = $NewsCategoriesTable->find('all', ['contain'=>['News'=>['fields'=>['News.id','News.category_id']]],'conditions'=>['NewsCategories.status'=>'A'],'fields'=>['NewsCategories.id','NewsCategories.name','NewsCategories.slug'], 'order'=>['NewsCategories.name ASC']])->toArray();	
+        $news_cat_data = $NewsCategoriesTable->find('all', ['contain'=>['News'=>['conditions'=>['News.status'=>'A'],'fields'=>['News.id','News.category_id']]],'conditions'=>['NewsCategories.status'=>'A'],'fields'=>['NewsCategories.id','NewsCategories.name','NewsCategories.slug'], 'order'=>['NewsCategories.name ASC']])->toArray();	
 		return $news_cat_data;
     }
 	

@@ -31,7 +31,7 @@ class QuestionsController extends AppController{
 		$question_categories = $this->getQuestionCategoriesSorted();	//mention in AppController
 		
 		$TagsTable = TableRegistry::get('Tags');
-		$all_tags = $TagsTable->find('list', ['conditions'=>['Tags.status'=>'A'], 'keyField'=>'id','valueField'=>'title'])->toArray();
+		$all_tags = $TagsTable->find('list', ['conditions'=>['Tags.status'=>'A'],'order'=>['Tags.title'=>'ASC'], 'keyField'=>'id','valueField'=>'title'])->toArray();
 		
 		$new_question = $QuestionTable->newEntity();
 		$AdvertisementsTable = TableRegistry::get('Advertisement');
@@ -1515,10 +1515,74 @@ class QuestionsController extends AppController{
 		$this->viewBuilder()->layout = false;
         $this->render(false);
 		if($this->request->is(['POST','PUT'])){
+			$new_generated_tag_ids = array();
+			if( isset($this->request->data['new_tags']) && !empty($this->request->data['new_tags']) ) {
+				$TagsTable = TableRegistry::get('Tags');					
+				if( strpos($this->request->data['new_tags'], ',') !== false ) {
+					$exploded_tags = explode(',',$this->request->data['new_tags']);
+					//echo '<pre>'; print_r($exploded_tags); die;
+					foreach( $exploded_tags as $key_tag => $val_tag ) {							
+						$chk = $TagsTable->find('all',['conditions'=>['title'=>trim($val_tag)]])->first();
+						if( count($chk) > 0 ) {
+							$new_generated_tag_ids[] = $chk->id;
+						}else{
+							$slug = $this->createTagsSlug($val_tag);
+							$newtag['title'] 	= trim(ucwords($val_tag));
+							$newtag['slug'] 	= $slug;
+							$newtag['status'] 	= 'A';
+							
+							$new_tag 		= $TagsTable->newEntity();
+							$insertdata 	= $TagsTable->patchEntity($new_tag, $newtag);
+							$save 			= $TagsTable->save($insertdata);
+							$tag_insert_id 	= $save->id;
+							$new_generated_tag_ids[] = $tag_insert_id;
+							$tag_insert_id = '';
+						}
+					}
+				}else{
+					$chk = $TagsTable->find('all',['conditions'=>['title'=>trim($this->request->data['new_tags'])]])->first();
+					if( count($chk) > 0 ) {
+						$new_generated_tag_ids[] = $chk->id;
+					}else{							
+						$slug = $this->createTagsSlug($this->request->data['new_tags']);						
+						$newtag['title']	= trim(ucwords($this->request->data['new_tags']));
+						$newtag['slug'] 	= $slug;
+						$newtag['status'] 	= 'A';
+						
+						$new_tag 		= $TagsTable->newEntity();
+						$inserted_data = $TagsTable->patchEntity($new_tag, $newtag);
+						$save = $TagsTable->save($inserted_data);
+						$tag_insert_id = $save->id;
+						$new_generated_tag_ids[] = $tag_insert_id;
+					}
+				}
+			}
+			if( !empty($new_generated_tag_ids) ) {
+				$main_tags = $this->request->data['tags'];
+				$merge_array = array_merge( $main_tags,$new_generated_tag_ids );
+				$this->request->data['tags'] = $merge_array;
+			}
+			
 			$QuestionsTable   = TableRegistry::get('Questions');
 			$existing_data 	  = $QuestionsTable->find('all', ['conditions'=>['id'=>$this->request->data['questionid'],'user_id'=>$this->Auth->user('id')]])->first();
 			$updated_data 	  = $QuestionsTable->patchEntity($existing_data, $this->request->data);
-			if ($savedData 	  = $QuestionsTable->save($updated_data)) {
+			if ($savedData 	  = $QuestionsTable->save($updated_data)) {				
+				$get_last_insert_id = $savedData->id;
+				if(!empty($this->request->data['tags'])){
+					$QuestionTagsTable = TableRegistry::get('QuestionTags');							
+					$QuestionTagsTable->deleteAll([
+											'QuestionTags.question_id' => $get_last_insert_id,
+											'user_id'				   => $this->Auth->user('id')
+										]);
+					foreach( $this->request->data['tags'] as $key_tag_data => $val_tag_data ){
+						$tag_data['QuestionTags']['question_id'] = $get_last_insert_id;
+						$tag_data['QuestionTags']['user_id'] = $this->Auth->user('id');
+						$tag_data['QuestionTags']['tag_id'] = $val_tag_data;
+						$TagNewEntity = $QuestionTagsTable->newEntity();
+						$inserted_data = $QuestionTagsTable->patchEntity($TagNewEntity, $tag_data);
+						$QuestionTagsTable->save($inserted_data);						
+					}
+				}
                 echo 1;
 				exit();
             }

@@ -439,6 +439,7 @@ class UsersController extends AppController{
 	}
 	
 	public function downloadReportsNonRegisteredUsers(){
+		ini_set('memory_limit', '256M');
 		$this->viewBuilder()->layout('ajax');
 		$this->autoRender = false;
 		$VisitorsTable = TableRegistry::get('Admin.Visitors');
@@ -1754,7 +1755,7 @@ class UsersController extends AppController{
 		
 		$this->set(compact('submitted_questions','comment_details','answer_details','answer_comment_details'));
 		//pr($answer_comment_details); die;
-	}	
+	}
 	
 	//Resend Verification Link
 	public function resendUserNotification(){

@@ -401,9 +401,8 @@ jQuery(function () {
 				$('.signup_terms_loader').html('');
 				if(data.register=='success'){
 					$('#terms-modal').modal('hide');
-					swal('Success!', 'Thank you.','success');
-					$('#signup_terms_form')[0].reset();
-					
+					//swal('Success!', 'Thank you.','success');
+					$('#signup_terms_form')[0].reset();					
 					swal({
 						title: 'Success!',
 						type: 'success',

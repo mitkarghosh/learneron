@@ -134,7 +134,7 @@ $session  = $this->request->session();
 							<ul>
 				<?php		foreach($all_faqs as $faq){ ?>
 								<li class="accordion-toggle"><?php echo $faq->question;?></li>
-								<p class="accordion-content"><?php echo substr(strip_tags($faq->answer), 0, 200); if(strlen($faq->answer)>200){ echo '...<a href="faqs">more</a>'; }?></p>
+								<p class="accordion-content"><?php echo substr(strip_tags($faq->answer), 0, 200); if(strlen($faq->answer)>200){ echo '...<a href="/faqs">more</a>'; }?></p>
 				<?php		} ?>
 							</ul>
 						</div>

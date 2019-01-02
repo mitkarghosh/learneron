@@ -205,6 +205,30 @@ function doneTyping () {
 	},3000);
 }
 
+function uploadImage1(image) {
+	var data = new FormData();
+	data.append("image", image);
+	$("div#divLoading").addClass('show');
+	$.ajax({
+		url: '<?php echo Router::url("/admin/admin-details/upload-editor-image/", true); ?>',
+		cache: false,
+		contentType: false,
+		processData: false,
+		data: data,
+		type: "post",
+		success: function(url) {
+			$('.note-icon-picture').trigger('click');
+			$('.note-image-url').val(url);
+			$('.note-image-btn').trigger("click");
+			$("div#divLoading").removeClass('show');
+		},
+		error: function(data) {
+			console.log(data);
+			$("div#divLoading").removeClass('show');
+		}
+	});
+}
+
 $(document).ready(function(){
 	$('#description1').summernote({	
 		popover: {
@@ -222,10 +246,14 @@ $(document).ready(function(){
 			['height', ['height']],
 			['insert', ['link', 'hr']],
 			['view', ['fullscreen', 'codeview']],
+			['insert', ['picture']]
 			//['help', ['help']]
 		],
 		placeholder:'',
 		callbacks: {
+			onImageUpload: function(image) {
+				uploadImage1(image[0]);
+			},
 			onKeyup: function(e) {
 				clearTimeout(typingTimer1);
 				typingTimer1 = setTimeout(doneTypingdescription, doneTypingInterval1);

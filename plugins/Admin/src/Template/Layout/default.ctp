@@ -72,7 +72,7 @@
                         data.append("image", image);
                         $("div#divLoading").addClass('show');
                         $.ajax({
-                            url: '<?php echo Router::url("/admin/admin-detail/upload-editor-image/", true); ?>',
+                            url: '<?php echo Router::url("/admin/admin-details/upload-editor-image/", true); ?>',
                             cache: false,
                             contentType: false,
                             processData: false,
@@ -106,6 +106,7 @@
                         ['height', ['height']],
                         ['insert', ['link', 'hr']],
                         ['view', ['fullscreen', 'codeview']],
+						//['insert', ['picture']]
                         //['help', ['help']]
                       ]
                   });
@@ -132,6 +133,7 @@
                         ['para', ['ul', 'ol', 'paragraph']],
                         ['height', ['height']],
                         ['view', ['fullscreen', 'codeview']],
+						//['insert', ['picture']],
                         ['help', ['help']]
                       ]
                   });

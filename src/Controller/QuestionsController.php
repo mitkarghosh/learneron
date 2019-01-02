@@ -1454,7 +1454,14 @@ class QuestionsController extends AppController{
 		$this->visitorlogs('Questions','editSubmittedQuestion','Edited Question',NULL,NULL,NULL,$id,NULL,NULL,NULL);	//Log details insertion
 		$question_categories = $this->getQuestionCategoriesSorted();	//mention in AppController
 		$TagsTable = TableRegistry::get('Tags');
-		$all_tags = $TagsTable->find('list', ['conditions'=>['Tags.status'=>'A'], 'keyField'=>'id','valueField'=>'title'])->toArray();
+		//$all_tags = $TagsTable->find('list', ['conditions'=>['Tags.status'=>'A'], 'keyField'=>'id','valueField'=>'title'])->toArray();
+		$all_tags = $TagsTable->find('list', [
+										'keyField' => 'id',
+										'valueField' => 'title'
+									])
+								->where(['Tags.status' => 'A'])
+								->order(['Tags.title' => 'ASC'])
+								->toArray();
 		$existing_data =  $QuestionsTable->get($id,['contain'=>['Users'=>['fields'=>['id','name']], 'QuestionCategories'=>['fields'=>['id','name']], 'QuestionTags'=>['fields'=>['id','question_id','tag_id']]]]);
 		
 		if($this->request->is(['post', 'put'])){

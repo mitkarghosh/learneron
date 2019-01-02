@@ -116,7 +116,14 @@ class QuestionsController extends AppController{
 		$QuestionTable = TableRegistry::get('Admin.Questions');
 		$question_categories = $this->getQuestionCategories();
 		$TagsTable = TableRegistry::get('Admin.Tags');
-		$all_tags = $TagsTable->find('list', ['conditions'=>['Tags.status'=>'A'], 'keyField'=>'id','valueField'=>'title'])->toArray();
+		//$all_tags = $TagsTable->find('list', ['conditions'=>['Tags.status'=>'A'],'keyField'=>'id','valueField'=>'title'])->toArray();
+		$all_tags = $TagsTable->find('list', [
+										'keyField' => 'id',
+										'valueField' => 'title'
+									])
+								->where(['Tags.status' => 'A'])
+								->order(['Tags.title' => 'ASC'])
+								->toArray();
 		$new_question = $QuestionTable->newEntity();
 		if ($this->request->is('post','put')){
 			//$this->request->data['user_id'] 	= $this->Auth->user('id');
@@ -158,18 +165,27 @@ class QuestionsController extends AppController{
 		$QuestionsTable = TableRegistry::get('Admin.Questions');
 		$question_categories = $this->getQuestionCategories();
 		$TagsTable = TableRegistry::get('Admin.Tags');
-		$all_tags = $TagsTable->find('list', ['conditions'=>['Tags.status'=>'A'], 'keyField'=>'id','valueField'=>'title'])->toArray();
+		//$all_tags = $TagsTable->find('list', ['conditions'=>['Tags.status'=>'A'],'keyField'=>'id','valueField'=>'title'])->toArray();
+		$all_tags = $TagsTable->find('list', [
+										'keyField' => 'id',
+										'valueField' => 'title'
+									])
+								->where(['Tags.status' => 'A'])
+								->order(['Tags.title' => 'ASC'])
+								->toArray();
 		$existing_data =  $QuestionsTable->get($id,['contain'=>['Users'=>['fields'=>['id','name']], 'QuestionCategories'=>['fields'=>['id','name']], 'QuestionTags'=>['fields'=>['id','question_id','tag_id']]]]);
 		if($this->request->is(['post', 'put'])){
-			if($this->request->data['is_featured'] != 0){$this->request->data['is_featured'] = 'Y';}else{$this->request->data['is_featured'] = 'N';}
+			if(isset($this->request->data['is_featured']) && $this->request->data['is_featured'] != 0){$this->request->data['is_featured'] = 'Y';}else{$this->request->data['is_featured'] = 'N';}
 			$new_question = $QuestionsTable->newEntity();
 			$inserted_data = $QuestionsTable->patchEntity($existing_data, $this->request->data);
 			$send_data = $QuestionsTable->patchEntity($existing_data, $this->request->data);
 			if ($savedData = $QuestionsTable->save($inserted_data)) {
 				$get_last_insert_id = $savedData->id;
 				$QuestionTagsTable = TableRegistry::get('Admin.QuestionTags');
-				$question_tags_data = $QuestionTagsTable->find('list', ['conditions'=>array('QuestionTags.question_id'=>$id),'fields' => ['QuestionTags.id']])->toArray();
-				$QuestionTagsTable->deleteAll(['id IN' => $question_tags_data]);
+				$question_tags_data = $QuestionTagsTable->find('list', ['conditions'=>array('QuestionTags.question_id'=>$id),'fields' => ['QuestionTags.id']])->toArray();				
+				if( !empty($question_tags_data) ) {
+					$QuestionTagsTable->deleteAll(['id IN' => $question_tags_data]);
+				}				
 				if(!empty($this->request->data['tags'])){
 					$QuestionTagsTable = TableRegistry::get('Admin.QuestionTags');
 					foreach( $this->request->data['tags'] as $key_tag_data => $val_tag_data ){
